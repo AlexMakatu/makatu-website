@@ -82,13 +82,12 @@ export async function generateMetadata({
 }
 
 /* ---------------- PAGE ---------------- */
+
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
-
   const post = await client.fetch<Post | null>(
     groq`*[_type == "blogPost" && slug.current == $slug][0]{
       title,
@@ -123,7 +122,7 @@ export default async function BlogPostPage({
         name
       }
     }`,
-    { slug: slug },
+    { slug: params.slug },
   );
 
   if (!post) {
@@ -151,8 +150,8 @@ export default async function BlogPostPage({
       mainImage
     }`,
     {
-      slug: slug,
-      categoryId: post.category?._id ?? null,
+      slug: params.slug,
+      categoryId: post.category?._id,
     },
   );
 
@@ -173,7 +172,7 @@ export default async function BlogPostPage({
           publishedAt,
           mainImage
         }`,
-      { slug: slug },
+      { slug: params.slug },
     );
   }
 

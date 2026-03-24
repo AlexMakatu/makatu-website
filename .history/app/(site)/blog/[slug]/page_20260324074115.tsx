@@ -82,6 +82,7 @@ export async function generateMetadata({
 }
 
 /* ---------------- PAGE ---------------- */
+
 export default async function BlogPostPage({
   params,
 }: {
@@ -123,12 +124,8 @@ export default async function BlogPostPage({
         name
       }
     }`,
-    { slug: slug },
+    { slug },
   );
-
-  if (!post) {
-    return <div className="p-10">Post not found</div>;
-  }
 
   /* ---------------- RELATED POSTS (CATEGORY-BASED) ---------------- */
 
@@ -151,8 +148,8 @@ export default async function BlogPostPage({
       mainImage
     }`,
     {
-      slug: slug,
-      categoryId: post.category?._id ?? null,
+      slug: params.slug,
+      categoryId: post.category?._id,
     },
   );
 
@@ -173,7 +170,7 @@ export default async function BlogPostPage({
           publishedAt,
           mainImage
         }`,
-      { slug: slug },
+      { slug: params.slug },
     );
   }
 

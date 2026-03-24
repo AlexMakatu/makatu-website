@@ -123,7 +123,7 @@ export default async function BlogPostPage({
         name
       }
     }`,
-    { slug: slug },
+    { slug: params.slug },
   );
 
   if (!post) {
@@ -151,8 +151,8 @@ export default async function BlogPostPage({
       mainImage
     }`,
     {
-      slug: slug,
-      categoryId: post.category?._id ?? null,
+      slug: params.slug,
+      categoryId: post.category?._id,
     },
   );
 
@@ -173,7 +173,7 @@ export default async function BlogPostPage({
           publishedAt,
           mainImage
         }`,
-      { slug: slug },
+      { slug: params.slug },
     );
   }
 

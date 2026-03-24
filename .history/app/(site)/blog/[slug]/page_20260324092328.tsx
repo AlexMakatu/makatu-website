@@ -152,7 +152,7 @@ export default async function BlogPostPage({
     }`,
     {
       slug: slug,
-      categoryId: post.category?._id ?? null,
+      categoryId: post.category?._id,
     },
   );
 
