@@ -77,7 +77,6 @@ type SeoRoute = Pick<Route, "title" | "seoTitle" | "seoDescription">;
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
-
 type RouteRate = {
   vehicleType: string;
   priceType: "fixed" | "startingFrom" | "negotiable" | "quoteRequired";
@@ -209,7 +208,7 @@ Metadata
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
 
   const route: SeoRoute | null = await client.fetch(seoQuery, { slug });
 

@@ -209,7 +209,7 @@ Metadata
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
 
   const route: SeoRoute | null = await client.fetch(seoQuery, { slug });
 
