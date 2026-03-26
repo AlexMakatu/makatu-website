@@ -24,6 +24,9 @@ export async function GET() {
       Notes: "Zoho test submission",
       Status: "New",
 
+      // ✅ FIXED DATE FORMAT
+      Submitted_At: formatZohoDate(new Date()),
+
       // 🚗 SUBFORM
       Vehicles: [
         {

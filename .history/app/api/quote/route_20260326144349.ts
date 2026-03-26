@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@sanity/client";
 
-// ✅ TYPES
+// ✅ TYPES (NO ANY)
 type Vehicle = {
   vehicleType: string;
   vehicleMake?: string;
@@ -41,6 +41,7 @@ export async function POST(req: Request) {
   try {
     const data: QuoteRequestBody = await req.json();
 
+    // 🔒 BASIC VALIDATION
     if (!data.fullName || !data.email || !data.fromCity || !data.toCity) {
       return NextResponse.json(
         { success: false, message: "Missing required fields" },
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ SAVE TO SANITY
+    // ✅ 1. SAVE TO SANITY
     const sanityDoc = {
       _type: "quoteRequest",
       fullName: data.fullName,
@@ -71,11 +72,15 @@ export async function POST(req: Request) {
 
     const sanityResult = await client.create(sanityDoc);
 
-    // ✅ SEND TO ZOHO
+    // ✅ 2. SEND TO ZOHO (NON-BLOCKING)
     sendToZoho(data).catch((err) => {
       console.error("Zoho error:", err);
     });
+    function formatZohoDateOnly(date: Date): string {
+      const pad = (n: number) => String(n).padStart(2, "0");
 
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    }
     return NextResponse.json({ success: true, sanityResult });
   } catch (error) {
     console.error("API error:", error);
@@ -107,8 +112,6 @@ async function sendToZoho(data: QuoteRequestBody) {
 
       Notes: data.notes || "",
       Status: "New",
-
-      // ✅ CORRECT DATE FORMAT
       Submitted_At: formatZohoDateOnly(new Date()),
 
       Vehicles: (data.vehicles || []).map((v) => ({
@@ -121,7 +124,9 @@ async function sendToZoho(data: QuoteRequestBody) {
     },
   };
 
-  console.log("📤 Sending to Zoho:", JSON.stringify(payload, null, 2));
+  console.log("========== ZOHO DEBUG START ==========");
+  console.log("Zoho URL:", url);
+  console.log("Zoho payload:", JSON.stringify(payload, null, 2));
 
   const res = await fetch(url, {
     method: "POST",
@@ -132,26 +137,39 @@ async function sendToZoho(data: QuoteRequestBody) {
     body: JSON.stringify(payload),
   });
 
-  const text = await res.text();
+  const rawText = await res.text();
 
-  console.log("📥 Status:", res.status);
-  console.log("📥 Response:", text);
+  console.log("Zoho HTTP status:", res.status);
+  console.log("Zoho raw response:", rawText);
 
-  if (!res.ok) {
-    throw new Error("Zoho API failed");
+  let result: unknown = null;
+
+  try {
+    result = rawText ? JSON.parse(rawText) : null;
+  } catch (parseError) {
+    console.error("Zoho response was not valid JSON:", parseError);
   }
 
-  return text;
+  console.log("Zoho parsed response:", result);
+
+  if (!res.ok) {
+    console.error("❌ Zoho request failed");
+    throw new Error(`Zoho API failed with status ${res.status}`);
+  }
+
+  console.log("✅ Zoho request succeeded");
+
+  if (typeof result === "object" && result !== null && "data" in result) {
+    console.log("✅ Zoho appears to have created the record");
+  }
+
+  console.log("========== ZOHO DEBUG END ==========");
+
+  return result;
 }
 
-// ✅ FIXED: GLOBAL HELPER (IMPORTANT)
-function formatZohoDateOnly(date: Date): string {
-  const pad = (n: number) => String(n).padStart(2, "0");
+// 🧠 VALUE MAPPERS (CRITICAL FOR DROPDOWNS)
 
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-
-// 🧠 VALUE MAPPERS
 function mapVehicleType(type?: string): string {
   const map: Record<string, string> = {
     hatchback: "Hatchback",
