@@ -58,6 +58,7 @@ export default function QuoteWizard() {
 
   async function next(values: Partial<QuoteData>) {
     const updated = { ...data, ...values };
+
     setData(updated);
 
     if (step === 3) {
@@ -73,25 +74,14 @@ export default function QuoteWizard() {
           }),
         });
 
-        const result: { success: boolean; message?: string } = await res.json();
+        if (!res.ok) throw new Error("Submit failed");
 
-        if (!res.ok) {
-          throw new Error(result.message || "Submit failed");
-        }
-
-        // ✅ SUCCESS
         window.location.href = "/quote-success";
-
         setStep(1);
         setData({});
       } catch (error) {
-        console.error("Submit error:", error);
-
-        alert(
-          error instanceof Error
-            ? error.message
-            : "Something went wrong submitting your quote.",
-        );
+        console.error(error);
+        alert("Something went wrong submitting your quote.");
       }
 
       return;
