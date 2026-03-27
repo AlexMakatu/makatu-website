@@ -18,8 +18,6 @@ import imageSection from "./imageSection";
 import imageTextSection from "./imageTextSection";
 import ctaSection from "./ctaSection";
 import legalPage from "./legalPage";
-import documentFile from "./document";
-
 export const schemaTypes = [
   homepage,
   service,
@@ -41,5 +39,4 @@ export const schemaTypes = [
   imageTextSection,
   ctaSection,
   legalPage,
-  documentFile,
 ];

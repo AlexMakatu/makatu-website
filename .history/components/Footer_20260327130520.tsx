@@ -193,10 +193,6 @@ export default async function Footer() {
             <Link href="/legal/banking" className="hover:text-white transition">
               Banking Details
             </Link>
-
-            <Link href="/legal/banking" className="hover:text-white transition">
-              Documents
-            </Link>
           </div>
         </div>
       </div>

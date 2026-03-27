@@ -42,9 +42,6 @@ export const structure = (S: StructureBuilder) =>
 
               S.documentTypeListItem("contactPage").title("Contact Page"),
               S.documentTypeListItem("legalPage").title("Legal Pages"),
-              S.listItem()
-                .title("Documents & Certificates")
-                .child(S.documentTypeList("documentFile").title("Documents")),
             ]),
         ),
 
