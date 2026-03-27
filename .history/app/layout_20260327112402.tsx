@@ -29,23 +29,22 @@ export async function generateMetadata(): Promise<Metadata> {
       settings?.siteDescription ||
       "Nationwide vehicle transport services across South Africa.",
 
-    icons: {
-      icon: [
-        {
-          url: settings?.favicon?.asset?.url || "/favicon.png",
-          sizes: "32x32",
-          type: "image/png",
-        },
-      ],
-      apple: [
-        {
-          url: settings?.favicon?.asset?.url || "/favicon.png",
-          sizes: "180x180",
-          type: "image/png",
-        },
-      ],
+icons: {
+  icon: [
+    {
+      url: settings?.favicon?.asset?.url || "/favicon.png",
+      sizes: "32x32",
+      type: "image/png",
     },
-  };
+  ],
+  apple: [
+    {
+      url: settings?.favicon?.asset?.url || "/favicon.png",
+      sizes: "180x180",
+      type: "image/png",
+    },
+  ],
+},
 }
 
 export default function RootLayout({
