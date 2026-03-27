@@ -134,15 +134,15 @@ export default function RoutesSection({ routes }: Props) {
                     {/* GROWING CONTENT */}
                     <div className="flex-grow">
                       <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                        Car transport {from} to {to}
+                        {from} → {to}
                       </h3>
 
                       {renderPrice(route)}
                     </div>
 
                     {/* CTA pinned bottom */}
-                    <span className="mt-auto text-sm font-semibold text-brand group-hover:underline">
-                      Car transport from {from} to {to} →
+                    <span className="mt-auto text-sm font-medium text-brand group-hover:underline">
+                      View Route →
                     </span>
                   </div>
                 </div>

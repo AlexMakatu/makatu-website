@@ -1,9 +1,32 @@
 import Image from "next/image";
-import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { PortableText } from "@portabletext/react";
 import { PortableTextBlock } from "@portabletext/types";
 
 /* ================= TYPES ================= */
+const components: PortableTextComponents = {
+  marks: {
+    link: ({ children, value }) => {
+      const href =
+        typeof value === "object" &&
+        value !== null &&
+        "href" in value &&
+        typeof value.href === "string"
+          ? value.href
+          : "#";
 
+      return (
+        <a
+          href={href}
+          className="text-brand underline hover:text-brand/80 transition"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {children}
+        </a>
+      );
+    },
+  },
+};
 type SanityImage = {
   asset?: {
     url?: string;
@@ -16,29 +39,17 @@ type Props = {
   image?: SanityImage;
   background?: string;
 };
-
-/* ================= PORTABLE TEXT COMPONENTS ================= */
-
-const portableTextComponents: PortableTextComponents = {
+const components = {
   marks: {
-    link: ({ children, value }) => {
-      const href =
-        typeof value === "object" &&
-        value !== null &&
-        "href" in value &&
-        typeof value.href === "string"
-          ? value.href
-          : "#";
-
-      const isExternal = href.startsWith("http");
+    link: ({ children, value }: any) => {
+      const href = value?.href || "#";
 
       return (
         <a
           href={href}
-          className="text-brand underline underline-offset-4 hover:text-brand/80 transition"
-          {...(isExternal
-            ? { target: "_blank", rel: "noopener noreferrer" }
-            : {})}
+          className="text-brand underline hover:text-brand/80 transition"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           {children}
         </a>
@@ -46,7 +57,6 @@ const portableTextComponents: PortableTextComponents = {
     },
   },
 };
-
 /* ================= COMPONENT ================= */
 
 export default function VehicleIntro({
@@ -75,10 +85,7 @@ export default function VehicleIntro({
             {/* BODY */}
             <div className="prose prose-lg max-w-none text-gray-600 leading-relaxed">
               {Array.isArray(content) && content.length > 0 && (
-                <PortableText
-                  value={content}
-                  components={portableTextComponents}
-                />
+                <PortableText value={content} />
               )}
             </div>
           </div>

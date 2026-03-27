@@ -98,10 +98,10 @@ export default function FeaturedRoute({ route }: Props) {
         <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
           Makatu specialises in{" "}
           <strong>
-            vehicle transport, including car transport from {from} to {to}
-          </strong>
-          , one of the busiest long-distance routes in South Africa. Whether you
-          need to{" "}
+            car transport from {from} to {to}
+          </strong>{" "}
+          and vehicle transport between these major cities, one of the busiest
+          long-distance routes in South Africa. Whether you need to{" "}
           <Link
             href={`/vehicle-transport/${route.slug?.current}`}
             className="text-brand font-medium underline"

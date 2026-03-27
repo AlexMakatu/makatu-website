@@ -39,27 +39,7 @@ const client = createClient({
   token: process.env.SANITY_API_TOKEN,
   useCdn: false,
 });
-function formatZohoDateForUI(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0");
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
 
-  return `${day}-${month}-${year}`;
-}
 // =====================
 // MAIN API HANDLER
 // =====================
@@ -92,7 +72,7 @@ export async function POST(req: Request) {
       quotedPrice: data.quotedPrice,
       priceToBeat: data.priceToBeat,
       notes: data.notes,
-      Submitted_At: formatZohoDateForUI(new Date()),
+      submittedAt: new Date().toISOString(),
       status: "new",
       vehicles: data.vehicles || [],
     };
@@ -170,7 +150,7 @@ async function sendToZoho(data: QuoteRequestBody) {
       Status: "New",
 
       // ✅ CORRECT DATE FORMAT (YYYY-MM-DD)
-      Submitted_At: formatZohoDateForUI(new Date()),
+      Submitted_At: formatZohoDateOnly(new Date()),
 
       Vehicles: (data.vehicles || []).map((v) => ({
         Vehicle_Type: mapVehicleType(v.vehicleType),

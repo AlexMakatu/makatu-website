@@ -122,12 +122,6 @@ export default function StepContact({ next, back, data }: Props) {
               <span>Total</span>
               <span>R{totalWithVat?.toFixed(0)}</span>
             </div>
-            <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-              This is an estimated price based on standard transport rates
-              (excl. VAT). Final pricing may vary depending on vehicle
-              condition, route availability, and operational factors. Terms &
-              conditions apply.
-            </p>
           </>
         )}
 

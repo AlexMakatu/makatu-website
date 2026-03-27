@@ -13,7 +13,7 @@ import ReviewsSection from "@/components/reviews/ReviewsSection";
 import RouteEstimateSection from "@/components/vehicle/RouteEstimateSection";
 import ProcessSection from "@/components/home/ProcessSection";
 import RoutesSection from "@/components/home/RoutesSection";
-import CityLinks from "@/components/vehicle/CityLinks";
+
 import type { FAQ } from "../../../types/faq";
 import { PortableTextBlock } from "@portabletext/types";
 
@@ -109,12 +109,7 @@ export default async function VehicleTransportPage() {
       },
     })),
   };
-  const cities = await client.fetch(
-    groq`*[_type == "city"]{
-    name,
-    slug
-  }`,
-  );
+
   return (
     <main>
       {/* SERVICE SCHEMA */}
@@ -145,7 +140,7 @@ export default async function VehicleTransportPage() {
 
       {/* 2. PRICE / QUOTE */}
       <RouteEstimateSection />
-      <CityLinks cities={cities} />
+
       {/* 3. EXPLANATION (MOVED UP) */}
       <VehicleIntro
         content={data.introduction}

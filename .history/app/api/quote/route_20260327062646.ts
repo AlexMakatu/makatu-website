@@ -170,7 +170,7 @@ async function sendToZoho(data: QuoteRequestBody) {
       Status: "New",
 
       // ✅ CORRECT DATE FORMAT (YYYY-MM-DD)
-      Submitted_At: formatZohoDateForUI(new Date()),
+      Submitted_At: formatZohoDateOnly(new Date()),
 
       Vehicles: (data.vehicles || []).map((v) => ({
         Vehicle_Type: mapVehicleType(v.vehicleType),

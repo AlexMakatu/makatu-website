@@ -31,6 +31,7 @@ export default function RoutesSection({ routes }: Props) {
   if (!routes || routes.length === 0) return null;
 
   function renderPrice(route: Route) {
+    // No price at all
     if (!route.lowestPrice || route.priceType === "quoteRequired") {
       return (
         <div className="mb-3">
@@ -44,6 +45,7 @@ export default function RoutesSection({ routes }: Props) {
       );
     }
 
+    // Negotiable
     if (route.priceType === "negotiable") {
       return (
         <div className="mb-3">
@@ -57,6 +59,7 @@ export default function RoutesSection({ routes }: Props) {
       );
     }
 
+    // Fixed or startingFrom
     return (
       <div className="mb-3">
         <span className="text-xs text-gray-500 uppercase tracking-wide">
@@ -66,7 +69,7 @@ export default function RoutesSection({ routes }: Props) {
         </span>
 
         <div className="text-brand text-lg font-semibold leading-tight">
-          R{route.lowestPrice.toLocaleString("en-ZA")}
+          R{route.lowestPrice.toLocaleString()}
         </div>
 
         <p className="text-xs text-gray-400 mt-1">
@@ -100,7 +103,7 @@ export default function RoutesSection({ routes }: Props) {
               <Link
                 key={index}
                 href={`/vehicle-transport/${route.slug?.current}`}
-                className="group w-full h-full"
+                className="group w-full"
               >
                 <div
                   className="
@@ -109,7 +112,6 @@ export default function RoutesSection({ routes }: Props) {
                     transition-all duration-300
                     hover:-translate-y-2
                     hover:shadow-[0_25px_70px_rgba(49,29,96,0.08)]
-                    flex flex-col h-full
                   "
                 >
                   {/* IMAGE */}
@@ -125,24 +127,21 @@ export default function RoutesSection({ routes }: Props) {
                     />
 
                     <div className="absolute top-4 left-4 bg-brand text-white text-xs px-3 py-1 rounded-full shadow">
-                      Door-to-Door
+                      Top Route
                     </div>
                   </div>
 
                   {/* CONTENT */}
-                  <div className="p-6 text-center flex flex-col flex-grow">
-                    {/* GROWING CONTENT */}
-                    <div className="flex-grow">
-                      <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                        Car transport {from} to {to}
-                      </h3>
+                  <div className="p-6 text-center">
+                    <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                      {from} → {to}
+                    </h3>
 
-                      {renderPrice(route)}
-                    </div>
+                    {/* PRICE */}
+                    {renderPrice(route)}
 
-                    {/* CTA pinned bottom */}
-                    <span className="mt-auto text-sm font-semibold text-brand group-hover:underline">
-                      Car transport from {from} to {to} →
+                    <span className="text-sm font-medium text-brand group-hover:underline">
+                      View Route →
                     </span>
                   </div>
                 </div>
@@ -154,7 +153,7 @@ export default function RoutesSection({ routes }: Props) {
         {/* CTA */}
         <div className="text-center mt-12">
           <Link
-            href="/vehicle-transport/routes"
+            href="/vehicle-transport"
             className="text-brand font-medium hover:underline"
           >
             View all routes →

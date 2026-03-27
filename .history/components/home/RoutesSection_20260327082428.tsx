@@ -128,24 +128,22 @@ export default function RoutesSection({ routes }: Props) {
                       Door-to-Door
                     </div>
                   </div>
+{/* CONTENT */}
+<div className="p-6 text-center flex flex-col flex-grow">
+  {/* GROWING CONTENT */}
+  <div className="flex-grow">
+    <h3 className="font-semibold text-lg text-gray-900 mb-2">
+      Car transport {from} to {to}
+    </h3>
 
-                  {/* CONTENT */}
-                  <div className="p-6 text-center flex flex-col flex-grow">
-                    {/* GROWING CONTENT */}
-                    <div className="flex-grow">
-                      <h3 className="font-semibold text-lg text-gray-900 mb-2">
-                        Car transport {from} to {to}
-                      </h3>
+    {renderPrice(route)}
+  </div>
 
-                      {renderPrice(route)}
-                    </div>
-
-                    {/* CTA pinned bottom */}
-                    <span className="mt-auto text-sm font-semibold text-brand group-hover:underline">
-                      Car transport from {from} to {to} →
-                    </span>
-                  </div>
-                </div>
+  {/* CTA pinned bottom */}
+  <span className="mt-auto text-sm font-semibold text-brand group-hover:underline">
+    Car transport from {from} to {to} →
+  </span>
+</div>
               </Link>
             );
           })}

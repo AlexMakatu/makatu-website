@@ -95,29 +95,28 @@ export default function FeaturedRoute({ route }: Props) {
         </div>
 
         {/* CONTENT */}
-        <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-          Makatu specialises in{" "}
-          <strong>
-            vehicle transport, including car transport from {from} to {to}
-          </strong>
-          , one of the busiest long-distance routes in South Africa. Whether you
-          need to{" "}
-          <Link
-            href={`/vehicle-transport/${route.slug?.current}`}
-            className="text-brand font-medium underline"
-          >
-            move a car from {from} to {to}
-          </Link>{" "}
-          or{" "}
-          <Link
-            href={`/vehicle-transport/${to.toLowerCase()}-to-${from.toLowerCase()}-vehicle-transport`}
-            className="text-brand font-medium underline"
-          >
-            from {to} to {from}
-          </Link>
-          , we provide reliable, scheduled delivery with safe and efficient
-          transport.
-        </p>
+        <div className="max-w-3xl mx-auto text-center mb-8">
+          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+            Makatu specialises in vehicle transport, including car transport
+            from {from} to {to}, one of the busiest long-distance routes in
+            South Africa. Whether you need to{" "}
+            <Link
+              href={`/vehicle-transport/${route.slug?.current}`}
+              className="text-brand font-medium underline"
+            >
+              move a car from {from} to {to}
+            </Link>{" "}
+            or{" "}
+            <Link
+              href={`/vehicle-transport/${to.toLowerCase()}-to-${from.toLowerCase()}-vehicle-transport`}
+              className="text-brand font-medium underline"
+            >
+              from {to} to {from}
+            </Link>
+            , we provide reliable, scheduled delivery with safe and efficient
+            transport.
+          </p>
+        </div>
         <br></br>
 
         {/* CTA */}

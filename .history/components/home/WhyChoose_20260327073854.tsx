@@ -19,14 +19,14 @@ export default function WhyChoose({ title, features }: Props) {
   if (!features || features.length === 0) return null;
 
   return (
-    <section className="py-14 md:py-16 bg-white relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-white relative overflow-hidden">
       {/* subtle background */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(49,29,96,0.06),transparent_65%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-5 md:px-6 relative">
         {/* TITLE */}
         {title && (
-          <div className="text-center mb-16 md:mb-20">
+          <div className="text-center mb-16 md:mb-20 max-w-3xl mx-auto">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 tracking-tight leading-tight">
               {title}
             </h2>

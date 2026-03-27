@@ -7,7 +7,6 @@ export async function GET(req: Request) {
   const from = searchParams.get("from");
   const to = searchParams.get("to");
   const vehicle = searchParams.get("vehicle");
-
   console.log("Estimate API called");
   console.log("From:", from);
   console.log("To:", to);

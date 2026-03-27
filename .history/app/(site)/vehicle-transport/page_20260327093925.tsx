@@ -143,9 +143,8 @@ export default async function VehicleTransportPage() {
         background={data.heroBackground}
       />
 
-      {/* 2. PRICE / QUOTE */}
-      <RouteEstimateSection />
       <CityLinks cities={cities} />
+
       {/* 3. EXPLANATION (MOVED UP) */}
       <VehicleIntro
         content={data.introduction}
