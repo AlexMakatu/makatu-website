@@ -25,8 +25,8 @@ type Route = {
   priceType?: "fixed" | "startingFrom" | "negotiable" | "quoteRequired";
 };
 
-export default async function Page({ params }: Props) {
-  const { slug } = await params;
+export default async function CityPage({ params }: Props) {
+  const { slug } = params;
 
   /* ================= CITY ================= */
 

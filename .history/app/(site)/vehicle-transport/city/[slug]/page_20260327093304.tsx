@@ -3,9 +3,9 @@ import { notFound } from "next/navigation";
 import RoutesSection from "@/components/home/RoutesSection";
 
 type Props = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
 type City = {
@@ -25,8 +25,8 @@ type Route = {
   priceType?: "fixed" | "startingFrom" | "negotiable" | "quoteRequired";
 };
 
-export default async function Page({ params }: Props) {
-  const { slug } = await params;
+export default async function CityPage({ params }: Props) {
+  const { slug } = params;
 
   /* ================= CITY ================= */
 
