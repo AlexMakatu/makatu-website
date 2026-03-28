@@ -44,15 +44,13 @@ const components: PortableTextComponents = {
   },
 };
 
-type PageProps = {
-  params: Promise<{ slug: string }>;
-};
-
-export default async function LegalPage({ params }: PageProps) {
-  const { slug } = await params;
-
+export default async function LegalPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const page: LegalPage = await client.fetch(query, {
-    slug,
+    slug: params.slug,
   });
 
   if (!page) {
