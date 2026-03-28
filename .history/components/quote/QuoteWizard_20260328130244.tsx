@@ -28,6 +28,7 @@ export type QuoteData = {
   customerType?: string;
 
   priceToBeat?: number;
+
   notes?: string;
 
   quotedPrice?: number;
@@ -38,38 +39,22 @@ export default function QuoteWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<QuoteData>({});
 
+  /* 🔥 NEW: Read URL params */
   const searchParams = useSearchParams();
 
   const fromCityParam = searchParams.get("fromCity");
   const toCityParam = searchParams.get("toCity");
-  const vehicleTypeParam = searchParams.get("vehicleType");
 
+  /* 🔥 NEW: Inject params into state */
   useEffect(() => {
-    if (!fromCityParam && !toCityParam && !vehicleTypeParam) return;
+    if (!fromCityParam && !toCityParam) return;
 
     setData((prev) => ({
       ...prev,
       fromCity: prev.fromCity || fromCityParam || "",
       toCity: prev.toCity || toCityParam || "",
-      vehicles: prev.vehicles?.length
-        ? prev.vehicles
-        : vehicleTypeParam
-          ? [
-              {
-                vehicleType: vehicleTypeParam,
-                vehicleMake: "",
-                vehicleModel: "",
-                vehicleYear: "",
-                vehicleCondition: "runner",
-              },
-            ]
-          : prev.vehicles,
     }));
-
-    if (fromCityParam && toCityParam && vehicleTypeParam) {
-      setStep(3);
-    }
-  }, [fromCityParam, toCityParam, vehicleTypeParam]);
+  }, [fromCityParam, toCityParam]);
 
   async function next(values: Partial<QuoteData>) {
     const updated = { ...data, ...values };
@@ -94,6 +79,7 @@ export default function QuoteWizard() {
           throw new Error(result.message || "Submit failed");
         }
 
+        // ✅ SUCCESS
         window.location.href = "/quote-success";
 
         setStep(1);
@@ -119,53 +105,70 @@ export default function QuoteWizard() {
   }
 
   return (
-    <section className="px-4 sm:px-6 py-4 sm:py-8 bg-gray-50 min-h-[80vh] flex items-start justify-center">
-      <div className="max-w-2xl w-full bg-white p-4 sm:p-6 rounded-2xl shadow-sm border">
-        {/* HEADER */}
-        <div className="text-center mb-5">
-          <h1 className="text-xl sm:text-3xl font-semibold text-[#311d60] mb-1">
+    <section className="px-6 py-8 bg-gray-50 min-h-screen flex items-start justify-center">
+      <div className="max-w-3xl w-full bg-white p-6 rounded-xl shadow border">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-[#311d60] mb-2">
             Get a Quote
           </h1>
-          <p className="text-gray-400 text-xs sm:text-sm">
+          <p className="text-gray-500 text-sm">
             Fast vehicle transport pricing across South Africa
           </p>
         </div>
 
-        {/* ROUTE SUMMARY (AI CONNECT) */}
-        {data.fromCity && data.toCity && (
-          <div className="mb-4 text-sm text-gray-500 text-center">
-            {data.fromCity} → {data.toCity}
+        {/* Progress */}
+        <div className="flex items-center justify-between mb-6 text-sm font-medium">
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-9 h-9 flex items-center justify-center rounded-full font-semibold ${
+                step >= 1
+                  ? "bg-[#311d60] text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              1
+            </span>
+            <span className={step >= 1 ? "text-[#311d60]" : "text-gray-400"}>
+              Route
+            </span>
           </div>
-        )}
 
-        {/* PROGRESS */}
-        <div className="flex justify-between mb-6 text-xs sm:text-sm font-medium">
-          {[1, 2, 3].map((num) => (
-            <div key={num} className="flex items-center gap-2">
-              <span
-                className={`w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full font-semibold ${
-                  step >= num
-                    ? "bg-[#311d60] text-white"
-                    : "bg-gray-200 text-gray-500"
-                }`}
-              >
-                {num}
-              </span>
-              <span
-                className={step >= num ? "text-[#311d60]" : "text-gray-400"}
-              >
-                {num === 1 ? "Route" : num === 2 ? "Vehicle" : "Contact"}
-              </span>
-            </div>
-          ))}
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-9 h-9 flex items-center justify-center rounded-full font-semibold ${
+                step >= 2
+                  ? "bg-[#311d60] text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              2
+            </span>
+            <span className={step >= 2 ? "text-[#311d60]" : "text-gray-400"}>
+              Vehicle
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span
+              className={`w-9 h-9 flex items-center justify-center rounded-full font-semibold ${
+                step >= 3
+                  ? "bg-[#311d60] text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              3
+            </span>
+            <span className={step >= 3 ? "text-[#311d60]" : "text-gray-400"}>
+              Contact
+            </span>
+          </div>
         </div>
 
-        {/* STEPS */}
-        <div className="transition-all duration-300">
-          {step === 1 && <StepRoute next={next} data={data} />}
-          {step === 2 && <StepVehicle next={next} back={back} data={data} />}
-          {step === 3 && <StepContact next={next} back={back} data={data} />}
-        </div>
+        {/* Steps */}
+        {step === 1 && <StepRoute next={next} data={data} />}
+        {step === 2 && <StepVehicle next={next} back={back} data={data} />}
+        {step === 3 && <StepContact next={next} back={back} data={data} />}
       </div>
     </section>
   );

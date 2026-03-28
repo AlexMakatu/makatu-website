@@ -114,9 +114,9 @@ export default function RouteEstimateSection() {
           </button>
         </div>
         {/* 🔥 PREMIUM AI SUGGESTIONS */}
-        <div className="mt-6">
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-xs text-white/60 uppercase tracking-wide">
+        <div className="md:col-span-3">
+          <div className="flex flex-col items-center gap-3 mb-2">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">
               Smart suggestions
             </p>
 
@@ -127,7 +127,7 @@ export default function RouteEstimateSection() {
                     "/get-a-quote?fromCity=Johannesburg&toCity=Cape%20Town&vehicleType=suv",
                   )
                 }
-                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs text-white transition"
+                className="px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-xs text-gray-700 transition"
               >
                 SUV Joburg → Cape Town
               </button>
@@ -138,7 +138,7 @@ export default function RouteEstimateSection() {
                     "/get-a-quote?fromCity=Durban&toCity=Pretoria&vehicleType=bakkie",
                   )
                 }
-                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs text-white transition"
+                className="px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-xs text-gray-700 transition"
               >
                 Bakkie Durban → Pretoria
               </button>
@@ -149,7 +149,7 @@ export default function RouteEstimateSection() {
                     "/get-a-quote?fromCity=Cape%20Town&toCity=Johannesburg&vehicleType=sedan",
                   )
                 }
-                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs text-white transition"
+                className="px-3 py-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-xs text-gray-700 transition"
               >
                 Sedan Cape Town → Joburg
               </button>

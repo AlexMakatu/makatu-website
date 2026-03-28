@@ -35,7 +35,7 @@ function CityInput({
 
   return (
     <div className="relative">
-      <label className="text-xs text-gray-400 mb-1 block">{label}</label>
+      <label className="text-xs text-gray-500 mb-1 block">{label}</label>
 
       <input
         value={query}
@@ -48,7 +48,7 @@ function CityInput({
         onFocus={() => setShowDropdown(true)}
         onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
         placeholder="Enter city"
-        className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#311d60]"
+        className="w-full rounded-xl border border-gray-200 px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#311d60]"
       />
 
       {showDropdown && filtered.length > 0 && (
@@ -61,7 +61,7 @@ function CityInput({
                 onChange(city.name);
                 setShowDropdown(false);
               }}
-              className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+              className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
             >
               {city.name}
             </div>
@@ -92,6 +92,7 @@ export default function HomeRouteEstimator() {
     fetchCities();
   }, []);
 
+  // 🔥 AI HANDLER
   async function handleAI() {
     if (!aiInput) return;
 
@@ -143,7 +144,7 @@ export default function HomeRouteEstimator() {
       }
 
       goToQuote();
-    } catch {
+    } catch (err) {
       goToQuote();
     }
   }
@@ -158,34 +159,34 @@ export default function HomeRouteEstimator() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* HEADER */}
-      <div>
-        <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-          Move your vehicle
-        </p>
-        <h3 className="text-lg font-semibold text-gray-900 leading-snug">
-          Where should we collect and deliver?
+      <div className="border-b pb-3">
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+          Move Your Vehicle
         </h3>
+        <p className="text-lg font-semibold text-gray-900">
+          Where do you need it collected and delivered?
+        </p>
       </div>
 
       {/* 🔥 AI INPUT */}
-      <div className="space-y-3">
+      <div>
         <input
           value={aiInput}
           onChange={(e) => setAiInput(e.target.value)}
-          placeholder="SUV Joburg → Cape Town"
-          className="w-full rounded-xl border border-gray-200 px-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#311d60]"
+          placeholder="Type your route (e.g. SUV Joburg → Cape Town)"
+          className="w-full rounded-xl border border-gray-200 px-3 py-3 text-sm mb-2"
         />
 
         <button
           onClick={handleAI}
-          className="w-full py-3 rounded-xl text-sm font-medium bg-[#311d60] text-white hover:bg-[#2a1854] transition"
+          className="w-full py-2 text-sm font-medium text-white bg-black rounded-xl"
         >
           {loading ? "Processing..." : "Quick Estimate ⚡"}
         </button>
 
-        <p className="text-xs text-gray-400 text-center">or enter manually</p>
+        <p className="text-xs text-gray-400 text-center mt-2">or</p>
       </div>
 
       {/* INPUTS */}
@@ -211,7 +212,7 @@ export default function HomeRouteEstimator() {
         disabled={!fromCity || !toCity || loading}
         className={`w-full py-3 rounded-xl text-sm font-semibold transition ${
           fromCity && toCity
-            ? "bg-gray-900 hover:bg-black text-white"
+            ? "bg-[#311d60] hover:bg-[#2a1854] text-white"
             : "bg-gray-200 text-gray-500 cursor-not-allowed"
         }`}
       >
@@ -221,9 +222,7 @@ export default function HomeRouteEstimator() {
       {/* ESTIMATE */}
       {estimate && (
         <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 text-sm">
-          <p className="text-gray-500">
-            {fromCity} → {toCity}
-          </p>
+          <p className="text-gray-500">Estimated transport cost</p>
           <p className="text-lg font-semibold text-gray-900">
             R {estimate.price}
           </p>

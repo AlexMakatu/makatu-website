@@ -273,49 +273,6 @@ export default function StepRoute({ next, data }: Props) {
           </div>
         )}
       </div>
-      {/* Transport Type */}
-      <div>
-        <label className="block font-medium mb-2">Transport Type</label>
-
-        <select
-          value={transportType}
-          onChange={(e) => setTransportType(e.target.value)}
-          className="w-full border rounded-lg px-4 py-3"
-        >
-          <option value="doorToDoor">Door to Door</option>
-          <option value="dealerToDealer">Dealer to Dealer</option>
-          <option value="dealerToPrivate">Dealer to Private</option>
-          <option value="privateToDealer">Private to Dealer</option>
-        </select>
-      </div>
-
-      {/* Collection Timing */}
-      <div>
-        <label className="block font-medium mb-2">Collection Timing</label>
-
-        <select
-          value={collectionDateType}
-          onChange={(e) => setCollectionDateType(e.target.value)}
-          className="w-full border rounded-lg px-4 py-3"
-        >
-          <option value="flexible">Flexible</option>
-          <option value="asap">ASAP</option>
-          <option value="specificDate">Specific Date</option>
-        </select>
-      </div>
-
-      {collectionDateType === "specificDate" && (
-        <div>
-          <label className="block font-medium mb-2">Collection Date</label>
-
-          <input
-            type="date"
-            value={collectionDate}
-            onChange={(e) => setCollectionDate(e.target.value)}
-            className="w-full border rounded-lg px-4 py-3"
-          />
-        </div>
-      )}
 
       <button className="bg-black text-white px-6 py-3 rounded-lg w-full">
         Continue
