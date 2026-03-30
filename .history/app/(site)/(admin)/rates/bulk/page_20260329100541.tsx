@@ -56,33 +56,10 @@ export default function BulkUploadPage() {
     setRows(parsed);
   }
 
-  /* 🔥 NEW: CLEAR ALL */
-  async function handleClear() {
-    if (!key) return alert("Missing admin key");
-
-    if (!confirm("⚠️ This will DELETE ALL route rates. Continue?")) return;
-
-    const res = await fetch("/api/admin/route-rate/clear-route-rates", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ key }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.error || "Failed to clear");
-      return;
-    }
-
-    alert(`Deleted ${data.deleted} route rates`);
-  }
-
   async function handleUpload() {
     if (!file || !key) return alert("Missing file or key");
 
+    // 🔐 THIS IS THE IMPORTANT LINE
     document.cookie = `adminKey=${key}; path=/`;
 
     setLoading(true);
@@ -171,23 +148,13 @@ export default function BulkUploadPage() {
         </div>
       )}
 
-      {/* 🔥 ACTION BUTTONS */}
-      <div className="flex gap-3">
-        <button
-          onClick={handleClear}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Clear ALL Rates
-        </button>
-
-        <button
-          onClick={handleUpload}
-          disabled={loading}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          {loading ? "Uploading..." : "Upload"}
-        </button>
-      </div>
+      <button
+        onClick={handleUpload}
+        disabled={loading}
+        className="bg-black text-white px-4 py-2"
+      >
+        {loading ? "Uploading..." : "Upload"}
+      </button>
 
       {/* RESULTS */}
       {results.length > 0 && (

@@ -85,6 +85,8 @@ export async function POST(req: Request) {
           continue;
         }
 
+        /* ================= NORMALIZE ================= */
+
         const vehicleType = row.vehicleType.toLowerCase().trim();
 
         /* ================= PRICE ================= */
@@ -105,16 +107,14 @@ export async function POST(req: Request) {
 
         /* ================= TRANSIT TIME ================= */
 
-        const transitTime =
-          row.transitTime && !isNaN(Number(row.transitTime))
-            ? Number(row.transitTime)
-            : undefined;
+        const transitTime = row.transitTime
+          ? Number(row.transitTime)
+          : undefined;
 
         /* ================= ROUTE ================= */
 
         const routeId = `route-${from._id}-${to._id}`;
 
-        // ✅ Always ensure route exists
         tx.createIfNotExists({
           _id: routeId,
           _type: "route",
@@ -125,25 +125,16 @@ export async function POST(req: Request) {
           },
           fromCity: { _type: "reference", _ref: from._id },
           toCity: { _type: "reference", _ref: to._id },
+          transitTime: transitTime ?? 2,
           featuredRoute: false,
         });
 
-        // 🔥 THIS IS THE KEY — ALWAYS UPDATE
-        tx.patch(routeId, {
-          set: {
-            title: `${from.name} to ${to.name} Vehicle Transport`,
-
-            slug: {
-              _type: "slug",
-              current: slugify(`${from.name}-to-${to.name}-vehicle-transport`),
-            },
-
-            fromCity: { _type: "reference", _ref: from._id },
-            toCity: { _type: "reference", _ref: to._id },
-
-            ...(transitTime !== undefined && { transitTime }),
-          },
-        });
+        // ✅ ALWAYS update transit time if provided
+        if (transitTime !== undefined && !isNaN(transitTime)) {
+          tx.patch(routeId, {
+            set: { transitTime },
+          });
+        }
 
         /* ================= ROUTE RATE ================= */
 

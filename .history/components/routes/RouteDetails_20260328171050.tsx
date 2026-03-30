@@ -9,8 +9,8 @@ type RouteRate = {
 type Props = {
   transitTime?: number;
   rates?: RouteRate[];
-  fromCity?: string;
-  toCity?: string;
+  fromCity?: string; // ✅ NEW
+  toCity?: string; // ✅ NEW
 };
 
 function formatVehicleType(value: string) {
@@ -65,47 +65,58 @@ export default function RouteDetails({
       )}
 
       {/* Rates */}
-      {rates && rates.length > 0 && (
-        <>
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            Estimated Transport Price
-          </h2>
+{rates && rates.length > 0 && (
+  <>
+    <h2 className="text-2xl font-bold mb-6 text-center">
+      Estimated Transport Price
+    </h2>
 
-          {/* ✅ PREMIUM TABLE */}
-          <div className="border rounded-2xl overflow-hidden bg-white">
-            {/* Header */}
-            <div className="flex justify-between px-6 py-3 bg-gray-50 border-b text-sm font-medium text-gray-600">
-              <span>Vehicle Type</span>
-              <span>Estimated Price</span>
-            </div>
+    <div className="border rounded-xl overflow-hidden bg-white">
+      {rates.map((rate, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-between px-6 py-4 border-b last:border-b-0"
+        >
+          <span className="font-medium text-gray-900">
+            {formatVehicleType(rate.vehicleType)}
+          </span>
 
-            {/* Rows */}
-            {rates.map((rate, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between px-6 py-4 border-b last:border-b-0"
-              >
-                <span className="font-medium text-gray-900">
-                  {formatVehicleType(rate.vehicleType)}
-                </span>
+          <span className="text-gray-700">{formatPrice(rate)}</span>
+        </div>
+      ))}
+    </div>
 
-                <span className="text-gray-900 font-semibold tracking-tight">
-                  {formatPrice(rate)}
-                </span>
-              </div>
-            ))}
-          </div>
+    {/* VAT NOTE */}
+    <p className="text-xs text-gray-500 mt-3 text-center">
+      *All prices exclude VAT. Final pricing may vary based on availability and scheduling.
+    </p>
 
-          {/* VAT NOTE */}
-          <p className="text-sm text-gray-600 mt-3 text-center">
-            Prices exclude VAT. Final pricing may vary based on availability and
-            scheduling.
-          </p>
+    {/* CTA */}
+    <div className="mt-8 text-center">
+      <p className="text-gray-600 mb-4">
+        Get your exact price and confirm availability in seconds.
+      </p>
 
-          {/* CTA */}
-          <div className="mt-8 text-center space-y-4">
-            <p className="text-gray-700 font-medium">
-              Get your exact transport price
+      <Link
+        href={`/get-a-quote?fromCity=${encodeURIComponent(
+          fromCity || "",
+        )}&toCity=${encodeURIComponent(toCity || "")}`}
+        className="inline-block bg-[#311d60] text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition"
+      >
+        Continue to Quote
+      </Link>
+
+      <p className="text-sm text-gray-500 mt-2">
+        No obligation • Takes less than 30 seconds
+      </p>
+    </div>
+  </>
+)}
+
+          {/* 🔥 NEW CTA */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 mb-4">
+              Get your exact price and confirm availability in seconds.
             </p>
 
             <Link
@@ -117,8 +128,8 @@ export default function RouteDetails({
               Continue to Quote
             </Link>
 
-            <p className="text-sm text-gray-500">
-              No obligation • We&apos;ll confirm availability and final pricing
+            <p className="text-sm text-gray-500 mt-2">
+              No obligation • Takes less than 30 seconds
             </p>
           </div>
         </>

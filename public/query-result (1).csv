@@ -1,0 +1,13 @@
+_id,fromCity,title,toCity,transitTime
+24d45c31-1ca4-4a2b-8a3d-dd33cbb8f668,Pretoria,Pretoria to Durban Vehicle Transport,Durban,3
+43ed9b4e-40b3-4f99-8144-fc7db5766336,Durban,Durban to Johannesburg Vehicle Transport,Johannesburg,3
+route-41b0ed74-c405-4c18-9b45-db49d718447c-693711c7-2a9c-4bfc-8831-652ea8bc08e1,Durban,Durban to Pretoria Vehicle Transport,Pretoria,3
+route-51fcef23-0183-4b47-b1cf-794c7427cbbc-693711c7-2a9c-4bfc-8831-652ea8bc08e1,Gqeberha,Gqeberha to Pretoria Vehicle Transport,Pretoria,5
+route-51fcef23-0183-4b47-b1cf-794c7427cbbc-bcebac6b-0a33-499f-a8ae-96b12f0f6a50,Gqeberha,Gqeberha to Johannesburg Vehicle Transport,Johannesburg,5
+route-693711c7-2a9c-4bfc-8831-652ea8bc08e1-51fcef23-0183-4b47-b1cf-794c7427cbbc,Pretoria,Pretoria to Gqeberha Vehicle Transport,Gqeberha,5
+route-693711c7-2a9c-4bfc-8831-652ea8bc08e1-b23f68f5-11b9-4cc0-a208-ed21233fa0a4,Pretoria,Pretoria to Cape Town Vehicle Transport,Cape Town,5
+route-b23f68f5-11b9-4cc0-a208-ed21233fa0a4-693711c7-2a9c-4bfc-8831-652ea8bc08e1,Cape Town,Cape Town to Pretoria Vehicle Transport,Pretoria,5
+route-b23f68f5-11b9-4cc0-a208-ed21233fa0a4-bcebac6b-0a33-499f-a8ae-96b12f0f6a50,Cape Town,Cape Town to Johannesburg Vehicle Transport,Johannesburg,5
+route-bcebac6b-0a33-499f-a8ae-96b12f0f6a50-41b0ed74-c405-4c18-9b45-db49d718447c,Johannesburg,Johannesburg to Durban Vehicle Transport,Durban,3
+route-bcebac6b-0a33-499f-a8ae-96b12f0f6a50-51fcef23-0183-4b47-b1cf-794c7427cbbc,Johannesburg,Johannesburg to Gqeberha Vehicle Transport,Gqeberha,5
+route-bcebac6b-0a33-499f-a8ae-96b12f0f6a50-b23f68f5-11b9-4cc0-a208-ed21233fa0a4,Johannesburg,Johannesburg to Cape Town Vehicle Transport,Cape Town,5

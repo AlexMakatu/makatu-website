@@ -131,16 +131,6 @@ export async function POST(req: Request) {
         // 🔥 THIS IS THE KEY — ALWAYS UPDATE
         tx.patch(routeId, {
           set: {
-            title: `${from.name} to ${to.name} Vehicle Transport`,
-
-            slug: {
-              _type: "slug",
-              current: slugify(`${from.name}-to-${to.name}-vehicle-transport`),
-            },
-
-            fromCity: { _type: "reference", _ref: from._id },
-            toCity: { _type: "reference", _ref: to._id },
-
             ...(transitTime !== undefined && { transitTime }),
           },
         });

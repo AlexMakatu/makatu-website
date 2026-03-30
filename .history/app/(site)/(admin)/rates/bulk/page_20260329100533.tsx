@@ -41,6 +41,15 @@ function validateRow(row: CsvRow): string | null {
   return null;
 }
 
+function getRouteFromRows(rows: CsvRow[]) {
+  if (!rows.length) return null;
+
+  return {
+    fromCity: rows[0].fromCity,
+    toCity: rows[0].toCity,
+  };
+}
+
 /* ================= COMPONENT ================= */
 
 export default function BulkUploadPage() {
@@ -56,18 +65,29 @@ export default function BulkUploadPage() {
     setRows(parsed);
   }
 
-  /* 🔥 NEW: CLEAR ALL */
   async function handleClear() {
     if (!key) return alert("Missing admin key");
 
-    if (!confirm("⚠️ This will DELETE ALL route rates. Continue?")) return;
+    const route = getRouteFromRows(rows);
+
+    if (!route?.fromCity || !route?.toCity) {
+      return alert("No valid route found in CSV");
+    }
+
+    if (!confirm(`Clear rates for ${route.fromCity} → ${route.toCity}?`)) {
+      return;
+    }
 
     const res = await fetch("/api/admin/route-rate/clear-route-rates", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ key }),
+      body: JSON.stringify({
+        key,
+        fromCity: route.fromCity,
+        toCity: route.toCity,
+      }),
     });
 
     const data = await res.json();
@@ -77,7 +97,7 @@ export default function BulkUploadPage() {
       return;
     }
 
-    alert(`Deleted ${data.deleted} route rates`);
+    alert(`Deleted ${data.deleted} existing rates`);
   }
 
   async function handleUpload() {
@@ -171,23 +191,22 @@ export default function BulkUploadPage() {
         </div>
       )}
 
-      {/* 🔥 ACTION BUTTONS */}
-      <div className="flex gap-3">
-        <button
-          onClick={handleClear}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Clear ALL Rates
-        </button>
+      {/* 🔥 CLEAR BUTTON */}
+      <button
+        onClick={handleClear}
+        className="bg-red-600 text-white px-4 py-2 rounded"
+      >
+        Clear Existing Rates
+      </button>
 
-        <button
-          onClick={handleUpload}
-          disabled={loading}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          {loading ? "Uploading..." : "Upload"}
-        </button>
-      </div>
+      {/* UPLOAD */}
+      <button
+        onClick={handleUpload}
+        disabled={loading}
+        className="bg-black text-white px-4 py-2 rounded"
+      >
+        {loading ? "Uploading..." : "Upload"}
+      </button>
 
       {/* RESULTS */}
       {results.length > 0 && (

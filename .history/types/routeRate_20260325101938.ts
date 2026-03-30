@@ -5,7 +5,6 @@ export type CsvRow = {
   priceType: "fixed" | "startingFrom" | "negotiable" | "quoteRequired";
   price?: string;
   active?: string;
-  transitTime?: string;
 };
 
 export type UploadResult =

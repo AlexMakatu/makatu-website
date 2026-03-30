@@ -50,24 +50,40 @@ export default function BulkUploadPage() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<UploadResult[]>([]);
 
+  // 🔥 NEW: manual route inputs
+  const [fromCityInput, setFromCityInput] = useState("");
+  const [toCityInput, setToCityInput] = useState("");
+
   async function handleFile(file: File) {
     const text = await file.text();
     const parsed = parseCSV(text);
     setRows(parsed);
   }
 
-  /* 🔥 NEW: CLEAR ALL */
   async function handleClear() {
     if (!key) return alert("Missing admin key");
 
-    if (!confirm("⚠️ This will DELETE ALL route rates. Continue?")) return;
+    const fromCity = fromCityInput || rows[0]?.fromCity;
+    const toCity = toCityInput || rows[0]?.toCity;
+
+    if (!fromCity || !toCity) {
+      return alert("Provide route manually or upload CSV");
+    }
+
+    if (!confirm(`Clear rates for ${fromCity} → ${toCity}?`)) {
+      return;
+    }
 
     const res = await fetch("/api/admin/route-rate/clear-route-rates", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ key }),
+      body: JSON.stringify({
+        key,
+        fromCity,
+        toCity,
+      }),
     });
 
     const data = await res.json();
@@ -77,7 +93,7 @@ export default function BulkUploadPage() {
       return;
     }
 
-    alert(`Deleted ${data.deleted} route rates`);
+    alert(`Deleted ${data.deleted} existing rates`);
   }
 
   async function handleUpload() {
@@ -134,6 +150,7 @@ export default function BulkUploadPage() {
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">Bulk Upload (Pro)</h1>
 
+      {/* ADMIN KEY */}
       <input
         type="password"
         placeholder="Admin key"
@@ -141,6 +158,24 @@ export default function BulkUploadPage() {
         className="border p-2 w-full"
       />
 
+      {/* 🔥 MANUAL ROUTE INPUTS */}
+      <input
+        type="text"
+        placeholder="From City (e.g. Johannesburg)"
+        value={fromCityInput}
+        onChange={(e) => setFromCityInput(e.target.value)}
+        className="border p-2 w-full"
+      />
+
+      <input
+        type="text"
+        placeholder="To City (e.g. Durban)"
+        value={toCityInput}
+        onChange={(e) => setToCityInput(e.target.value)}
+        className="border p-2 w-full"
+      />
+
+      {/* FILE INPUT */}
       <input
         type="file"
         accept=".csv"
@@ -171,23 +206,22 @@ export default function BulkUploadPage() {
         </div>
       )}
 
-      {/* 🔥 ACTION BUTTONS */}
-      <div className="flex gap-3">
-        <button
-          onClick={handleClear}
-          className="bg-red-600 text-white px-4 py-2 rounded"
-        >
-          Clear ALL Rates
-        </button>
+      {/* 🔥 CLEAR BUTTON */}
+      <button
+        onClick={handleClear}
+        className="bg-red-600 text-white px-4 py-2 rounded"
+      >
+        Clear Existing Rates
+      </button>
 
-        <button
-          onClick={handleUpload}
-          disabled={loading}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          {loading ? "Uploading..." : "Upload"}
-        </button>
-      </div>
+      {/* UPLOAD BUTTON */}
+      <button
+        onClick={handleUpload}
+        disabled={loading}
+        className="bg-black text-white px-4 py-2 rounded"
+      >
+        {loading ? "Uploading..." : "Upload"}
+      </button>
 
       {/* RESULTS */}
       {results.length > 0 && (

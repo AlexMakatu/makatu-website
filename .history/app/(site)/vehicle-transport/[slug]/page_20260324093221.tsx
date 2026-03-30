@@ -14,7 +14,6 @@ import { contactSettingsQuery } from "@/sanity/queries/getContactSettings";
 import VehicleTypes from "@/components/vehicle/VehicleTypes";
 import CustomerTypes from "@/components/vehicle/CustomerTypes";
 import FloatingQuoteCTA from "@/components/FloatingQuoteCTA";
-
 import type {
   PortableTextBlock,
   PortableTextListItemBlock,
@@ -182,7 +181,9 @@ function isPortableTextSpan(
 function blockToPlainText(
   block: PortableTextBlock | PortableTextListItemBlock,
 ): string {
-  if (!("children" in block) || !Array.isArray(block.children)) return "";
+  if (!("children" in block) || !Array.isArray(block.children)) {
+    return "";
+  }
 
   return block.children
     .filter((child): child is PortableTextSpan => isPortableTextSpan(child))
@@ -191,7 +192,9 @@ function blockToPlainText(
 }
 
 function portableTextToPlainText(blocks?: PortableTextBlock[]): string {
-  if (!blocks || blocks.length === 0) return "";
+  if (!blocks || blocks.length === 0) {
+    return "";
+  }
 
   return blocks
     .map((block) => blockToPlainText(block))
@@ -241,7 +244,7 @@ export default async function RoutePage({ params }: PageProps) {
 
   const vehiclePage = await client.fetch(vehiclePageQuery);
   const contact = await client.fetch(contactSettingsQuery);
-
+  const whatsappNumber = contact?.whatsappNumber || "27833441849";
   const fromCity = route.fromCity?.name ?? "";
   const toCity = route.toCity?.name ?? "";
 
@@ -249,6 +252,10 @@ export default async function RoutePage({ params }: PageProps) {
     fromCity && toCity
       ? await client.fetch(routeRatesQuery, { fromCity, toCity })
       : [];
+
+  /* ---------------------------
+  Structured Data
+  ----------------------------*/
 
   const faqSchema =
     route.faqs && route.faqs.length > 0
@@ -291,6 +298,19 @@ export default async function RoutePage({ params }: PageProps) {
     ],
   };
 
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "TransportService",
+    name: "Makatu Vehicle Transport",
+    serviceType: "Vehicle Transport",
+    areaServed: "South Africa",
+    provider: {
+      "@type": "Organization",
+      name: "Makatu",
+      url: "https://makatu.co.za",
+    },
+  };
+
   return (
     <main>
       {faqSchema && (
@@ -309,7 +329,15 @@ export default async function RoutePage({ params }: PageProps) {
         }}
       />
 
-      {/* HERO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceSchema),
+        }}
+      />
+
+      {/* CONTENT */}
+
       <RouteHero
         routeImage={route.routeImage}
         heroText={route.heroText}
@@ -317,10 +345,8 @@ export default async function RoutePage({ params }: PageProps) {
         toCity={route.toCity}
       />
 
-      {/* INTRO */}
       <RouteIntroduction introduction={route.introduction} />
 
-      {/* PRICING (PRIMARY) */}
       <RouteDetails
         transitTime={route.transitTime}
         rates={routeRates}
@@ -328,28 +354,21 @@ export default async function RoutePage({ params }: PageProps) {
         toCity={toCity}
       />
 
-      {/* TRUST */}
-      <RouteBenefits benefits={route.benefits} />
-
-      {/* VEHICLE TYPES */}
+      {/* 🔥 MOVED HERE */}
       <VehicleTypes items={vehiclePage?.vehicleTypes} />
 
-      {/* FAQ */}
-      <RouteFAQ faqs={route.faqs} />
+      <RouteBenefits benefits={route.benefits} />
 
-      {/* WHO WE SERVE */}
-      <CustomerTypes items={vehiclePage?.customerTypes} />
-
-      {/* SEO CONTENT */}
       <RouteSEOContent seoContent={route.seoContent} />
 
-      {/* FINAL CTA */}
+      <RouteFAQ faqs={route.faqs} />
+
+      {/* optional */}
+      <CustomerTypes items={vehiclePage?.customerTypes} />
+
       <RouteCTA fromCity={fromCity} toCity={toCity} />
 
-      {/* RELATED */}
       <RouteRelatedRoutes routes={route.relatedRoutes} />
-
-      {/* FLOATING CTA */}
       <FloatingQuoteCTA
         fromCity={fromCity}
         toCity={toCity}
