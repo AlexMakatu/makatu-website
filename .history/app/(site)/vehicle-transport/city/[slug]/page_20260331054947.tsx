@@ -61,7 +61,7 @@ export async function generateMetadata({
     description: `Reliable vehicle transport services to and from ${city.name}. Get instant quotes and door-to-door car delivery across South Africa.`,
 
     alternates: {
-      canonical: `/vehicle-transport/city/${slug}`,
+      canonical: `/vehicle-transport/${slug}`,
     },
 
     openGraph: {
