@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "Contact Makatu for vehicle transport services.",
 
     alternates: {
-      canonical: page?.seo?.canonicalUrl || "https://www.makatu.co.za/contact",
+      canonical: page?.seo?.canonicalUrl || "/contact",
     },
 
     openGraph: {

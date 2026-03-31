@@ -160,19 +160,17 @@ export default function HomeRouteEstimator() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* HEADER */}
-      <div className="space-y-6">
-        {/* HEADER */}
-        <div>
-          <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-            Move your vehicle
-          </p>
-          <h2 className="text-lg font-semibold text-gray-900 leading-snug">
-            Where should we collect and deliver?
-          </h2>
-        </div>
-      </div>
+<div className="space-y-6">
+  {/* HEADER */}
+  <div>
+    <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">
+      Move your vehicle
+    </p>
+    <h2 className="text-lg font-semibold text-gray-900 leading-snug">
+      Where should we collect and deliver?
+    </h2>
+  </div>
+</div>
 
       {/* 🔥 AI INPUT */}
       <div className="space-y-3">
