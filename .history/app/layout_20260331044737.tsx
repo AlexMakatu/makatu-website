@@ -1,11 +1,13 @@
+"use client";
+
+import CookieConsent from "react-cookie-consent";
 import type { Metadata } from "next";
 import "./globals.css";
 
 import { League_Spartan } from "next/font/google";
+
 import { client } from "@/sanity/lib/client";
 import { siteSettingsQuery } from "@/sanity/queries/getSiteSettings";
-
-import CookieBanner from "@/components/CookieBanner"; // ✅ add this
 
 const leagueSpartan = League_Spartan({
   subsets: ["latin"],
@@ -20,7 +22,23 @@ type SiteSettings = {
     };
   };
 };
-
+export default function CookieBanner() {
+  return (
+    <CookieConsent
+      location="bottom"
+      buttonText="Accept"
+      declineButtonText="Decline"
+      enableDeclineButton
+      cookieName="makatu_cookie_consent"
+      style={{ background: "#111827" }}
+      buttonStyle={{ color: "#fff", background: "#2563eb" }}
+      declineButtonStyle={{ color: "#fff", background: "#6b7280" }}
+      expires={365}
+    >
+      We use cookies to improve your experience.
+    </CookieConsent>
+  );
+}
 export async function generateMetadata(): Promise<Metadata> {
   const settings: SiteSettings = await client.fetch(siteSettingsQuery);
 
@@ -29,6 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       settings?.siteDescription ||
       "Nationwide vehicle transport services across South Africa.",
+
     icons: {
       icon: [
         {
@@ -55,12 +74,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={leagueSpartan.className}>
-        {children}
-
-        {/* ✅ Cookie banner mounted globally */}
-        <CookieBanner />
-      </body>
+      <body className={leagueSpartan.className}>{children}</body>
     </html>
   );
 }
