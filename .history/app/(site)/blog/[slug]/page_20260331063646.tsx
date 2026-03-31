@@ -87,7 +87,7 @@ export async function generateMetadata({
     description: post.seoDescription || "",
 
     alternates: {
-      canonical: `/blog/${slug}`,
+      canonical: `/insights/${slug}`,
     },
 
     openGraph: {
