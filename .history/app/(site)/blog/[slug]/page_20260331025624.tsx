@@ -6,15 +6,10 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import Link from "next/link";
 import type { PortableTextBlock } from "@portabletext/types";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
-/* ---------------- COMPONENTS ---------------- */
-
+// ✅ COMPONENTS
 import RelatedPosts from "@/components/blog/RelatedPosts";
 import PopularRoutes from "@/components/blog/PopularRoutes";
-
-/* ---------------- IMAGE BUILDER ---------------- */
 
 const builder = imageUrlBuilder(client);
 
@@ -49,7 +44,6 @@ type Post = {
   sections?: Section[];
   author?: {
     name: string;
-    slug?: { current?: string };
     image?: SanityImageSource;
   };
   category?: {
@@ -67,15 +61,14 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+}) {
   const { slug } = await params;
 
   const post = await client.fetch<Post | null>(
     groq`*[_type == "blogPost" && slug.current == $slug][0]{
       title,
       seoTitle,
-      seoDescription,
-      mainImage
+      seoDescription
     }`,
     { slug },
   );
@@ -85,27 +78,10 @@ export async function generateMetadata({
   return {
     title: post.seoTitle || post.title,
     description: post.seoDescription || "",
-
-    alternates: {
-      canonical: `/insights/${slug}`,
-    },
-
-    openGraph: {
-      title: post.seoTitle || post.title,
-      description: post.seoDescription,
-      images: post.mainImage
-        ? [
-            {
-              url: urlFor(post.mainImage).width(1200).height(630).url(),
-            },
-          ]
-        : [],
-    },
   };
 }
 
 /* ---------------- PAGE ---------------- */
-
 export default async function BlogPostPage({
   params,
 }: {
@@ -137,7 +113,6 @@ export default async function BlogPostPage({
       },
       author->{
         name,
-        slug,
         image
       },
       category->{
@@ -148,14 +123,23 @@ export default async function BlogPostPage({
         name
       }
     }`,
-    { slug },
+    { slug: slug },
   );
 
-  if (!post) return notFound();
+  if (!post) {
+    return <div className="p-10">Post not found</div>;
+  }
 
-  /* ---------------- RELATED POSTS ---------------- */
+  /* ---------------- RELATED POSTS (CATEGORY-BASED) ---------------- */
 
-  let relatedPosts = await client.fetch(
+  let relatedPosts = await client.fetch<
+    {
+      title: string;
+      slug: { current: string };
+      mainImage?: SanityImageSource;
+      publishedAt?: string;
+    }[]
+  >(
     groq`*[_type == "blogPost"
       && slug.current != $slug
       && category->_id == $categoryId
@@ -167,34 +151,49 @@ export default async function BlogPostPage({
       mainImage
     }`,
     {
-      slug,
+      slug: slug,
       categoryId: post.category?._id ?? null,
     },
   );
 
+  /* 🔁 FALLBACK → LATEST POSTS */
   if (relatedPosts.length === 0) {
-    relatedPosts = await client.fetch(
+    relatedPosts = await client.fetch<
+      {
+        title: string;
+        slug: { current: string };
+        mainImage?: SanityImageSource;
+        publishedAt?: string;
+      }[]
+    >(
       groq`*[_type == "blogPost" && slug.current != $slug]
-      | order(publishedAt desc)[0..3]{
-        title,
-        slug,
-        publishedAt,
-        mainImage
-      }`,
-      { slug },
+        | order(publishedAt desc)[0..3]{
+          title,
+          slug,
+          publishedAt,
+          mainImage
+        }`,
+      { slug: slug },
     );
   }
 
-  /* ---------------- ROUTES ---------------- */
+  /* ---------------- SMART ROUTES ---------------- */
 
-  let popularRoutes = [];
+  let popularRoutes: {
+    slug?: { current?: string };
+    fromCity?: { name?: string };
+    toCity?: { name?: string };
+  }[] = [];
 
-  if (post.relatedCities?.length) {
+  if (post.relatedCities && post.relatedCities.length > 0) {
     const cityNames = post.relatedCities.map((c) => c.name);
 
     popularRoutes = await client.fetch(
       groq`*[_type == "route" &&
-        (fromCity->name in $cities || toCity->name in $cities)
+        (
+          fromCity->name in $cities ||
+          toCity->name in $cities
+        )
       ][0..3]{
         slug,
         fromCity->{ name },
@@ -204,7 +203,8 @@ export default async function BlogPostPage({
     );
   }
 
-  if (!popularRoutes.length) {
+  /* 🔁 FALLBACK → FEATURED ROUTES */
+  if (!popularRoutes || popularRoutes.length === 0) {
     popularRoutes = await client.fetch(
       groq`*[_type == "route" && featuredRoute == true][0..3]{
         slug,
@@ -214,74 +214,54 @@ export default async function BlogPostPage({
     );
   }
 
-  /* ---------------- STRUCTURED DATA ---------------- */
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    datePublished: post.publishedAt,
-    author: post.author
-      ? {
-          "@type": "Person",
-          name: post.author.name,
-        }
-      : undefined,
-  };
-
   return (
     <main className="py-20">
       <article className="max-w-6xl mx-auto px-6">
-        {/* ✅ STRUCTURED DATA */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
-
-        {/* BREADCRUMBS */}
+        {/* ---------------- BREADCRUMBS ---------------- */}
         <nav className="text-sm text-gray-500 mb-6">
-          <Link href="/">Home</Link> / <Link href="/blog">Insights</Link> /{" "}
-          <span className="text-gray-800">{post.title}</span>
+          <Link href="/" className="hover:underline">
+            Home
+          </Link>{" "}
+          /{" "}
+          <Link href="/blog" className="hover:underline">
+            Insights
+          </Link>{" "}
+          / <span className="text-gray-800">{post.title}</span>
         </nav>
 
-        {/* TITLE */}
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 max-w-4xl">
+        {/* ---------------- TITLE ---------------- */}
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight max-w-4xl">
           {post.title}
         </h1>
 
-        {/* INTRO (SEO BOOST) */}
-        {post.seoDescription && (
-          <p className="text-lg text-gray-600 mb-10 max-w-3xl">
-            {post.seoDescription}
-          </p>
-        )}
-
-        {/* DATE */}
+        {/* ---------------- DATE ---------------- */}
         {post.publishedAt && (
           <p className="text-gray-500 mb-8">
-            {new Date(post.publishedAt).toLocaleDateString("en-ZA")}
+            {new Date(post.publishedAt).toLocaleDateString("en-ZA", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </p>
         )}
 
-        {/* IMAGE */}
+        {/* ---------------- HERO IMAGE ---------------- */}
         {post.mainImage && (
           <Image
             src={urlFor(post.mainImage).width(2000).height(1125).url()}
             alt={post.title}
             width={2000}
             height={1125}
-            className="rounded-2xl mb-16 w-full object-cover"
+            className="rounded-2xl mb-16 w-full object-cover aspect-[16/9] shadow-lg"
           />
         )}
 
-        {/* CONTENT */}
+        {/* ---------------- SECTIONS ---------------- */}
         <SectionRenderer sections={post.sections || []} />
 
-        {/* AUTHOR */}
+        {/* ---------------- AUTHOR ---------------- */}
         {post.author && (
-          <div className="mt-16 pt-10 border-t">
+          <div className="mt-16 pt-10 border-t border-gray-200">
             <p className="text-sm text-gray-500">Written by</p>
 
             <div className="flex items-center gap-3 mt-2">
@@ -295,24 +275,15 @@ export default async function BlogPostPage({
                 />
               )}
 
-              {post.author.slug?.current ? (
-                <Link
-                  href={`/authors/${post.author.slug.current}`}
-                  className="font-medium hover:underline"
-                >
-                  {post.author.name}
-                </Link>
-              ) : (
-                <p className="font-medium">{post.author.name}</p>
-              )}
+              <p className="font-medium">{post.author.name}</p>
             </div>
           </div>
         )}
 
-        {/* RELATED */}
+        {/* ---------------- RELATED POSTS ---------------- */}
         <RelatedPosts posts={relatedPosts} />
 
-        {/* ROUTES */}
+        {/* ---------------- SMART ROUTES ---------------- */}
         <PopularRoutes routes={popularRoutes} />
       </article>
     </main>
