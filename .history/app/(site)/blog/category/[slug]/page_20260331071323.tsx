@@ -62,12 +62,12 @@ export async function generateMetadata({
       "car transport blog South Africa",
     ],
     alternates: {
-      canonical: `https://www.makatu.co.za/blog/category/${slug}`,
+      canonical: `https://makatu.co.za/blog/category/${slug}`,
     },
     openGraph: {
       title,
       description,
-      url: `https://www.makatu.co.za/blog/category/${slug}`,
+      url: `https://makatu.co.za/blog/category/${slug}`,
       type: "website",
       siteName: "Makatu",
     },
@@ -118,13 +118,13 @@ export default async function CategoryPage({
         "@type": "ListItem",
         position: 1,
         name: "Blog",
-        item: "https://www.makatu.co.za/blog",
+        item: "https://makatu.co.za/blog",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: category.title,
-        item: `https://www.makatu.co.za/blog/category/${slug}`,
+        item: `https://makatu.co.za/blog/category/${slug}`,
       },
     ],
   };
@@ -134,7 +134,7 @@ export default async function CategoryPage({
     "@type": "CollectionPage",
     name: category.title,
     description: category.description,
-    url: `https://www.makatu.co.za/blog/category/${slug}`,
+    url: `https://makatu.co.za/blog/category/${slug}`,
   };
 
   const itemListJsonLd = {
@@ -144,7 +144,7 @@ export default async function CategoryPage({
       "@type": "ListItem",
       position: index + 1,
       name: post.title,
-      url: `https://www.makatu.co.za/blog/${post.slug.current}`,
+      url: `https://makatu.co.za/blog/${post.slug.current}`,
     })),
   };
 

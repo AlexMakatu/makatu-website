@@ -274,19 +274,19 @@ export default async function RoutePage({ params }: PageProps) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.makatu.co.za",
+        item: "https://makatu.co.za",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Vehicle Transport",
-        item: "https://www.makatu.co.za/vehicle-transport",
+        item: "https://makatu.co.za/vehicle-transport",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: `${fromCity} to ${toCity} Vehicle Transport`,
-        item: `https://www.makatu.co.za/vehicle-transport/${slug}`,
+        item: `https://makatu.co.za/vehicle-transport/${slug}`,
       },
     ],
   };
