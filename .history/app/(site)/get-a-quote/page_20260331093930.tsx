@@ -21,12 +21,10 @@ export async function generateMetadata({
   const from = params.fromCity;
   const to = params.toCity;
 
-  const type = params.vehicleType;
-
-  if (from && to && type) {
+  if (from && to) {
     return {
-      title: `${type.toUpperCase()} Transport from ${from} to ${to} | Makatu`,
-      description: `Get a fast ${type} transport quote from ${from} to ${to}. Reliable vehicle transport across South Africa.`,
+      title: `Vehicle Transport from ${from} to ${to} | Makatu`,
+      description: `Get a fast vehicle transport quote from ${from} to ${to}. Reliable car transport across South Africa.`,
       alternates: {
         canonical: "/get-a-quote",
       },

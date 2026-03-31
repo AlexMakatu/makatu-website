@@ -16,7 +16,11 @@ type Props = {
   back: () => void;
   data: QuoteData;
 };
-
+useEffect(() => {
+  if (data.vehicles && data.vehicles.length > 0) {
+    setVehicles(data.vehicles);
+  }
+}, [data.vehicles]);
 /**
  * Model → Make + Type mapping (fallback safety layer)
  */
@@ -44,11 +48,6 @@ export default function StepVehicle({ next, back, data }: Props) {
         ],
   );
 
-  useEffect(() => {
-    if (data.vehicles && data.vehicles.length > 0) {
-      setVehicles(data.vehicles);
-    }
-  }, [data.vehicles]);
   /**
    * Update vehicle + smart autofill
    */

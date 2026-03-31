@@ -43,12 +43,15 @@ export default function StepVehicle({ next, back, data }: Props) {
           },
         ],
   );
-
   useEffect(() => {
-    if (data.vehicles && data.vehicles.length > 0) {
+    if (
+      data.vehicles &&
+      data.vehicles.length > 0 &&
+      JSON.stringify(data.vehicles) !== JSON.stringify(vehicles)
+    ) {
       setVehicles(data.vehicles);
     }
-  }, [data.vehicles]);
+  }, [data.vehicles, vehicles]);
   /**
    * Update vehicle + smart autofill
    */

@@ -4,9 +4,8 @@ type AIParseResult = {
   fromCity: string | null;
   toCity: string | null;
   vehicleType: string | null;
-  vehicleMake: string | null;
-  vehicleModel: string | null;
 };
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
@@ -40,16 +39,14 @@ Return ONLY valid JSON:
 {
   "fromCity": string | null,
   "toCity": string | null,
-  "vehicleType": string | null,
-  "vehicleMake": string | null,
-  "vehicleModel": string | null
+  "vehicleType": string | null
 }
 
 Rules:
 - Normalize cities (e.g. Joburg → Johannesburg)
 
 Vehicle types must be one of:
-hatchback, sedan, suv, bakkie, van, luxury
+hatchback, sedan, suv, bakkie, van, luxury, other
 
 Interpret synonyms:
 - pickup, pick-up, truck → bakkie
@@ -68,20 +65,6 @@ Examples:
 - Ford Ranger → bakkie
 - BMW X3 → suv
 - Mercedes S-Class → luxury
-
-- If vehicleModel is known but vehicleMake is missing, you MUST infer the make.
-
-Common mappings:
-- 320i → BMW
-- 318i → BMW
-- M4 → BMW
-- X3 → BMW
-- X5 → BMW
-- C200 → Mercedes-Benz
-- C180 → Mercedes-Benz
-- A200 → Mercedes-Benz
-- Hilux → Toyota
-- Ranger → Ford
 
 If unsure, still choose the closest category instead of "other".
 
@@ -115,13 +98,19 @@ If a value is missing, return null.
     }
 
     // ✅ HARD SAFETY: enforce allowed vehicle types
-    const allowed = ["hatchback", "sedan", "suv", "bakkie", "van", "luxury"];
+    const allowed = [
+      "hatchback",
+      "sedan",
+      "suv",
+      "bakkie",
+      "van",
+      "luxury",
+      "other",
+    ];
 
     if (!parsed.vehicleType || !allowed.includes(parsed.vehicleType)) {
-      parsed.vehicleType = "sedan"; // safe default
+      parsed.vehicleType = "other";
     }
-    console.log("AI RAW:", text);
-    console.log("AI PARSED:", parsed);
 
     return Response.json(parsed);
   } catch (error) {

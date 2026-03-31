@@ -43,7 +43,7 @@ export default function StepVehicle({ next, back, data }: Props) {
           },
         ],
   );
-
+/ct
   useEffect(() => {
     if (data.vehicles && data.vehicles.length > 0) {
       setVehicles(data.vehicles);

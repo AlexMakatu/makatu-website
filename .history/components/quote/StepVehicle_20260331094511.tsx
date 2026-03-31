@@ -31,6 +31,11 @@ const modelMap: Record<string, { make: string; type: string }> = {
 
 export default function StepVehicle({ next, back, data }: Props) {
   const [vehicles, setVehicles] = useState<Vehicle[]>(
+    useEffect(() => {
+  if (data.vehicles && data.vehicles.length > 0) {
+    setVehicles(data.vehicles);
+  }
+}, [data.vehicles]);
     data.vehicles && data.vehicles.length > 0
       ? data.vehicles
       : [
@@ -44,11 +49,6 @@ export default function StepVehicle({ next, back, data }: Props) {
         ],
   );
 
-  useEffect(() => {
-    if (data.vehicles && data.vehicles.length > 0) {
-      setVehicles(data.vehicles);
-    }
-  }, [data.vehicles]);
   /**
    * Update vehicle + smart autofill
    */
