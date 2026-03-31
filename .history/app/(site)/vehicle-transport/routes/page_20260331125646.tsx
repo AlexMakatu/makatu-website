@@ -36,7 +36,7 @@ export const metadata = {
     title: "Vehicle Transport Routes South Africa | Makatu",
     description:
       "Browse all available car transport routes across South Africa with pricing and delivery insights.",
-    url: "https://www.makatu.co.za/vehicle-transport/routes",
+    url: "https://makatu.co.za/vehicle-transport/routes",
     type: "website",
     siteName: "Makatu",
   },
@@ -77,19 +77,19 @@ export default async function RoutesPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.makatu.co.za",
+        item: "https://makatu.co.za",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Vehicle Transport",
-        item: "https://www.makatu.co.za/vehicle-transport",
+        item: "https://makatu.co.za/vehicle-transport",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: "Routes",
-        item: "https://www.makatu.co.za/vehicle-transport/routes",
+        item: "https://makatu.co.za/vehicle-transport/routes",
       },
     ],
   };

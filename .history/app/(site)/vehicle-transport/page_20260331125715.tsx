@@ -54,7 +54,7 @@ export const metadata = {
     title: "Vehicle Transport South Africa | Makatu",
     description:
       "Nationwide car transport services. Safe, affordable & reliable vehicle shipping across South Africa.",
-    url: "https://www.makatu.co.za/vehicle-transport",
+    url: "https://yourdomain.com/vehicle-transport",
     siteName: "Makatu",
     images: [
       {
