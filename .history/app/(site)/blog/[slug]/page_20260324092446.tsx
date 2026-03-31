@@ -223,7 +223,7 @@ export default async function BlogPostPage({
             Home
           </Link>{" "}
           /{" "}
-          <Link href="/blog" className="hover:underline">
+          <Link href="/insights" className="hover:underline">
             Insights
           </Link>{" "}
           / <span className="text-gray-800">{post.title}</span>

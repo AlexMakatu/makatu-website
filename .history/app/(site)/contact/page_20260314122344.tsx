@@ -141,7 +141,7 @@ export default async function ContactPage() {
           </p>
 
           <a
-            href="/get-a-quote"
+            href="/quote"
             className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold"
           >
             Get a Quote
