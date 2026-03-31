@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CookieBanner() {
-  const [visible, setVisible] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return !localStorage.getItem("cookie_consent");
-  });
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem("cookie_consent");
+    if (!consent) setVisible(true); // ⚠️ warning
+  }, []);
 
   const accept = () => {
     localStorage.setItem("cookie_consent", "accepted");
@@ -26,11 +28,12 @@ export default function CookieBanner() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="fixed bottom-6 left-6 z-[9999]"
         >
           <div className="max-w-sm w-full rounded-2xl shadow-2xl bg-white/90 backdrop-blur-lg border border-gray-200 p-5">
             <p className="text-sm text-gray-700 mb-4">
-              We use cookies to improve your experience.
+              We use cookies to improve your experience and analyze traffic.
             </p>
 
             <div className="flex gap-2 justify-end">
