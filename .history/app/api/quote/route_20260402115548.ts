@@ -92,7 +92,7 @@ export async function POST(req: Request) {
       quotedPrice: data.quotedPrice,
       priceToBeat: data.priceToBeat,
       notes: data.notes,
-      submittedAt: new Date().toISOString(),
+      Submitted_At: formatZohoDateForUI(new Date()),
       status: "new",
       vehicles: (data.vehicles || []).map((v) => ({
         _key: crypto.randomUUID(),
@@ -177,7 +177,7 @@ async function sendToZoho(data: QuoteRequestBody) {
       Status: "New",
 
       // ✅ CORRECT DATE FORMAT (YYYY-MM-DD)
-      Submitted_At: formatZohoDateForUI(new Date()),
+      submittedAt: new Date().toISOString(),
 
       Vehicles: (data.vehicles || []).map((v) => ({
         Vehicle_Type: mapVehicleType(v.vehicleType),

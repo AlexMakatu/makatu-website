@@ -92,7 +92,7 @@ export async function POST(req: Request) {
       quotedPrice: data.quotedPrice,
       priceToBeat: data.priceToBeat,
       notes: data.notes,
-      submittedAt: new Date().toISOString(),
+      Submitted_At: formatZohoDateForUI(new Date()),
       status: "new",
       vehicles: (data.vehicles || []).map((v) => ({
         _key: crypto.randomUUID(),
