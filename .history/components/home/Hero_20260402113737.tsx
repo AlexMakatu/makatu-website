@@ -94,21 +94,20 @@ export default function Hero({ homepage, logo }: HeroProps) {
               className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed"
             >
               {homepage?.heroText}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="mt-4"
-            >
-              <Link
-                href="/vehicle-transport"
-                className="text-white/80 text-sm underline underline-offset-4 hover:text-white"
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-4"
               >
-                Learn more about our vehicle transport →
-              </Link>
-            </motion.div>
+                <Link
+                  href="/vehicle-transport"
+                  className="text-white/80 text-sm underline underline-offset-4 hover:text-white"
+                >
+                  Learn more about our vehicle transport →
+                </Link>
+              </motion.div>
+            </motion.p>
           </div>
 
           {/* RIGHT: ESTIMATOR */}
