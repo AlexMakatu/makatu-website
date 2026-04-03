@@ -169,10 +169,7 @@ async function sendToZoho(data: QuoteRequestBody) {
       Transport_Type: mapTransportType(data.transportType),
 
       Collection_Date_Type: mapCollectionType(data.collectionDateType),
-      Collection_Date:
-        data.collectionDateType === "specificDate" && data.collectionDate
-          ? formatZohoDateForUI(new Date(data.collectionDate))
-          : "",
+      Collection_Date: data.collectionDate,
 
       Price_Type: mapPriceType(data.quotedPriceType),
       Quoted_Price: data.quotedPrice,

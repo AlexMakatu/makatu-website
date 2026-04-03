@@ -66,6 +66,10 @@ function formatZohoDateForUI(date: Date): string {
 export async function POST(req: Request) {
   try {
     const data: QuoteRequestBody = await req.json();
+    console.log("====================================");
+    console.log("📥 INCOMING REQUEST BODY:");
+    console.log(JSON.stringify(data, null, 2));
+    console.log("====================================");
 
     if (!data.fullName || !data.email || !data.fromCity || !data.toCity) {
       return NextResponse.json(
@@ -151,8 +155,6 @@ async function getZohoAccessToken(): Promise<string> {
 // ZOHO INTEGRATION
 // =====================
 async function sendToZoho(data: QuoteRequestBody) {
-  console.log("🚀 sendToZoho FUNCTION STARTED");
-  console.log("🧪 RAW collectionDate:", data.collectionDate);
   const url = `https://creator.zoho.com/api/v2/${process.env.ZOHO_OWNER}/${process.env.ZOHO_APP}/form/${process.env.ZOHO_FORM}`;
 
   const accessToken = await getZohoAccessToken();
@@ -169,10 +171,7 @@ async function sendToZoho(data: QuoteRequestBody) {
       Transport_Type: mapTransportType(data.transportType),
 
       Collection_Date_Type: mapCollectionType(data.collectionDateType),
-      Collection_Date:
-        data.collectionDateType === "specificDate" && data.collectionDate
-          ? formatZohoDateForUI(new Date(data.collectionDate))
-          : "",
+      Collection_Date: data.collectionDate,
 
       Price_Type: mapPriceType(data.quotedPriceType),
       Quoted_Price: data.quotedPrice,

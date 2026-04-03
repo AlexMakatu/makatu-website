@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@sanity/client";
+import type { QuoteData } from "@/components/quote/QuoteWizard";
 
 // =====================
 // TYPES
@@ -39,27 +40,7 @@ const client = createClient({
   token: process.env.SANITY_API_TOKEN,
   useCdn: false,
 });
-function formatZohoDateForUI(date: Date): string {
-  const day = String(date.getDate()).padStart(2, "0");
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
 
-  return `${day}-${month}-${year}`;
-}
 // =====================
 // MAIN API HANDLER
 // =====================
@@ -107,11 +88,9 @@ export async function POST(req: Request) {
     const sanityResult = await client.create(sanityDoc);
 
     // =====================
-    // SEND TO ZOHO (async)
+    // SEND TO ZOHO (FIXED)
     // =====================
-    sendToZoho(data).catch((err) => {
-      console.error("Zoho error:", err);
-    });
+    await sendToZoho(data);
 
     return NextResponse.json({ success: true, sanityResult });
   } catch (error) {
@@ -148,11 +127,9 @@ async function getZohoAccessToken(): Promise<string> {
 }
 
 // =====================
-// ZOHO INTEGRATION
+// ZOHO SEND FUNCTION
 // =====================
 async function sendToZoho(data: QuoteRequestBody) {
-  console.log("🚀 sendToZoho FUNCTION STARTED");
-  console.log("🧪 RAW collectionDate:", data.collectionDate);
   const url = `https://creator.zoho.com/api/v2/${process.env.ZOHO_OWNER}/${process.env.ZOHO_APP}/form/${process.env.ZOHO_FORM}`;
 
   const accessToken = await getZohoAccessToken();
@@ -170,9 +147,7 @@ async function sendToZoho(data: QuoteRequestBody) {
 
       Collection_Date_Type: mapCollectionType(data.collectionDateType),
       Collection_Date:
-        data.collectionDateType === "specificDate" && data.collectionDate
-          ? formatZohoDateForUI(new Date(data.collectionDate))
-          : "",
+        data.collectionDateType === "specific" ? data.collectionDate : null,
 
       Price_Type: mapPriceType(data.quotedPriceType),
       Quoted_Price: data.quotedPrice,
@@ -181,15 +156,14 @@ async function sendToZoho(data: QuoteRequestBody) {
       Notes: data.notes || "",
       Status: "New",
 
-      // ✅ CORRECT DATE FORMAT (YYYY-MM-DD)
-      Submitted_At: formatZohoDateForUI(new Date()),
+      Submitted_At: formatZohoDateOnly(new Date()),
 
       Vehicles: (data.vehicles || []).map((v) => ({
         Vehicle_Type: mapVehicleType(v.vehicleType),
         Vehicle_Make: v.vehicleMake || "",
         Vehicle_Model: v.vehicleModel || "",
         Vehicle_Year: v.vehicleYear || "",
-        Vehicle_Condition: mapCondition(v.vehicleCondition),
+        Condition_field: mapCondition(v.vehicleCondition), // ✅ FIXED
       })),
     },
   };
@@ -211,14 +185,14 @@ async function sendToZoho(data: QuoteRequestBody) {
   console.log("📥 Response:", text);
 
   if (!res.ok) {
-    throw new Error("Zoho API failed");
+    throw new Error(`Zoho API failed: ${text}`);
   }
 
   return text;
 }
 
 // =====================
-// DATE FORMATTER
+// DATE FORMATTER (YYYY-MM-DD)
 // =====================
 function formatZohoDateOnly(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -229,7 +203,7 @@ function formatZohoDateOnly(date: Date): string {
 }
 
 // =====================
-// VALUE MAPPERS
+// MAPPERS
 // =====================
 function mapVehicleType(type?: string): string {
   const map: Record<string, string> = {

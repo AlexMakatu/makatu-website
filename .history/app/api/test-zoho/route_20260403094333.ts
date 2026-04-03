@@ -47,7 +47,7 @@ export async function GET() {
       Transport_Type: "Door to Door",
 
       Collection_Date_Type: "Flexible",
-      Collection_Date: "03-Apr-2026",
+      Collection_Date: "2026-04-03",
 
       Price_Type: "Fixed",
       Quoted_Price: 5000,
