@@ -104,21 +104,11 @@ export default function StepContact({ next, back, data }: Props) {
 
               <p className="text-gray-500">
                 {data.vehicles
-                  ?.map((v) => {
-                    const type =
+                  ?.map(
+                    (v) =>
                       v.vehicleType.charAt(0).toUpperCase() +
-                      v.vehicleType.slice(1);
-
-                    const condition = v.vehicleCondition
-                      ? v.vehicleCondition === "nonrunner"
-                        ? "Non-Runner"
-                        : v.vehicleCondition === "forklift"
-                          ? "Requires Forklift"
-                          : "Runner"
-                      : null;
-
-                    return condition ? `${type} (${condition})` : type;
-                  })
+                      v.vehicleType.slice(1),
+                  )
                   .join(", ")}
               </p>
 
