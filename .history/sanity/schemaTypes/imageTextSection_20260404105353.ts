@@ -32,6 +32,7 @@ export default defineType({
           type: "string",
         }),
       ],
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
