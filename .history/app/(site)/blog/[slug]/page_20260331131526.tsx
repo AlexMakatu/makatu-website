@@ -43,10 +43,7 @@ type Post = {
   title: string;
   slug: { current: string };
   publishedAt?: string;
-  mainImage?: {
-    asset: SanityImageSource;
-    alt?: string;
-  };
+  mainImage?: SanityImageSource;
   seoTitle?: string;
   seoDescription?: string;
   sections?: Section[];
@@ -99,7 +96,7 @@ export async function generateMetadata({
       images: post.mainImage
         ? [
             {
-              url: urlFor(post.mainImage.asset).width(1200).height(630).url(),
+              url: urlFor(post.mainImage).width(1200).height(630).url(),
             },
           ]
         : [],
@@ -231,25 +228,7 @@ export default async function BlogPostPage({
         }
       : undefined,
   };
-  const faqSection = post.sections?.find((s) => s._type === "faqSection") as
-    | { questions?: { question: string; answer: string }[] }
-    | undefined;
 
-  const faqJsonLd =
-    faqSection?.questions && faqSection.questions.length
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqSection.questions.map((q) => ({
-            "@type": "Question",
-            name: q.question,
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: q.answer,
-            },
-          })),
-        }
-      : null;
   return (
     <main className="py-20">
       <article className="max-w-6xl mx-auto px-6">
@@ -260,14 +239,6 @@ export default async function BlogPostPage({
             __html: JSON.stringify(structuredData),
           }}
         />
-        {faqJsonLd && (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(faqJsonLd),
-            }}
-          />
-        )}
 
         {/* BREADCRUMBS */}
         <nav className="text-sm text-gray-500 mb-6">
@@ -298,7 +269,7 @@ export default async function BlogPostPage({
         {post.mainImage && (
           <Image
             src={urlFor(post.mainImage).width(2000).height(1125).url()}
-            alt={post.mainImage?.alt || post.title}
+            alt={post.title}
             width={2000}
             height={1125}
             className="rounded-2xl mb-16 w-full object-cover"

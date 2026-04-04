@@ -1,22 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
-type TextSection = {
-  _type: "textSection";
-  sectionKey: string;
-};
 
-type ImageTextSection = {
-  _type: "imageTextSection";
-};
-
-type FAQSection = {
-  _type: "faqSection";
-};
-
-type CTASection = {
-  _type: "ctaSection";
-};
-
-type Section = TextSection | ImageTextSection | FAQSection | CTASection;
 export default defineType({
   name: "blogPost",
   title: "Blog Post",
@@ -104,11 +87,12 @@ export default defineType({
             return "Sections are required";
           }
 
-          const safeSections = sections as Section[];
+          const safeSections = sections as any[];
 
           if (safeSections.length === 0) {
             return "Sections are required";
           }
+
           // ---------------- 1. SECTION ORDER ----------------
           const expectedOrder = [
             "intro",

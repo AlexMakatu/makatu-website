@@ -99,7 +99,7 @@ export async function generateMetadata({
       images: post.mainImage
         ? [
             {
-              url: urlFor(post.mainImage.asset).width(1200).height(630).url(),
+              url: urlFor(post.mainImage).width(1200).height(630).url(),
             },
           ]
         : [],

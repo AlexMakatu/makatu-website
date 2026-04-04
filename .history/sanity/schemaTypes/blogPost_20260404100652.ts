@@ -1,22 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
-type TextSection = {
-  _type: "textSection";
-  sectionKey: string;
-};
 
-type ImageTextSection = {
-  _type: "imageTextSection";
-};
-
-type FAQSection = {
-  _type: "faqSection";
-};
-
-type CTASection = {
-  _type: "ctaSection";
-};
-
-type Section = TextSection | ImageTextSection | FAQSection | CTASection;
 export default defineType({
   name: "blogPost",
   title: "Blog Post",
@@ -77,7 +60,7 @@ export default defineType({
       type: "datetime",
     }),
 
-    // ---------------- LEGACY CONTENT ----------------
+    // ---------------- LEGACY CONTENT (SAFE MIGRATION) ----------------
     defineField({
       name: "body",
       title: "Old Content (legacy)",
@@ -86,7 +69,7 @@ export default defineType({
       hidden: true,
     }),
 
-    // ---------------- STRUCTURED SECTIONS ----------------
+    // ---------------- NEW STRUCTURED SECTIONS ----------------
     defineField({
       name: "sections",
       title: "Structured Sections",
@@ -99,16 +82,11 @@ export default defineType({
       ],
 
       validation: (Rule) =>
-        Rule.required().custom((sections: unknown) => {
-          if (!Array.isArray(sections)) {
+        Rule.required().custom((sections: any[]) => {
+          if (!sections || sections.length === 0) {
             return "Sections are required";
           }
 
-          const safeSections = sections as Section[];
-
-          if (safeSections.length === 0) {
-            return "Sections are required";
-          }
           // ---------------- 1. SECTION ORDER ----------------
           const expectedOrder = [
             "intro",
@@ -122,7 +100,7 @@ export default defineType({
             "ctaSection",
           ];
 
-          const actualOrder = safeSections.map((section) => {
+          const actualOrder = sections.map((section) => {
             if (section._type === "textSection") return section.sectionKey;
             if (section._type === "imageTextSection") return "process";
             return section._type;
@@ -135,14 +113,14 @@ export default defineType({
           }
 
           // ---------------- 2. REQUIRED SECTIONS ----------------
-          const hasFAQ = safeSections.some((s) => s._type === "faqSection");
-          const hasCTA = safeSections.some((s) => s._type === "ctaSection");
+          const hasFAQ = sections.some((s) => s._type === "faqSection");
+          const hasCTA = sections.some((s) => s._type === "ctaSection");
 
           if (!hasFAQ) return "FAQ section is required";
           if (!hasCTA) return "CTA section is required";
 
           // ---------------- 3. INTERNAL LINK VALIDATION ----------------
-          const allText = JSON.stringify(safeSections);
+          const allText = JSON.stringify(sections);
 
           if (!allText.includes("/vehicle-transport")) {
             return "Must include /vehicle-transport link";

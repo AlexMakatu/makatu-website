@@ -43,10 +43,7 @@ type Post = {
   title: string;
   slug: { current: string };
   publishedAt?: string;
-  mainImage?: {
-    asset: SanityImageSource;
-    alt?: string;
-  };
+  mainImage?: SanityImageSource;
   seoTitle?: string;
   seoDescription?: string;
   sections?: Section[];
@@ -99,7 +96,7 @@ export async function generateMetadata({
       images: post.mainImage
         ? [
             {
-              url: urlFor(post.mainImage.asset).width(1200).height(630).url(),
+              url: urlFor(post.mainImage).width(1200).height(630).url(),
             },
           ]
         : [],
@@ -298,7 +295,7 @@ export default async function BlogPostPage({
         {post.mainImage && (
           <Image
             src={urlFor(post.mainImage).width(2000).height(1125).url()}
-            alt={post.mainImage?.alt || post.title}
+            alt={post.title}
             width={2000}
             height={1125}
             className="rounded-2xl mb-16 w-full object-cover"
