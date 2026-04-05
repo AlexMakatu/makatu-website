@@ -33,9 +33,26 @@ export default function VehicleHero({ heading, text, image }: Props) {
   return (
     <section className="relative w-full min-h-[60vh] md:min-h-[75vh] lg:min-h-[85vh] flex items-center">
       {/* IMAGE */}
-      const imageUrl = isSanityImage(image) ? urlFor(image) : null;
+      {isSanityImage(image) && image.asset && (
+        <div className="absolute inset-0 z-0">
+
+
+{imageUrl && (
+  <div className="absolute inset-0 z-0">
+    <Image
+      src={imageUrl.width(2000).quality(90).url()}
+      alt={image?.alt || "Vehicle transport"}
+      fill
+      priority
+      sizes="100vw"
+      className="object-cover object-center"
+    />
+  </div>
+)}
+
       {/* OVERLAY (stronger on mobile) */}
       <div className="absolute inset-0 bg-black/60 md:bg-gradient-to-r md:from-black/60 md:via-black/20 md:to-transparent z-10" />
+
       {/* CONTENT */}
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center h-full">
         <div className="w-full max-w-lg md:max-w-xl text-white">
