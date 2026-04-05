@@ -14,7 +14,6 @@ import { contactSettingsQuery } from "@/sanity/queries/getContactSettings";
 import VehicleTypes from "@/components/vehicle/VehicleTypes";
 import CustomerTypes from "@/components/vehicle/CustomerTypes";
 import FloatingQuoteCTA from "@/components/FloatingQuoteCTA";
-import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 import type {
   PortableTextBlock,
@@ -294,15 +293,6 @@ export default async function RoutePage({ params }: PageProps) {
 
   return (
     <main>
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Vehicle Transport", href: "/vehicle-transport" },
-          {
-            label: `${fromCity} to ${toCity}`,
-          },
-        ]}
-      />
       {faqSchema && (
         <script
           type="application/ld+json"
