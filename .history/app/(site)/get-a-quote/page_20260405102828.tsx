@@ -49,13 +49,8 @@ PAGE
 --------------------------- */
 export default function Page() {
   return (
-    <>
-      <Breadcrumbs
-        items={[{ label: "Home", href: "/" }, { label: "Get a Quote" }]}
-      />
-      <Suspense fallback={<div>Loading...</div>}>
-        <QuoteWizard />
-      </Suspense>
-    </>
+    <Suspense fallback={<div>Loading...</div>}>
+      <QuoteWizard />
+    </Suspense>
   );
 }

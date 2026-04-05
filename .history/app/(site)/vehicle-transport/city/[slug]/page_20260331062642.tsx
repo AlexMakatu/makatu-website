@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import RoutesSection from "@/components/home/RoutesSection";
-import Breadcrumbs from "@/components/ui/Breadcrumbs";
 
 /* --------------------------
 TYPES
@@ -125,13 +124,6 @@ export default async function Page({ params }: Props) {
 
   return (
     <main>
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Vehicle Transport", href: "/vehicle-transport" },
-          { label: city.name },
-        ]}
-      />
       {/* ✅ STRUCTURED DATA */}
       <script
         type="application/ld+json"
