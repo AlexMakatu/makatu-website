@@ -176,18 +176,7 @@ export default async function VehicleTransportPage() {
           __html: JSON.stringify(serviceJsonLd),
         }}
       />
-      <>
-        {/* ✅ SEO JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateBreadcrumbJsonLd(breadcrumbItems)),
-          }}
-        />
 
-        {/* ✅ UI Breadcrumbs */}
-        <Breadcrumbs items={breadcrumbItems} />
-      </>
       {/* FAQ SCHEMA */}
       {faqs?.length > 0 && (
         <script

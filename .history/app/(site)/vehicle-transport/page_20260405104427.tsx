@@ -17,7 +17,6 @@ import type { FAQ } from "../../../types/faq";
 import { PortableTextBlock } from "@portabletext/types";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { generateBreadcrumbJsonLd } from "@/lib/seo";
-
 /* ================= HELPERS ================= */
 
 type PortableTextChild = {
@@ -163,10 +162,6 @@ export default async function VehicleTransportPage() {
     slug
   }`,
   );
-  const breadcrumbItems = [
-    { label: "Home", href: "/" },
-    { label: "Vehicle Transport" },
-  ];
   return (
     <main>
       {/* SERVICE SCHEMA */}
@@ -176,18 +171,7 @@ export default async function VehicleTransportPage() {
           __html: JSON.stringify(serviceJsonLd),
         }}
       />
-      <>
-        {/* ✅ SEO JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateBreadcrumbJsonLd(breadcrumbItems)),
-          }}
-        />
 
-        {/* ✅ UI Breadcrumbs */}
-        <Breadcrumbs items={breadcrumbItems} />
-      </>
       {/* FAQ SCHEMA */}
       {faqs?.length > 0 && (
         <script

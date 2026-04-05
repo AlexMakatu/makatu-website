@@ -16,7 +16,6 @@ import CityLinks from "@/components/vehicle/CityLinks";
 import type { FAQ } from "../../../types/faq";
 import { PortableTextBlock } from "@portabletext/types";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-import { generateBreadcrumbJsonLd } from "@/lib/seo";
 
 /* ================= HELPERS ================= */
 
@@ -163,10 +162,6 @@ export default async function VehicleTransportPage() {
     slug
   }`,
   );
-  const breadcrumbItems = [
-    { label: "Home", href: "/" },
-    { label: "Vehicle Transport" },
-  ];
   return (
     <main>
       {/* SERVICE SCHEMA */}
@@ -176,18 +171,7 @@ export default async function VehicleTransportPage() {
           __html: JSON.stringify(serviceJsonLd),
         }}
       />
-      <>
-        {/* ✅ SEO JSON-LD */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(generateBreadcrumbJsonLd(breadcrumbItems)),
-          }}
-        />
 
-        {/* ✅ UI Breadcrumbs */}
-        <Breadcrumbs items={breadcrumbItems} />
-      </>
       {/* FAQ SCHEMA */}
       {faqs?.length > 0 && (
         <script
@@ -209,16 +193,16 @@ export default async function VehicleTransportPage() {
       {/* 2. PRICE / QUOTE */}
       <RouteEstimateSection />
       <CityLinks cities={cities} />
+      {/* 3. EXPLANATION (MOVED UP) */}
+          />
       <Breadcrumbs
         items={[{ label: "Home", href: "/" }, { label: "Vehicle Transport" }]}
       />
-      {/* 3. EXPLANATION (MOVED UP) */}
       <VehicleIntro
         content={data.introduction}
         image={data.introImage}
         background={data.introBackground}
-      />
-
+  
       {/* 4. ROUTES */}
       <RoutesSection routes={routes} />
 

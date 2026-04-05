@@ -187,6 +187,8 @@ export default async function VehicleTransportPage() {
 
         {/* ✅ UI Breadcrumbs */}
         <Breadcrumbs items={breadcrumbItems} />
+
+        {/* rest of your page */}
       </>
       {/* FAQ SCHEMA */}
       {faqs?.length > 0 && (
