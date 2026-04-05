@@ -127,43 +127,43 @@ export default async function BlogPostPage({
 
   const post = await client.fetch<Post | null>(
     groq`*[_type == "blogPost" && slug.current == $slug][0]{
+      title,
+      slug,
+      publishedAt,
+mainImage,
+      seoTitle,
+      seoDescription,
+sections[]{
+  _type,
+  _key,
   title,
-  slug,
-  publishedAt,
-  mainImage,
-  seoTitle,
-  seoDescription,
-  sections[]{
-    _type,
-    _key,
-    title,
-    layout,
-    content,
-    caption,
-    buttonText,
-    buttonLink,
-    questions[]{
-      question,
-      answer
-    },
-    image{
-      asset,
-      alt
-    }
-  },  // 👈 THIS COMMA WAS MISSING
-  author->{
-    name,
-    slug,
-    image
+  layout,
+  content,
+  caption,
+  buttonText,
+  buttonLink,
+  questions[]{
+    question,
+    answer
   },
-  category->{
-    _id
-  },
-  relatedCities[]->{
-    _id,
-    name
+  image{
+    asset,
+    alt
   }
-}`,
+}
+      author->{
+        name,
+        slug,
+        image
+      },
+      category->{
+        _id
+      },
+      relatedCities[]->{
+        _id,
+        name
+      }
+    }`,
     { slug },
   );
   console.log("BLOG POST DATA:", JSON.stringify(post, null, 2));

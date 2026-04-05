@@ -20,14 +20,15 @@ function RouteCards({ routes }: { routes: string[] }) {
   if (!routes.length) return null;
 
   return (
-    <div className="space-y-2">
+    <div className="grid gap-4 my-6">
       {routes.map((route, i) => (
         <a
           key={i}
           href={route}
-          className="block text-blue-600 hover:text-blue-800"
+          className="block border rounded-xl p-4 hover:shadow-md transition bg-white"
         >
-          {formatRouteLabel(route)}
+          <div className="font-semibold text-lg">{formatRouteLabel(route)}</div>
+          <div className="text-sm text-blue-600 mt-1">View Route →</div>
         </a>
       ))}
     </div>
@@ -135,30 +136,11 @@ const portableTextComponents: PortableTextComponents = {
         )
         .join("\n");
 
-      const lines = text.split("\n").filter(Boolean);
-
       return (
-        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-3">
-          {lines.map((line, i) => {
-            const trimmed = line.trim();
-
-            // 👉 If it's a route → render as styled link
-            if (isRoutePath(trimmed)) {
-              return (
-                <div key={i} className="pl-4 border-l-2 border-blue-200">
-                  <a
-                    href={trimmed}
-                    className="block text-blue-700 hover:text-blue-900 font-medium"
-                  >
-                    {formatRouteLabel(trimmed)}
-                  </a>
-                </div>
-              );
-            }
-
-            // 👉 Normal paragraph line
-            return <div key={i}>{renderWithLinks(line)}</div>;
-          })}
+        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-2">
+          {text.split("\n").map((line, i) => (
+            <div key={i}>{renderWithLinks(line)}</div>
+          ))}
         </div>
       );
     },

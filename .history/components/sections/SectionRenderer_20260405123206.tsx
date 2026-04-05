@@ -7,72 +7,19 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 const builder = imageUrlBuilder(client);
-function isRoutePath(path: string) {
-  return path.startsWith("/vehicle-transport/");
-}
-
-function extractRoutes(text: string) {
-  const matches = text.match(/\/vehicle-transport\/[a-z0-9\-]+/gi) || [];
-  return matches;
-}
-
-function RouteCards({ routes }: { routes: string[] }) {
-  if (!routes.length) return null;
-
-  return (
-    <div className="space-y-2">
-      {routes.map((route, i) => (
-        <a
-          key={i}
-          href={route}
-          className="block text-blue-600 hover:text-blue-800"
-        >
-          {formatRouteLabel(route)}
-        </a>
-      ))}
-    </div>
-  );
-}
-function formatRouteLabel(path: string) {
-  const parts = path.split("/").filter(Boolean);
-
-  if (parts.length >= 2 && parts[0] === "vehicle-transport") {
-    const route = parts[1]; // johannesburg-to-cape-town
-
-    const [from, to] = route.split("-to-");
-
-    const format = (str: string) =>
-      str
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-
-    if (from && to) {
-      return `${format(from)} → ${format(to)} Vehicle Transport`;
-    }
-  }
-
-  if (path === "/get-a-quote") {
-    return "Get a Quote";
-  }
-
-  return path;
-}
-
 function renderWithLinks(text: string) {
   const parts = text.split(/(\/[a-z0-9\-\/]+)/gi);
 
   return parts.map((part, i) => {
     if (part.startsWith("/")) {
       return (
-        <span key={i}>
-          <a
-            href={part}
-            className="text-blue-600 underline hover:text-blue-800"
-          >
-            {formatRouteLabel(part)}
-          </a>{" "}
-        </span>
+        <a
+          key={i}
+          href={part}
+          className="text-blue-600 underline hover:text-blue-800"
+        >
+          {part}
+        </a>
       );
     }
 
@@ -119,47 +66,22 @@ const portableTextComponents: PortableTextComponents = {
       <h3 className="text-xl font-semibold mt-8 mb-3">{children}</h3>
     ),
     normal: ({ children }) => {
-      const childArray = Array.isArray(children) ? children : [children];
-
-      const text = childArray
-        .map((child) =>
-          typeof child === "object" &&
-          child !== null &&
-          "props" in child &&
-          typeof (child as { props?: { children?: unknown } }).props
-            ?.children === "string"
-            ? (child as { props: { children: string } }).props.children
-            : typeof child === "string"
-              ? child
+      const text =
+        children
+          ?.map((child) =>
+            typeof child === "object" &&
+            child !== null &&
+            "text" in child &&
+            typeof (child as { text?: unknown }).text === "string"
+              ? (child as { text: string }).text
               : "",
-        )
-        .join("\n");
-
-      const lines = text.split("\n").filter(Boolean);
+          )
+          .join("") || "";
 
       return (
-        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-3">
-          {lines.map((line, i) => {
-            const trimmed = line.trim();
-
-            // 👉 If it's a route → render as styled link
-            if (isRoutePath(trimmed)) {
-              return (
-                <div key={i} className="pl-4 border-l-2 border-blue-200">
-                  <a
-                    href={trimmed}
-                    className="block text-blue-700 hover:text-blue-900 font-medium"
-                  >
-                    {formatRouteLabel(trimmed)}
-                  </a>
-                </div>
-              );
-            }
-
-            // 👉 Normal paragraph line
-            return <div key={i}>{renderWithLinks(line)}</div>;
-          })}
-        </div>
+        <p className="mb-5 text-gray-600 text-lg leading-8">
+          {renderWithLinks(text)}
+        </p>
       );
     },
   },

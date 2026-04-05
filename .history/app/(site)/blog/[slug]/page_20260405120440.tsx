@@ -45,9 +45,7 @@ type Post = {
   publishedAt?: string;
   mainImage?: {
     asset?: {
-      asset?: {
-        _ref?: string;
-      };
+      _ref?: string;
     };
     alt?: string;
   };
@@ -103,11 +101,8 @@ export async function generateMetadata({
       images: post.mainImage
         ? [
             {
-              url: post.mainImage?.asset?.asset?._ref
-                ? urlFor(post.mainImage.asset.asset)
-                    .width(1200)
-                    .height(630)
-                    .url()
+              url: post.mainImage?.asset?._ref
+                ? urlFor(post.mainImage.asset).width(1200).height(630).url()
                 : "",
             },
           ]
@@ -127,46 +122,42 @@ export default async function BlogPostPage({
 
   const post = await client.fetch<Post | null>(
     groq`*[_type == "blogPost" && slug.current == $slug][0]{
-  title,
-  slug,
-  publishedAt,
-  mainImage,
-  seoTitle,
-  seoDescription,
-  sections[]{
-    _type,
-    _key,
-    title,
-    layout,
-    content,
-    caption,
-    buttonText,
-    buttonLink,
-    questions[]{
-      question,
-      answer
-    },
-    image{
-      asset,
-      alt
-    }
-  },  // 👈 THIS COMMA WAS MISSING
-  author->{
-    name,
-    slug,
-    image
-  },
-  category->{
-    _id
-  },
-  relatedCities[]->{
-    _id,
-    name
-  }
-}`,
+      title,
+      slug,
+      publishedAt,
+mainImage,
+      seoTitle,
+      seoDescription,
+      sections[]{
+        _type,
+        _key,
+        title,
+        layout,
+        content,
+        caption,
+        buttonText,
+        buttonLink,
+        image{
+          asset,
+          alt
+        }
+      },
+      author->{
+        name,
+        slug,
+        image
+      },
+      category->{
+        _id
+      },
+      relatedCities[]->{
+        _id,
+        name
+      }
+    }`,
     { slug },
   );
-  console.log("BLOG POST DATA:", JSON.stringify(post, null, 2));
+
   if (!post) return notFound();
 
   /* ---------------- RELATED POSTS ---------------- */
@@ -308,18 +299,16 @@ export default async function BlogPostPage({
         )}
 
         {/* IMAGE */}
-        {post.mainImage?.asset?.asset?._ref && (
+        {post.mainImage?.asset?._ref && (
           <Image
-            src={urlFor(post.mainImage.asset.asset)
-              .width(2000)
-              .height(1125)
-              .url()}
+            src={urlFor(post.mainImage.asset).width(2000).height(1125).url()}
             alt={post.mainImage?.alt || post.title}
             width={2000}
             height={1125}
             className="rounded-2xl mb-16 w-full object-cover"
           />
         )}
+
         {/* CONTENT */}
         <SectionRenderer sections={post.sections || []} />
 

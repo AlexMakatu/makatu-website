@@ -31,11 +31,7 @@ type Post = {
   slug: Slug;
   excerpt?: string;
   publishedAt?: string;
-  mainImage?: {
-    asset?: {
-      _ref?: string;
-    };
-  };
+  mainImage?: SanityImageSource;
   author?: Author;
   category?: Category;
 };
@@ -76,9 +72,17 @@ export default async function BlogPage() {
               key={post.slug.current}
               className="bg-white rounded-xl shadow-sm overflow-hidden"
             >
-              {post.mainImage?.asset?._ref && (
+              {post.mainImage && (
                 <Image
-                  src={urlFor(post.mainImage).width(800).height(500).url()}
+                  {post.mainImage?.asset?._ref && (
+  <Image
+    src={urlFor(post.mainImage).width(800).height(500).url()}
+    alt={post.title}
+    width={800}
+    height={500}
+    className="w-full h-48 object-cover"
+  />
+)}
                   alt={post.title}
                   width={800}
                   height={500}

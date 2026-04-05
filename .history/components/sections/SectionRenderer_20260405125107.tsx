@@ -135,30 +135,27 @@ const portableTextComponents: PortableTextComponents = {
         )
         .join("\n");
 
-      const lines = text.split("\n").filter(Boolean);
+      const routes = extractRoutes(text);
+
+      const cleanedText = text
+        .split("\n")
+        .filter((line) => !isRoutePath(line.trim()))
+        .join("\n");
+
+      const lines = cleanedText.split("\n").filter(Boolean);
+
+      const isRouteBlock = routes.length > 0 && lines.length <= 2;
 
       return (
-        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-3">
-          {lines.map((line, i) => {
-            const trimmed = line.trim();
+        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-4">
+          {!isRouteBlock &&
+            lines.map((line, i) => <div key={i}>{renderWithLinks(line)}</div>)}
 
-            // 👉 If it's a route → render as styled link
-            if (isRoutePath(trimmed)) {
-              return (
-                <div key={i} className="pl-4 border-l-2 border-blue-200">
-                  <a
-                    href={trimmed}
-                    className="block text-blue-700 hover:text-blue-900 font-medium"
-                  >
-                    {formatRouteLabel(trimmed)}
-                  </a>
-                </div>
-              );
-            }
-
-            // 👉 Normal paragraph line
-            return <div key={i}>{renderWithLinks(line)}</div>;
-          })}
+          {routes.length > 0 && (
+            <div className="mt-2">
+              <RouteCards routes={routes} />
+            </div>
+          )}
         </div>
       );
     },

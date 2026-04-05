@@ -184,6 +184,9 @@ export default async function VehicleTransportPage() {
             __html: JSON.stringify(generateBreadcrumbJsonLd(breadcrumbItems)),
           }}
         />
+
+        {/* ✅ UI Breadcrumbs */}
+        <Breadcrumbs items={breadcrumbItems} />
       </>
       {/* FAQ SCHEMA */}
       {faqs?.length > 0 && (

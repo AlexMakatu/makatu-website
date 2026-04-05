@@ -145,14 +145,13 @@ const portableTextComponents: PortableTextComponents = {
             // 👉 If it's a route → render as styled link
             if (isRoutePath(trimmed)) {
               return (
-                <div key={i} className="pl-4 border-l-2 border-blue-200">
-                  <a
-                    href={trimmed}
-                    className="block text-blue-700 hover:text-blue-900 font-medium"
-                  >
-                    {formatRouteLabel(trimmed)}
-                  </a>
-                </div>
+                <a
+                  key={i}
+                  href={trimmed}
+                  className="block text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  {formatRouteLabel(trimmed)}
+                </a>
               );
             }
 

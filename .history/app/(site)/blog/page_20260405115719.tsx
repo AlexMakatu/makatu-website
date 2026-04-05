@@ -31,11 +31,7 @@ type Post = {
   slug: Slug;
   excerpt?: string;
   publishedAt?: string;
-  mainImage?: {
-    asset?: {
-      _ref?: string;
-    };
-  };
+  mainImage?: SanityImageSource;
   author?: Author;
   category?: Category;
 };

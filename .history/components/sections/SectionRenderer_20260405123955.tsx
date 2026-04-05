@@ -7,32 +7,6 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 const builder = imageUrlBuilder(client);
-function isRoutePath(path: string) {
-  return path.startsWith("/vehicle-transport/");
-}
-
-function extractRoutes(text: string) {
-  const matches = text.match(/\/vehicle-transport\/[a-z0-9\-]+/gi) || [];
-  return matches;
-}
-
-function RouteCards({ routes }: { routes: string[] }) {
-  if (!routes.length) return null;
-
-  return (
-    <div className="space-y-2">
-      {routes.map((route, i) => (
-        <a
-          key={i}
-          href={route}
-          className="block text-blue-600 hover:text-blue-800"
-        >
-          {formatRouteLabel(route)}
-        </a>
-      ))}
-    </div>
-  );
-}
 function formatRouteLabel(path: string) {
   const parts = path.split("/").filter(Boolean);
 
@@ -135,30 +109,11 @@ const portableTextComponents: PortableTextComponents = {
         )
         .join("\n");
 
-      const lines = text.split("\n").filter(Boolean);
-
       return (
-        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-3">
-          {lines.map((line, i) => {
-            const trimmed = line.trim();
-
-            // 👉 If it's a route → render as styled link
-            if (isRoutePath(trimmed)) {
-              return (
-                <div key={i} className="pl-4 border-l-2 border-blue-200">
-                  <a
-                    href={trimmed}
-                    className="block text-blue-700 hover:text-blue-900 font-medium"
-                  >
-                    {formatRouteLabel(trimmed)}
-                  </a>
-                </div>
-              );
-            }
-
-            // 👉 Normal paragraph line
-            return <div key={i}>{renderWithLinks(line)}</div>;
-          })}
+        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-2">
+          {text.split("\n").map((line, i) => (
+            <div key={i}>{renderWithLinks(line)}</div>
+          ))}
         </div>
       );
     },

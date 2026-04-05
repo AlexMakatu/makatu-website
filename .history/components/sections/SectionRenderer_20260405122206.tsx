@@ -7,78 +7,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 const builder = imageUrlBuilder(client);
-function isRoutePath(path: string) {
-  return path.startsWith("/vehicle-transport/");
-}
 
-function extractRoutes(text: string) {
-  const matches = text.match(/\/vehicle-transport\/[a-z0-9\-]+/gi) || [];
-  return matches;
-}
-
-function RouteCards({ routes }: { routes: string[] }) {
-  if (!routes.length) return null;
-
-  return (
-    <div className="space-y-2">
-      {routes.map((route, i) => (
-        <a
-          key={i}
-          href={route}
-          className="block text-blue-600 hover:text-blue-800"
-        >
-          {formatRouteLabel(route)}
-        </a>
-      ))}
-    </div>
-  );
-}
-function formatRouteLabel(path: string) {
-  const parts = path.split("/").filter(Boolean);
-
-  if (parts.length >= 2 && parts[0] === "vehicle-transport") {
-    const route = parts[1]; // johannesburg-to-cape-town
-
-    const [from, to] = route.split("-to-");
-
-    const format = (str: string) =>
-      str
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-
-    if (from && to) {
-      return `${format(from)} → ${format(to)} Vehicle Transport`;
-    }
-  }
-
-  if (path === "/get-a-quote") {
-    return "Get a Quote";
-  }
-
-  return path;
-}
-
-function renderWithLinks(text: string) {
-  const parts = text.split(/(\/[a-z0-9\-\/]+)/gi);
-
-  return parts.map((part, i) => {
-    if (part.startsWith("/")) {
-      return (
-        <span key={i}>
-          <a
-            href={part}
-            className="text-blue-600 underline hover:text-blue-800"
-          >
-            {formatRouteLabel(part)}
-          </a>{" "}
-        </span>
-      );
-    }
-
-    return part;
-  });
-}
 function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
@@ -88,11 +17,6 @@ function urlFor(source: SanityImageSource) {
 type ImageWithAlt = {
   asset: SanityImageSource;
   alt?: string;
-};
-
-type FAQItem = {
-  question: string;
-  answer: string;
 };
 
 type Section = {
@@ -105,10 +29,9 @@ type Section = {
   caption?: string;
   buttonText?: string;
   buttonLink?: string;
-  questions?: FAQItem[]; // ✅ added
 };
 
-/* ---------------- PORTABLE TEXT ---------------- */
+/* ---------------- PORTABLE TEXT STYLES ---------------- */
 
 const portableTextComponents: PortableTextComponents = {
   block: {
@@ -118,50 +41,9 @@ const portableTextComponents: PortableTextComponents = {
     h3: ({ children }) => (
       <h3 className="text-xl font-semibold mt-8 mb-3">{children}</h3>
     ),
-    normal: ({ children }) => {
-      const childArray = Array.isArray(children) ? children : [children];
-
-      const text = childArray
-        .map((child) =>
-          typeof child === "object" &&
-          child !== null &&
-          "props" in child &&
-          typeof (child as { props?: { children?: unknown } }).props
-            ?.children === "string"
-            ? (child as { props: { children: string } }).props.children
-            : typeof child === "string"
-              ? child
-              : "",
-        )
-        .join("\n");
-
-      const lines = text.split("\n").filter(Boolean);
-
-      return (
-        <div className="mb-5 text-gray-600 text-lg leading-8 space-y-3">
-          {lines.map((line, i) => {
-            const trimmed = line.trim();
-
-            // 👉 If it's a route → render as styled link
-            if (isRoutePath(trimmed)) {
-              return (
-                <div key={i} className="pl-4 border-l-2 border-blue-200">
-                  <a
-                    href={trimmed}
-                    className="block text-blue-700 hover:text-blue-900 font-medium"
-                  >
-                    {formatRouteLabel(trimmed)}
-                  </a>
-                </div>
-              );
-            }
-
-            // 👉 Normal paragraph line
-            return <div key={i}>{renderWithLinks(line)}</div>;
-          })}
-        </div>
-      );
-    },
+    normal: ({ children }) => (
+      <p className="mb-5 text-gray-600 text-lg leading-8">{children}</p>
+    ),
   },
 
   list: {
@@ -263,8 +145,6 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
               </div>
             );
           }
-
-          /* ---------- FAQ ---------- */
           case "faqSection":
             return (
               <div key={section._key} className="my-16">
@@ -272,7 +152,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
                   <h2 className="text-2xl font-bold mb-6">{section.title}</h2>
                 )}
 
-                {section.questions && section.questions.length > 0 && (
+                {"questions" in section && section.questions?.length > 0 && (
                   <div className="space-y-4">
                     {section.questions.map((q, i) => (
                       <div
@@ -287,7 +167,6 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
                 )}
               </div>
             );
-
           /* ---------- CTA ---------- */
           case "ctaSection":
             return (
