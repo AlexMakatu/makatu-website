@@ -27,7 +27,8 @@ export default function Certifications({
 }: Props) {
   if (!items || items.length === 0) return null;
 
-  const isDark = background === "bg-brand" || background === "bg-gray-900";
+  const isDark =
+    background === "bg-brand" || background === "bg-gray-900";
 
   return (
     <section className={`${background} py-20 md:py-24`}>
@@ -55,7 +56,6 @@ export default function Certifications({
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item, index) => {
             const logo = item.logo;
-            const image = logo ? urlFor(logo) : null;
 
             return (
               <article
@@ -70,11 +70,21 @@ export default function Certifications({
                 )}
 
                 {/* Logo */}
-                {image && (
+                {logo && logo.asset && (
                   <div className="flex justify-center items-center mb-6 min-h-[60px]">
                     <Image
-                      src={image.width(240).quality(95).url()}
-                      alt={logo?.alt || item.name || "Certification"}
+                      {image && (
+  <div className="flex justify-center items-center mb-6 min-h-[60px]">
+    <Image
+      src={image.width(240).quality(95).url()}
+      alt={logo.alt || item.name || "Certification"}
+      width={140}
+      height={70}
+      className="h-14 md:h-16 w-auto object-contain"
+    />
+  </div>
+)}
+                      alt={logo.alt || item.name || "Certification"}
                       width={140}
                       height={70}
                       className="h-14 md:h-16 w-auto object-contain"
@@ -91,7 +101,9 @@ export default function Certifications({
 
                 {/* Issuer */}
                 {item.issuer && (
-                  <p className="text-sm mb-2 text-brand/70">{item.issuer}</p>
+                  <p className="text-sm mb-2 text-brand/70">
+                    {item.issuer}
+                  </p>
                 )}
 
                 {/* Description */}

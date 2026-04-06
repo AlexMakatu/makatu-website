@@ -54,47 +54,76 @@ export default function Certifications({
         {/* GRID */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {items.map((item, index) => {
-            const logo = item.logo;
-            const image = logo ? urlFor(logo) : null;
+            const isComingSoon = item.status === "comingSoon";
 
             return (
               <article
                 key={`${item.name ?? "cert"}-${index}`}
                 className="relative mx-auto w-full max-w-sm rounded-2xl p-5 md:p-6 text-center bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition"
               >
-                {/* Badge */}
-                {item.status === "comingSoon" && (
+                {isComingSoon && (
                   <div className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.18em] px-3 py-1 rounded-full bg-brand/10 text-brand border border-brand/20">
                     Coming Soon
                   </div>
                 )}
 
-                {/* Logo */}
-                {image && (
-                  <div className="flex justify-center items-center mb-6 min-h-[60px]">
-                    <Image
-                      src={image.width(240).quality(95).url()}
-                      alt={logo?.alt || item.name || "Certification"}
-                      width={140}
-                      height={70}
-                      className="h-14 md:h-16 w-auto object-contain"
-                    />
-                  </div>
-                )}
+                {items.map((item, index) => {
+                  const logo = item.logo;
 
-                {/* Name */}
+                  return (
+                    <article
+                      key={`${item.name ?? "cert"}-${index}`}
+                      className="relative mx-auto w-full max-w-sm rounded-2xl p-5 md:p-6 text-center bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition"
+                    >
+                      {item.status === "comingSoon" && (
+                        <div className="absolute top-4 right-4 text-[10px] uppercase tracking-[0.18em] px-3 py-1 rounded-full bg-brand/10 text-brand border border-brand/20">
+                          Coming Soon
+                        </div>
+                      )}
+
+                      {logo && logo.asset && (
+                        <div className="flex justify-center items-center mb-6 min-h-[60px]">
+                          <Image
+                            src={urlFor(logo).width(240).quality(95).url()}
+                            alt={logo.alt || item.name || "Certification"}
+                            width={140}
+                            height={70}
+                            className="h-14 md:h-16 w-auto object-contain"
+                          />
+                        </div>
+                      )}
+
+                      {item.name && (
+                        <h3 className="text-xl font-semibold mb-2 text-brand">
+                          {item.name}
+                        </h3>
+                      )}
+
+                      {item.issuer && (
+                        <p className="text-sm mb-2 text-brand/70">
+                          {item.issuer}
+                        </p>
+                      )}
+
+                      {item.description && (
+                        <p className="text-sm leading-relaxed text-brand/80">
+                          {item.description}
+                        </p>
+                      )}
+                    </article>
+                  );
+                })}
+
                 {item.name && (
                   <h3 className="text-xl font-semibold mb-2 text-brand">
                     {item.name}
                   </h3>
                 )}
 
-                {/* Issuer */}
                 {item.issuer && (
                   <p className="text-sm mb-2 text-brand/70">{item.issuer}</p>
                 )}
 
-                {/* Description */}
                 {item.description && (
                   <p className="text-sm leading-relaxed text-brand/80">
                     {item.description}
