@@ -111,18 +111,6 @@ type Section = {
 /* ---------------- PORTABLE TEXT ---------------- */
 
 const portableTextComponents: PortableTextComponents = {
-  marks: {
-    link: ({ value, children }) => {
-      return (
-        <a
-          href={value?.href}
-          className="font-semibold text-black underline decoration-2 underline-offset-4 hover:opacity-70"
-        >
-          {children}
-        </a>
-      );
-    },
-  },
   block: {
     h2: ({ children }) => (
       <h2 className="text-3xl font-bold mt-12 mb-4">{children}</h2>
