@@ -236,9 +236,7 @@ export default defineType({
           const plainText = extractText(safeSections);
           const wordCount = plainText.split(/\s+/).filter(Boolean).length;
 
-          if (wordCount < 800) {
-            return `Word count is ${wordCount} (min 800 required)`;
-          }
+          if (wordCount < 800) return "Article must be at least 800 words";
 
           /* ---------------- CITY CHECK ---------------- */
 
