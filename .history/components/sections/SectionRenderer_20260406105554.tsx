@@ -145,13 +145,10 @@ const portableTextComponents: PortableTextComponents = {
             // 👉 If it's a route → render as styled link
             if (isRoutePath(trimmed)) {
               return (
-                <div
-                  key={i}
-                  className="pl-4 border-l-4 border-black bg-gray-50 p-3 rounded-md"
-                >
+                <div key={i} className="pl-4 border-l-2 border-blue-200">
                   <a
                     href={trimmed}
-                    className="block font-semibold text-black hover:opacity-70"
+                    className="block text-blue-700 hover:text-blue-900 font-medium"
                   >
                     {formatRouteLabel(trimmed)}
                   </a>
@@ -186,33 +183,16 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
           /* ---------- TEXT ---------- */
           case "textSection":
             return (
-              <div
-                key={section._key}
-                className="my-16 grid md:grid-cols-2 gap-10 items-center"
-              >
+              <div key={section._key} className="mb-10">
                 {section.title && (
                   <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
                 )}
 
                 {section.content && (
-                  <>
-                    <PortableText
-                      value={section.content}
-                      components={portableTextComponents}
-                    />
-
-                    {/* 🔥 Route cards */}
-                    {(() => {
-                      const rawText = JSON.stringify(section.content);
-                      const routes = extractRoutes(rawText);
-
-                      return routes.length > 0 ? (
-                        <div className="mt-6">
-                          <RouteCards routes={routes} />
-                        </div>
-                      ) : null;
-                    })()}
-                  </>
+                  <PortableText
+                    value={section.content}
+                    components={portableTextComponents}
+                  />
                 )}
               </div>
             );
@@ -313,7 +293,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
             return (
               <div
                 key={section._key}
-                className="my-16 p-10 bg-black text-white rounded-2xl text-center"
+                className="my-5 p-10 bg-gray-100 rounded-xl text-center"
               >
                 {section.title && (
                   <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
@@ -329,7 +309,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
                 {section.buttonText && section.buttonLink && (
                   <a
                     href={section.buttonLink}
-                    className="inline-block mt-6 bg-white text-black px-6 py-3 rounded-lg font-semibold hover:opacity-90"
+                    className="inline-block mt-6 bg-black text-white px-6 py-3 rounded-lg"
                   >
                     {section.buttonText}
                   </a>

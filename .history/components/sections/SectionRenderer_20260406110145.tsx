@@ -145,10 +145,7 @@ const portableTextComponents: PortableTextComponents = {
             // 👉 If it's a route → render as styled link
             if (isRoutePath(trimmed)) {
               return (
-                <div
-                  key={i}
-                  className="pl-4 border-l-4 border-black bg-gray-50 p-3 rounded-md"
-                >
+                <div key={i} className="pl-4 border-l-4 border-black bg-gray-50 p-3 rounded-md"">
                   <a
                     href={trimmed}
                     className="block font-semibold text-black hover:opacity-70"
@@ -186,10 +183,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
           /* ---------- TEXT ---------- */
           case "textSection":
             return (
-              <div
-                key={section._key}
-                className="my-16 grid md:grid-cols-2 gap-10 items-center"
-              >
+              <div key={section._key} className="mb-10">
                 {section.title && (
                   <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
                 )}

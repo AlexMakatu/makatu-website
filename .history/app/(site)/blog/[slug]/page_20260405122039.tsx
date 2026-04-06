@@ -299,42 +299,7 @@ export default async function BlogPostPage({
             {post.seoDescription}
           </p>
         )}
-        {/* 🔥 QUICK CONVERSION BOX */}
-        <div className="bg-gray-100 border rounded-2xl p-6 mb-12 max-w-3xl">
-          <h3 className="text-xl font-semibold mb-4">
-            Quick Transport Estimate
-          </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-            <div>
-              <p className="text-gray-500">Typical Price</p>
-              <p className="font-medium">R3,500 – R12,000</p>
-            </div>
-
-            <div>
-              <p className="text-gray-500">Delivery Time</p>
-              <p className="font-medium">1–5 Days</p>
-            </div>
-
-            <div>
-              <p className="text-gray-500">Coverage</p>
-              <p className="font-medium">Nationwide</p>
-            </div>
-          </div>
-
-          <Link
-            href="/get-a-quote"
-            className="inline-block mt-6 bg-black text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition"
-          >
-            Get a Quote
-          </Link>
-        </div>
-        {/* ✅ TRUST STRIP */}
-        <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-12">
-          <span>✔ Fully insured transport</span>
-          <span>✔ Nationwide delivery</span>
-          <span>✔ Trusted by SA customers</span>
-        </div>
         {/* DATE */}
         {post.publishedAt && (
           <p className="text-gray-500 mb-8">
@@ -394,15 +359,6 @@ export default async function BlogPostPage({
         {/* ROUTES */}
         <PopularRoutes routes={popularRoutes} />
       </article>
-      {/* 🔥 STICKY CTA */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-        <Link
-          href="/get-a-quote"
-          className="bg-black text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium hover:opacity-90"
-        >
-          Get a Quote
-        </Link>
-      </div>
     </main>
   );
 }

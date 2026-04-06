@@ -186,10 +186,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
           /* ---------- TEXT ---------- */
           case "textSection":
             return (
-              <div
-                key={section._key}
-                className="my-16 grid md:grid-cols-2 gap-10 items-center"
-              >
+              <div key={section._key} className="mb-10">
                 {section.title && (
                   <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
                 )}

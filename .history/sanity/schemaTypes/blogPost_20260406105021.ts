@@ -164,8 +164,7 @@ export default defineType({
           if (/depot-to-depot/i.test(allText)) {
             return "Depot-to-depot is not an allowed service";
           }
-          const plainText = allText.replace(/[^a-zA-Z0-9\s]/g, " ");
-          const wordCount = plainText.split(/\s+/).filter(Boolean).length;
+          const wordCount = allText.split(/\s+/).length;
 
           if (wordCount < 800) {
             return "Article must be at least 800 words";
@@ -197,48 +196,6 @@ export default defineType({
 
             if (!introText.includes("/vehicle-transport")) {
               return "Intro must include /vehicle-transport link";
-            }
-          }
-          const quickAnswer = safeSections.find(
-            (s) => s._type === "textSection" && s.sectionKey === "quickAnswer",
-          );
-
-          if (quickAnswer) {
-            const text = JSON.stringify(quickAnswer);
-
-            const bulletCount = (text.match(/•|- /g) || []).length;
-
-            if (bulletCount === 0) {
-              return "Quick answer must use bullet points";
-            }
-
-            if (bulletCount > 6) {
-              return "Quick answer max 6 bullets";
-            }
-          }
-          const costSection = safeSections.find(
-            (s) => s._type === "textSection" && s.sectionKey === "cost",
-          );
-
-          if (costSection) {
-            const text = JSON.stringify(costSection);
-
-            const routeExamples = (
-              text.match(
-                /(Johannesburg|Cape Town|Durban|Pretoria).*to.*(Johannesburg|Cape Town|Durban|Pretoria)/gi,
-              ) || []
-            ).length;
-
-            if (routeExamples < 2) {
-              return "Cost section must include at least 2 route examples";
-            }
-
-            if (routeExamples < 2) {
-              return "Cost section must include at least 2 route examples";
-            }
-
-            if (!/R\s?\d+/i.test(text)) {
-              return "Cost section must include pricing";
             }
           }
           return true;

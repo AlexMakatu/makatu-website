@@ -394,15 +394,6 @@ export default async function BlogPostPage({
         {/* ROUTES */}
         <PopularRoutes routes={popularRoutes} />
       </article>
-      {/* 🔥 STICKY CTA */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
-        <Link
-          href="/get-a-quote"
-          className="bg-black text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium hover:opacity-90"
-        >
-          Get a Quote
-        </Link>
-      </div>
     </main>
   );
 }
