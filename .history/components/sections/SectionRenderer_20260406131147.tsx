@@ -100,7 +100,7 @@ type FAQItem = {
 type Section = {
   _type: string;
   _key: string;
-  heading?: string; //
+  title?: string;
   content?: PortableTextBlock[];
   layout?: "imageLeft" | "imageRight";
   image?: ImageWithAlt;
@@ -272,8 +272,8 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
           case "faqSection":
             return (
               <div key={section._key} className="my-16">
-                {section.heading && (
-                  <h2 className="text-2xl font-bold mb-6">{section.heading}</h2>
+                {section.title && (
+                  <h2 className="text-2xl font-bold mb-6">{section.title}</h2>
                 )}
 
                 {section.questions && section.questions.length > 0 && (
@@ -299,8 +299,8 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
                 key={section._key}
                 className="my-16 p-10 bg-black text-white rounded-2xl text-center"
               >
-                {section.heading && (
-                  <h2 className="text-2xl font-bold mb-4">{section.heading}</h2>
+                {section.title && (
+                  <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
                 )}
 
                 {section.content && (

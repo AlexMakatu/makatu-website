@@ -136,7 +136,7 @@ export default async function BlogPostPage({
   sections[]{
     _type,
     _key,
-    heading,
+    title,
     layout,
     content,
     caption,
