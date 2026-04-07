@@ -142,7 +142,6 @@ export default async function BlogPostPage({
     caption,
     buttonText,
     buttonLink,
-    sectionKey,
     questions[]{
       question,
       answer
