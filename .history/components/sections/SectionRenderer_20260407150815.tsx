@@ -126,7 +126,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
                     {routes.map((route) => (
                       <Link
                         key={route}
-                        href={normalizeRoute(route)}
+                        href={route}
                         className="block p-5 rounded-xl border bg-white shadow-sm hover:shadow-md"
                       >
                         <div className="font-semibold">
