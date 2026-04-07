@@ -1,12 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { urlFor } from "@/sanity/lib/image";
 
 /* ================= TYPES ================= */
 
 type HeroImage = {
   asset?: {
-    url?: string;
+    _ref?: string;
+    _type?: string;
   };
   alt?: string;
 };
@@ -15,26 +18,26 @@ type Props = {
   heading?: string;
   text?: string;
   image?: HeroImage;
+  background?: string;
 };
+
+/* ================= TYPE GUARD ================= */
+
+function isSanityImage(img: unknown): img is { asset?: unknown; alt?: string } {
+  return typeof img === "object" && img !== null && "asset" in img;
+}
 
 /* ================= COMPONENT ================= */
 
 export default function VehicleHero({ heading, text, image }: Props) {
-  const imageUrl = image?.asset?.url;
-
+  {
+    /* IMAGE */
+  }
+  const imageUrl = isSanityImage(image) ? urlFor(image) : null;
   return (
-    <section className="relative w-full min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden">
-      {/* BACKGROUND IMAGE */}
-      {imageUrl && (
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        />
-      )}
-
-      {/* OVERLAY */}
-      <div className="absolute inset-0 bg-black/60 md:bg-gradient-to-r md:from-black/70 md:via-black/30 md:to-transparent z-10" />
-
+    <section className="relative w-full min-h-[60vh] md:min-h-[75vh] lg:min-h-[85vh] flex items-center">
+      {/* OVERLAY (stronger on mobile) */}
+      <div className="absolute inset-0 bg-black/60 md:bg-gradient-to-r md:from-black/60 md:via-black/20 md:to-transparent z-10" />
       {/* CONTENT */}
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center h-full">
         <div className="w-full max-w-lg md:max-w-xl text-white">
