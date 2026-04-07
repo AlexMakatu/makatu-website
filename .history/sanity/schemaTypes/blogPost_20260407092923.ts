@@ -278,26 +278,11 @@ export default defineType({
           );
 
           if (quick) {
-            const s = quick as SectionWithContent;
+            const text = JSON.stringify(quick);
+            const bullets = (text.match(/•|- /g) || []).length;
 
-            if (!s.content || s.content.length === 0) {
-              return "Quick answer must have content";
-            }
-
-            // Count blocks (each block = one bullet item)
-            const blockCount = s.content.length;
-
-            if (blockCount === 0) return "Quick answer must have bullet items";
-            if (blockCount > 6) return "Max 6 bullets";
-
-            // OPTIONAL: ensure each block actually has text
-            const hasEmpty = s.content.some(
-              (block) =>
-                !block.children ||
-                block.children.every((child) => !child.text?.trim()),
-            );
-
-            if (hasEmpty) return "Quick answer contains empty bullet";
+            if (bullets === 0) return "Quick answer must use bullets";
+            if (bullets > 6) return "Max 6 bullets";
           }
 
           /* ---------------- COST ---------------- */
