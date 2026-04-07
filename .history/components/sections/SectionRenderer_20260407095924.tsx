@@ -254,7 +254,7 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
         if (section._type === "ctaSection") {
           return (
             <div key={section._key} className="my-20 px-6">
-              <div className="max-w-4xl mx-auto bg-gradient-to-br from-black via-gray-900 to-black text-white rounded-3xl p-10 md:p-14 text-center shadow-2xl border border-gray-800">
+              <div className="max-w-4xl mx-auto bg-gradient-to-br from-black #311d60 to-black text-white rounded-3xl p-10 md:p-14 text-center shadow-2xl border border-gray-800">
                 {section.heading && (
                   <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">
                     {section.heading}

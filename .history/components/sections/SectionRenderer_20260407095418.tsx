@@ -253,37 +253,27 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
         /* ---------- CTA ---------- */
         if (section._type === "ctaSection") {
           return (
-            <div key={section._key} className="my-20 px-6">
-              <div className="max-w-4xl mx-auto bg-gradient-to-br from-black via-gray-900 to-black text-white rounded-3xl p-10 md:p-14 text-center shadow-2xl border border-gray-800">
-                {section.heading && (
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">
-                    {section.heading}
-                  </h2>
-                )}
+            <div
+              key={section._key}
+              className="my-16 p-10 bg-black text-white rounded-2xl text-center"
+            >
+              {section.heading && (
+                <h2 className="text-2xl font-bold mb-4">{section.heading}</h2>
+              )}
 
-                {section.content && (
-                  <div className="mt-4 text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto">
-                    <PortableText value={section.content} />
-                  </div>
-                )}
+              {section.content && <PortableText value={section.content} />}
 
-                {section.text && (
-                  <p className="mt-4 text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto">
-                    {section.text}
-                  </p>
-                )}
-
-                {section.buttonText && section.buttonLink && (
-                  <div className="mt-8">
-                    <Link
-                      href={section.buttonLink}
-                      className="inline-block bg-white text-black px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-200 transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                      {section.buttonText}
-                    </Link>
-                  </div>
-                )}
-              </div>
+              {section.text && (
+                <p className="mt-4 text-lg text-white">{section.text}</p>
+              )}
+              {section.buttonText && section.buttonLink && (
+                <Link
+                  href={section.buttonLink}
+                  className="inline-block mt-6 bg-white text-black px-6 py-3 rounded-lg font-semibold"
+                >
+                  {section.buttonText}
+                </Link>
+              )}
             </div>
           );
         }
