@@ -13,11 +13,7 @@ function urlFor(source: SanityImageSource) {
 type RelatedPost = {
   title: string;
   slug: { current: string };
-  mainImage?: {
-    asset?: {
-      _ref?: string;
-    };
-  };
+  mainImage?: SanityImageSource;
   publishedAt?: string;
 };
 
