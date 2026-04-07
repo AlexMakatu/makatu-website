@@ -1,7 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+
 import RouteHero from "@/components/routes/RouteHero";
 import RouteIntroduction from "@/components/routes/RouteIntroduction";
 import RouteBenefits from "@/components/routes/RouteBenefits";
@@ -233,8 +233,13 @@ export default async function RoutePage({ params }: PageProps) {
   );
 
   if (!route) {
-    notFound();
+    return (
+      <main className="max-w-4xl mx-auto px-6 py-20">
+        <h1 className="text-3xl font-bold">Route not found</h1>
+      </main>
+    );
   }
+
   const vehiclePage = await client.fetch(vehiclePageQuery);
   const contact = await client.fetch(contactSettingsQuery);
 
