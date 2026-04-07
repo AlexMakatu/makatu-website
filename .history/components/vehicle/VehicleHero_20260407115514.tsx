@@ -4,13 +4,6 @@ import Link from "next/link";
 
 /* ================= TYPES ================= */
 
-type HeroImage = {
-  asset?: {
-    url?: string;
-  };
-  alt?: string;
-};
-
 type Props = {
   heading?: string;
   text?: string;
@@ -19,20 +12,19 @@ type Props = {
   };
   background?: string; // ✅ correct
 };
+type Props = {
+  heading?: string;
+  text?: string;
+  image?: HeroImage;
+};
+
 /* ================= COMPONENT ================= */
 
-export default function VehicleHero({
-  heading,
-  text,
-  image,
-  background,
-}: Props) {
+export default function VehicleHero({ heading, text, image }: Props) {
   const imageUrl = image?.asset?.url;
 
   return (
-    <section
-      className={`relative w-full min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden ${background || "bg-white"}`}
-    >
+    <section className="relative w-full min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center overflow-hidden">
       {/* BACKGROUND IMAGE */}
       {imageUrl && (
         <div
