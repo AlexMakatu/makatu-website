@@ -235,11 +235,7 @@ export default async function RoutePage({ params }: PageProps) {
   if (!route) {
     notFound();
   }
-  const vehiclePage = await client.fetch(
-    vehiclePageQuery,
-    {},
-    { cache: "no-store" },
-  );
+  const vehiclePage = await client.fetch(vehiclePageQuery);
   const contact = await client.fetch(contactSettingsQuery);
 
   const fromCity = route.fromCity?.name ?? "";
