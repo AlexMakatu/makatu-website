@@ -37,9 +37,9 @@ type Post = {
   excerpt?: string;
   publishedAt?: string;
   mainImage?: {
-    asset?: {
+    image?: {
       asset?: {
-        _ref?: string;
+        url?: string;
       };
     };
     alt?: string;
@@ -74,7 +74,14 @@ export default async function BlogPage() {
         slug,
         excerpt,
         publishedAt,
-mainImage,
+        mainImage{
+  image{
+    asset->{
+      url
+    }
+  },
+  alt
+},
         author->{
           name,
           slug,
@@ -121,13 +128,10 @@ mainImage,
               className="group bg-white rounded-2xl overflow-hidden border hover:shadow-xl transition-all duration-300"
             >
               {/* IMAGE */}
-              {post.mainImage?.asset?.asset?._ref && (
+              {post.mainImage?.image?.asset?.url && (
                 <div className="relative overflow-hidden">
                   <Image
-                    src={urlFor(post.mainImage.asset.asset)
-                      .width(800)
-                      .height(500)
-                      .url()}
+                    src={post.mainImage.image.asset.url}
                     alt={post.mainImage.alt || post.title}
                     width={800}
                     height={500}

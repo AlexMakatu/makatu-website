@@ -36,14 +36,7 @@ type Post = {
   slug: Slug;
   excerpt?: string;
   publishedAt?: string;
-  mainImage?: {
-    asset?: {
-      asset?: {
-        _ref?: string;
-      };
-    };
-    alt?: string;
-  };
+  mainImage?: SanityImageSource;
   author?: Author;
   category?: Category;
 };
@@ -74,7 +67,7 @@ export default async function BlogPage() {
         slug,
         excerpt,
         publishedAt,
-mainImage,
+        mainImage,
         author->{
           name,
           slug,
@@ -121,19 +114,17 @@ mainImage,
               className="group bg-white rounded-2xl overflow-hidden border hover:shadow-xl transition-all duration-300"
             >
               {/* IMAGE */}
-              {post.mainImage?.asset?.asset?._ref && (
+              {post.mainImage && (
                 <div className="relative overflow-hidden">
                   <Image
-                    src={urlFor(post.mainImage.asset.asset)
-                      .width(800)
-                      .height(500)
-                      .url()}
-                    alt={post.mainImage.alt || post.title}
+                    src={urlFor(post.mainImage).width(800).height(500).url()}
+                    alt={post.title}
                     width={800}
                     height={500}
                     className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500"
                   />
 
+                  {/* Hover Gradient */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
                 </div>
               )}
