@@ -76,7 +76,7 @@ async function sendNotificationEmail(
 ): Promise<void> {
   await resend.emails.send({
     from: "Makatu <onboarding@resend.dev>",
-    to: ["quoteme@makatu.co.za"],
+    to: ["alex@makatu.co.za"],
     subject,
     html,
   });
