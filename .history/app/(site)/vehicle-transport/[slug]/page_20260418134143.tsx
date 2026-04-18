@@ -15,9 +15,7 @@ import VehicleTypes from "@/components/vehicle/VehicleTypes";
 import CustomerTypes from "@/components/vehicle/CustomerTypes";
 import FloatingQuoteCTA from "@/components/FloatingQuoteCTA";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-type Props = {
-  params: { slug: string };
-};
+
 import type {
   PortableTextBlock,
   PortableTextListItemBlock,
@@ -230,9 +228,10 @@ Page
 export default async function RoutePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
+
   const route: Route | null = await client.fetch(
     routeQuery,
     { slug },

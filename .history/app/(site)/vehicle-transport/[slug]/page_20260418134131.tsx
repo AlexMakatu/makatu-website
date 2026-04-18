@@ -15,9 +15,7 @@ import VehicleTypes from "@/components/vehicle/VehicleTypes";
 import CustomerTypes from "@/components/vehicle/CustomerTypes";
 import FloatingQuoteCTA from "@/components/FloatingQuoteCTA";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
-type Props = {
-  params: { slug: string };
-};
+
 import type {
   PortableTextBlock,
   PortableTextListItemBlock,
@@ -206,10 +204,10 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
 
-  const route = await client.fetch(seoQuery, { slug });
+  const route: SeoRoute | null = await client.fetch(seoQuery, { slug });
 
   return {
     title: route?.seoTitle ?? route?.title ?? "Vehicle Transport | Makatu",
@@ -230,9 +228,10 @@ Page
 export default async function RoutePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
+
   const route: Route | null = await client.fetch(
     routeQuery,
     { slug },

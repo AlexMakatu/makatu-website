@@ -205,9 +205,9 @@ Metadata
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
 
   const route = await client.fetch(seoQuery, { slug });
 

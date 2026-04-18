@@ -233,6 +233,7 @@ export default async function RoutePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+
   const route: Route | null = await client.fetch(
     routeQuery,
     { slug },
