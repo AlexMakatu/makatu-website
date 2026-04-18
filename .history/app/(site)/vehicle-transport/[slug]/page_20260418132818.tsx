@@ -206,10 +206,8 @@ Metadata
 
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
+}: PageProps): Promise<Metadata> {
+  const { slug } = params; // ⚠️ no need for await here
 
   const route: SeoRoute | null = await client.fetch(seoQuery, { slug });
 
@@ -219,6 +217,7 @@ export async function generateMetadata({
       route?.seoDescription ??
       "Professional vehicle transport services across South Africa.",
 
+    // ✅ ADD THIS
     alternates: {
       canonical: `/vehicle-transport/${slug}`,
     },
