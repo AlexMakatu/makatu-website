@@ -160,26 +160,25 @@ export default async function SiteLayout({
           })();
         `}
       </Script>
-      {/* ================= ZOHO SALESIQ (TRACKING ONLY - NO CHAT UI) ================= */}
       <Script id="zoho-salesiq" strategy="afterInteractive">
         {`
-    window.$zoho = window.$zoho || {};
+    var $zoho=$zoho || {};
     $zoho.salesiq = $zoho.salesiq || {
-      ready: function () {
-        // 👇 THIS hides the chat bubble completely
+      widgetcode: "YOUR_WIDGET_CODE_HERE",
+      values:{},
+      ready:function(){
         $zoho.salesiq.floatwindow.visible("hide");
-        $zoho.salesiq.chatbox.visible("hide");
-        $zoho.salesiq.tracking = true; // keep tracking active
       }
     };
+    var d=document;
+    var s=d.createElement("script");
+    s.type="text/javascript";
+    s.defer=true;
+    s.src="https://salesiq.zoho.com/widget";
+    var t=d.getElementsByTagName("script")[0];
+    t.parentNode.insertBefore(s,t);
   `}
       </Script>
-
-      <Script
-        id="zsiqscript"
-        src="https://salesiq.zohopublic.com/widget?wc=siq6eef7bd420ca11b7efa68558bbef39db606bfa16b8f6c011f1557f06a0c56271"
-        strategy="afterInteractive"
-      />
     </div>
   );
 }
