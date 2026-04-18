@@ -20,11 +20,6 @@ type SiteSettings = {
       url?: string;
     };
   };
-  logoIcon?: {
-    asset?: {
-      url?: string;
-    };
-  };
   navigation?: NavItem[];
 };
 
@@ -34,18 +29,30 @@ export default function Header() {
 
   useEffect(() => {
     async function fetchSettings() {
-      const data = await client.fetch(siteSettingsQuery);
-      setSettings(data);
+      try {
+        const data = await client.fetch(siteSettingsQuery);
+        setSettings(data);
+      } catch (err) {
+        console.error("Failed to load site settings", err);
+      }
     }
     fetchSettings();
   }, []);
+
+  // ✅ FALLBACK NAVIGATION (THIS FIXES YOUR ISSUE)
+  const navigation: NavItem[] = settings?.navigation ?? [
+    { label: "Vehicle Transport", href: "/vehicle-transport" },
+    { label: "Transport Guide", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+    { label: "Get a Quote", href: "/get-a-quote", highlight: true },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-[#311d60] shadow-md">
       <div className="max-w-7xl mx-auto px-4 md:px-6 h-[72px] flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          {settings?.logo?.asset?.url && (
+          {settings?.logo?.asset?.url ? (
             <Image
               src={settings.logo.asset.url}
               alt={settings.siteTitle || "Makatu"}
@@ -54,12 +61,14 @@ export default function Header() {
               priority
               className="h-[42px] md:h-[46px] w-auto object-contain"
             />
+          ) : (
+            <span className="text-white font-bold text-lg">Makatu</span>
           )}
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8 text-base font-medium text-white/90">
-          {settings?.navigation?.map((item) => {
+          {navigation.map((item) => {
             const normal = "hover:text-white transition";
 
             const highlight =
@@ -89,7 +98,7 @@ export default function Header() {
           })}
 
           <Link
-            href="/portal"
+            href="https://supportitmakatu.zohocreatorportal.com/"
             className="border border-white/40 text-white px-5 py-2 rounded-md hover:bg-white hover:text-[#311d60] transition"
           >
             Portal Login
@@ -100,6 +109,9 @@ export default function Header() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden text-white"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +143,7 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-[#311d60] border-t border-white/10">
           <div className="px-4 py-6 flex flex-col gap-4 text-white text-lg">
-            {settings?.navigation?.map((item) => {
+            {navigation.map((item) => {
               if (item.external) {
                 return (
                   <a
