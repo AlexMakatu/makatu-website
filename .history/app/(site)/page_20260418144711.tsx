@@ -1,14 +1,23 @@
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
-import { PortableTextBlock } from "sanity";
+import { PortableTextBlock } from "@portabletext/types";
 import { toPlainText } from "@portabletext/react";
-
+import type { Metadata } from "next";
 import WhyChoose from "@/components/home/WhyChoose";
 import RoutesSection from "@/components/home/RoutesSection";
 import ProcessSection from "@/components/home/ProcessSection";
 import Hero from "@/components/home/Hero";
 import ReviewsSection from "@/components/reviews/ReviewsSection";
 import FAQSection from "@/components/home/FAQSection";
+import { getReviewsQuery } from "@/sanity/queries/getReviews";
+import FeaturedRoute from "@/components/home/FeaturedRoute";
+import ServiceIntro from "@/components/home/ServiceIntro";
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
+/* ---------------- TYPES ---------------- */
 
 type Homepage = {
   pageTitle?: string;
@@ -66,6 +75,9 @@ type Route = {
 
   fromCity?: { name?: string };
   toCity?: { name?: string };
+
+  lowestPrice?: number;
+  priceType?: "fixed" | "startingFrom" | "negotiable" | "quoteRequired";
 };
 
 type SiteSettings = {
@@ -81,6 +93,8 @@ type SiteSettings = {
     };
   };
 };
+
+/* ---------------- PAGE ---------------- */
 
 export default async function HomePage() {
   const homepage: Homepage = await client.fetch(
@@ -123,16 +137,47 @@ export default async function HomePage() {
     { cache: "no-store" },
   );
 
+  const featuredRoute = await client.fetch(
+    groq`*[_type == "route" && featuredRoute == true][0]{
+    slug,
+    fromCity->{name},
+    toCity->{name},
+
+    "lowestPrice": *[_type == "routeRate" 
+      && fromCity._ref == ^.fromCity._ref 
+      && toCity._ref == ^.toCity._ref
+    ] | order(price asc)[0].price,
+
+    "priceType": *[_type == "routeRate" 
+      && fromCity._ref == ^.fromCity._ref 
+      && toCity._ref == ^.toCity._ref
+    ] | order(price asc)[0].priceType
+  }`,
+  );
   const routes: Route[] = await client.fetch(
-    groq`*[_type == "route" && featuredRoute == true][0..5]{
-      slug,
-      routeSummary,
-      routeImage{
-        asset->{url}
-      },
-      fromCity->{name},
-      toCity->{name}
-    }`,
+    groq`*[_type == "route"]{
+    slug,
+    routeImage{
+      asset->{url}
+    },
+    fromCity->{
+      name
+    },
+    toCity->{
+      name
+    },
+
+    // 👇 ADD THIS
+    "lowestPrice": *[_type == "routeRate" 
+      && fromCity._ref == ^.fromCity._ref 
+      && toCity._ref == ^.toCity._ref
+    ] | order(price asc)[0].price,
+
+    "priceType": *[_type == "routeRate" 
+      && fromCity._ref == ^.fromCity._ref 
+      && toCity._ref == ^.toCity._ref
+    ] | order(price asc)[0].priceType
+  }`,
   );
 
   const settings: SiteSettings = await client.fetch(
@@ -146,9 +191,7 @@ export default async function HomePage() {
     }`,
   );
 
-  /* -------------------------------
-     FAQ STRUCTURED DATA (AI SEO)
-  -------------------------------- */
+  const reviews = await client.fetch(getReviewsQuery);
 
   const faqStructuredData = homepage?.faqs?.length
     ? {
@@ -166,8 +209,7 @@ export default async function HomePage() {
     : null;
 
   return (
-    <main className="flex flex-col">
-      {/* STRUCTURED DATA */}
+    <section className="flex flex-col">
       {faqStructuredData && (
         <script
           type="application/ld+json"
@@ -177,48 +219,36 @@ export default async function HomePage() {
         />
       )}
 
-      {/* HERO */}
       <Hero homepage={homepage} logo={settings?.logoIcon} />
-
-      {/* SEO INTRO */}
-      {homepage?.seoIntro && (
-        <section className="py-16 bg-white">
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Vehicle Transport Across South Africa
-            </h2>
-
-            <p className="text-gray-600 leading-relaxed">{homepage.seoIntro}</p>
-          </div>
-        </section>
-      )}
-
-      {/* WHY CHOOSE */}
-      <div className="mt-8 md:mt-12">
-        <WhyChoose
-          title={homepage?.whyChooseTitle}
-          features={homepage?.whyChooseUs}
-        />
+      <ServiceIntro />
+      <div className="bg-brand/5">
+        <FeaturedRoute route={featuredRoute} />
       </div>
 
-      {/* ROUTES */}
-      <div className="mt-8 md:mt-12">
-        <RoutesSection routes={routes} />
-      </div>
+      <WhyChoose
+        title={homepage?.whyChooseTitle}
+        features={homepage?.whyChooseUs}
+      />
 
-      {/* PROCESS */}
-      <div className="mt-8 md:mt-12">
-        <ProcessSection
-          title={homepage?.processTitle}
-          steps={homepage?.processSteps}
-        />
-      </div>
+      <RoutesSection routes={routes} />
 
-      {/* FAQ */}
-      <FAQSection faqs={homepage?.faqs} />
+      <ProcessSection
+        title={homepage?.processTitle}
+        steps={homepage?.processSteps}
+      />
 
-      {/* REVIEWS */}
+      <FAQSection
+        faqs={homepage?.faqs?.filter(
+          (
+            faq,
+          ): faq is {
+            question: string;
+            answer: PortableTextBlock[];
+          } => !!faq.question && !!faq.answer,
+        )}
+      />
+
       <ReviewsSection />
-    </main>
+    </section>
   );
 }

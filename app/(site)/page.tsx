@@ -2,7 +2,7 @@ import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import { PortableTextBlock } from "@portabletext/types";
 import { toPlainText } from "@portabletext/react";
-
+import type { Metadata } from "next";
 import WhyChoose from "@/components/home/WhyChoose";
 import RoutesSection from "@/components/home/RoutesSection";
 import ProcessSection from "@/components/home/ProcessSection";
@@ -12,7 +12,11 @@ import FAQSection from "@/components/home/FAQSection";
 import { getReviewsQuery } from "@/sanity/queries/getReviews";
 import FeaturedRoute from "@/components/home/FeaturedRoute";
 import ServiceIntro from "@/components/home/ServiceIntro";
-
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 /* ---------------- TYPES ---------------- */
 
 type Homepage = {
