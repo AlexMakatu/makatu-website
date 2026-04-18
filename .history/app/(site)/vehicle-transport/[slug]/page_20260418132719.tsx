@@ -229,7 +229,7 @@ Page
 ----------------------------*/
 
 export default async function RoutePage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const route: Route | null = await client.fetch(
     routeQuery,

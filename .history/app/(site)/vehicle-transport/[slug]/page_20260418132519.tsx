@@ -77,7 +77,7 @@ type Route = {
 type SeoRoute = Pick<Route, "title" | "seoTitle" | "seoDescription">;
 
 type PageProps = {
-  params: { slug: string }; // ✅ CORRECT
+  params: Promise<{ slug: string }>;
 };
 
 type RouteRate = {
@@ -229,7 +229,7 @@ Page
 ----------------------------*/
 
 export default async function RoutePage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const route: Route | null = await client.fetch(
     routeQuery,

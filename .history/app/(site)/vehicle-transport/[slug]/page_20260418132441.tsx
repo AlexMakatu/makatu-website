@@ -77,7 +77,7 @@ type Route = {
 type SeoRoute = Pick<Route, "title" | "seoTitle" | "seoDescription">;
 
 type PageProps = {
-  params: { slug: string }; // ✅ CORRECT
+  params: Promise<{ slug: string }>;
 };
 
 type RouteRate = {
@@ -207,7 +207,7 @@ Metadata
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = params; // ⚠️ no need for await here
+  const { slug } = await params;
 
   const route: SeoRoute | null = await client.fetch(seoQuery, { slug });
 
@@ -216,11 +216,6 @@ export async function generateMetadata({
     description:
       route?.seoDescription ??
       "Professional vehicle transport services across South Africa.",
-
-    // ✅ ADD THIS
-    alternates: {
-      canonical: `/vehicle-transport/${slug}`,
-    },
   };
 }
 
@@ -229,7 +224,7 @@ Page
 ----------------------------*/
 
 export default async function RoutePage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
 
   const route: Route | null = await client.fetch(
     routeQuery,
