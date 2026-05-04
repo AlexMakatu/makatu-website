@@ -1,0 +1,124 @@
+/* Default Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.slide {
+  display: none;
+  text-align: center;
+  padding: 20px;
+}
+
+.slide.active {
+  display: block;
+}
+
+.logo {
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 10px 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 10px 0;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  margin-top: 20px;
+}
+
+.navigation-buttons button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+/* Images */
+.fleet-image,
+.management-image {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+}
+
+/* Table Adjustments */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+
+  .logo {
+    max-width: 70%;
+  }
+
+  .fleet-images {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .reason-card, .management-detail {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .navigation-buttons button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+
+/* Mobile-Specific Adjustments */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  p {
+    font-size: 0.8rem;
+  }
+
+  .logo {
+    max-width: 60%;
+  }
+}

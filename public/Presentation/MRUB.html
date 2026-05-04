@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makatu Business Enterprises</title>
+  <link rel="stylesheet" type="text/css" href="present.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #311d60;
+      line-height: 1.6;
+      background-image: url('https://www.makatu.co.za/Presentation/img/Rubberising.webp');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .slide-content {
+      padding: 20px;
+      max-width: 90%;
+      margin: 20px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+    h1, h2 {
+      color: #311d60;
+      margin-top: 0;
+      font-size: 24px; // Larger for visibility
+    }
+    p, li {
+      font-size: 18px; // Larger for readability
+      color: #311d60;
+      text-align: left;
+    }
+    .logo {
+      max-width: 100px;
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .navigation-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .navigation-buttons button {
+      background-color: #311d60;
+      color: #fff;
+      border: none;
+      padding: 15px 20px;
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      font-size: 18px;
+    }
+    .navigation-buttons button:hover {
+      background-color: #4a1d90;
+    }
+    .management-details {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 10px;
+    }
+    .management-detail {
+      flex: 1 1 280px; // Ensures blocks do not get too narrow
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 5px;
+      background-color: #f9f9fb;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .management-image {
+      width: 120px; // Increased width
+      height: 120px; // Increased height to maintain aspect ratio
+      object-fit: cover; // Ensures images are not distorted
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    .reference {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-direction: column;
+    }
+    .reference img {
+      max-width: 60px;
+      margin-bottom: 10px;
+    }
+    .thank-you-container {
+      text-align: center;
+    }
+    .logo-spin {
+      animation: spin 3s linear infinite;
+      max-width: 60px;
+      margin-top: 20px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Slide 1: Title Slide -->
+  <div class="slide-content slide" id="slide1">
+    <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Business Enterprises Logo" class="logo">
+    <h1>MAKATU BUSINESS ENTERPRISES</h1>
+    <h2>Your Trusted Logistics Partner</h2>
+    <div class="navigation-buttons">
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 2: Index -->
+  <div class="slide-content slide" id="slide2">
+    <h1>Presentation Overview</h1>
+    <ol class="index-list">
+      <li>Introduction to Makatu</li>
+      <li>CoatTrack: Our Coating Process Tracker</li>
+      <li>Rubberising Excellence</li>
+      <li>BBBEE Compliance</li>
+      <li>Leadership Team</li>
+      <li>Client References</li>
+    </ol>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 3: Why Makatu? -->
+  <div class="slide-content slide" id="slide3">
+    <h1>Why Choose Makatu?</h1>
+    <p>Makatu Business Enterprises is a dynamic and forward-thinking company dedicated to delivering exceptional logistics solutions. Our focus is on achieving excellence and exceeding client expectations through innovation and expertise.</p>
+    <ul>
+      <li><strong>Dynamic and Ambitious:</strong> We strive to exceed your KPIs with adaptable and efficient solutions.</li>
+      <li><strong>Comprehensive Expertise:</strong> Our experienced team provides unparalleled customer care and technical knowledge.</li>
+      <li><strong>Real-Time Insights:</strong> Our ERP and ePOD systems ensure transparency and efficiency.</li>
+      <li><strong>BBBEE Level 1:</strong> Committed to empowerment and transformation in South Africa.</li>
+    </ul>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 4: CoatTrack System -->
+  <div class="slide-content slide" id="slide4">
+    <h1>CoatTrack: Coating Process Tracker</h1>
+    <p>The CoatTrack system, managed by Makatu, offers a streamlined vehicle processing solution with advanced workflow management and precise tracking capabilities.</p>
+    <ul>
+      <li><strong>Quality Control:</strong> Automated inspection and documentation ensure high standards.</li>
+      <li><strong>Stripping and Preparation:</strong> Efficient removal of old coatings for a fresh start.</li>
+      <li><strong>Application and Trimming:</strong> Uniform coating application and meticulous finishing.</li>
+      <li><strong>Handover:</strong> Comprehensive final checks guarantee readiness for delivery.</li>
+    </ul>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 5: Rubberising Process -->
+  <div class="slide-content slide" id="slide5">
+    <h1>Excellence in Rubberising</h1>
+    <p>Our rubberising services provide durable protection with precision and care:</p>
+    <ul>
+      <li><strong>Comprehensive Inspection:</strong> Ensures adherence to industry standards.</li>
+      <li><strong>Precision Application:</strong> Utilizes top-quality materials for lasting protection.</li>
+      <li><strong>Quality Assurance:</strong> Rigorous checks at every stage of the process.</li>
+      <li><strong>Warranty Protection:</strong> Backed by a comprehensive warranty for your peace of mind.</li>
+    </ul>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 6: BBBEE Certificate -->
+  <div class="slide-content slide" id="slide6">
+    <h1>BBBEE Compliance</h1>
+    <p>Makatu is proud to hold a Level 1 BBBEE certification, demonstrating our commitment to diversity, inclusion, and economic development in South Africa.</p>
+    <iframe class="pdf-iframe" src="https://www.makatu.co.za/B-BBEE.pdf" style="width: 100%; height: 400px;"></iframe>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 7: Leadership Team -->
+  <div class="slide-content slide" id="slide7">
+    <h1>Our Leadership Team</h1>
+    <div class="management-details">
+      <div class="management-detail">
+        <img src="https://www.makatu.co.za/assets/img/WhatsApp Image 2023-02-13 at 09.17.03.jpg" alt="Rudzani Muhkwanteli" class="management-image">
+        <h2>Rudzani Muhkwanteli</h2>
+        <p>CEO</p>
+        <p>Rudzani started in logistics in 2011 and has grown Makatu to a leader in the industry.</p>
+        <p>Years of Experience: 13</p>
+      </div>
+      <div class="management-detail">
+        <img src="https://www.makatu.co.za/assets/img/348479647_770151311477142_1055882247375433928_n.jpg" alt="William du Plessis" class="management-image">
+        <h2>William du Plessis</h2>
+        <p>Director</p>
+        <p>With 34+ years in vehicle logistics, William brings invaluable expertise to Makatu.</p>
+      </div>
+      <div class="management-detail">
+        <img src="https://www.makatu.co.za/Presentation/img/mac.png" alt="Mac from Mr. On The Spot" class="management-image">
+        <h2>Mac</h2>
+        <p>Specialist in Panel Beating and Rubberising</p>
+        <p>Over 30 years of experience in the industry. Makatu's team assisted Mahindra with rubberising in 2021-2022.</p>
+      </div>
+    </div>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 8: Client References -->
+  <div class="slide-content slide" id="slide8">
+    <h1>Client References</h1>
+    <div class="reference">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Ford-Motor-Company-Logo.png" alt="Ford SA Logo" class="logo">
+      <div>
+        <h2>Ford SA</h2>
+        <p>Contact: Thapelo | Phone: 079 655 9238</p>
+        <p>Services: Remarketing, Shuttle Services, Government Contracts</p>
+      </div>
+    </div>
+    <div class="reference">
+      <img src="https://mahindrabethal.co.za/wp-content/uploads/2018/11/mah_mahandford-400x250-1.jpg" alt="Mahindra SA Logo" class="logo">
+      <div>
+        <h2>Mahindra SA</h2>
+        <p>Contact: Godwin | Phone: 079 549 1195</p>
+        <p>Services: Government Contracts, Fitment Moves</p>
+      </div>
+    </div>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+      <button onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+  <!-- Slide 9: Thank You -->
+  <div class="slide-content slide" id="slide9">
+    <div class="thank-you-container">
+      <h1>Thank You for Your Time</h1>
+      <p>We appreciate your attention and look forward to working with you.</p>
+      <p>Best Regards, Makatu Business Enterprises</p>
+    </div>
+    <div class="logo-gif">
+      <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Business Enterprises Logo" class="logo-spin">
+    </div>
+    <div class="navigation-buttons">
+      <button onclick="previousSlide()">Previous</button>
+    </div>
+  </div>
+
+  <!-- JavaScript for slide navigation -->
+  <script src="present.js"></script>
+
+</body>
+</html>

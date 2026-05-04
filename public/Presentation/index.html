@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makatu Business Enterprises</title>
+  <script>
+    window.onload = function() {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = "VW/Mobile%20Profile.html"; // Mobile profile in VW folder
+      } else {
+        window.location.href = "VW/Makatu%20Presentation.html"; // Desktop presentation in VW folder
+      }
+    };
+  </script>
+</head>
+<body>
+  <p>Redirecting to the appropriate presentation...</p>
+</body>
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makatu Presentation</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+ <style>
+    .highlight-image {
+        width: 100%;
+        max-width: 450px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    body {
+        font-family: 'League Spartan', sans-serif;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        background-color: #311d60;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .content-wrapper {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 1100px;
+        background: #ffffff;
+        color: #311d60;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .active {
+        display: flex;
+    }
+
+    /* Adjust the first page wrapper to be centered and reduce excess space */
+    .content-wrapper:first-child {
+        height: auto;
+        width: 60%;
+        max-width: 1100px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        border-radius: 15px;
+    }
+    .content-wrapper:first-child.active {
+        display: flex;
+    }
+
+    /* Increase width for sections from section 3 onwards on normal screens only */
+    @media (min-width: 769px) {
+        .content-wrapper:nth-child(n+3) {
+            max-width: 1300px;
+        }
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        width: 100%;
+        max-width: 90%;
+        margin: auto;
+        padding: 20px;
+    }
+
+.grid-item {
+    background: #f4f4f4;
+    color: #311d60;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Push content to the top */
+    height: 100%; /* Ensures equal height for all blocks */
+}
+
+.grid-item h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.grid-item p {
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 1.5;
+    margin-bottom: auto; /* Ensures text stays at the top */
+}
+
+.grid-item img {
+    margin-top: auto; /* Pushes image to the bottom */
+}
+
+    .grid-item img {
+        width: 100%;
+        max-width: 450px;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1100px;
+        margin-top: 20px;
+    }
+
+    .nav-buttons button {
+        background: #311d60;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        font-size: 18px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .nav-buttons button:hover {
+        background: #51428c;
+    }
+
+    .download-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        color: #311d60;
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .download-button:hover {
+        background: #ddd;
+    }
+
+    @media (max-width: 768px) {
+        .download-button {
+            display: none;
+        }
+    }
+
+    .logo-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .logo-wrapper img {
+        width: 100px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .company-logos {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .company-logos img {
+        width: 80px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            font-size: 18px;
+        }
+        .content-wrapper:first-child {
+            width: 85%;
+            height: auto;
+            padding: 20px;
+        }
+        .grid-container {
+            grid-template-columns: 1fr;
+        }
+        .nav-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-buttons button {
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+
+
+</head>
+<body>
+
+  
+    <!-- Slide 1 - Cover -->
+    <div class="content-wrapper active">
+        <img src="https://makatu.co.za/assets/img/Cover.webp" class="banner" alt="Makatu Banner">
+        <h1>MAKATU DELIVERY MODEL</h1>
+    </div>
+
+
+  <!-- Slide 2 - Company Organogram -->
+<div class="content-wrapper">
+  <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Logo" class="logo">
+    <h1>📌 Makatu Organogram</h1>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+ 
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .box {
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #311d60;
+            color: white;
+            margin: 10px;
+            width: 250px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        .line {
+            width: 2px;
+            height: 20px;
+            background-color: black;
+            margin: 0 auto;
+        }
+        .level {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+    </style>
+    <div class="container">
+        <div class="box">Rudzani - CEO & William - Partner</div>
+        <div class="line"></div>
+        <div class="level">
+            <div class="box">Lungile Mnguni - General Manager</div>
+            <div class="box">Alex Heuer - Business Analyst</div>
+        </div>
+        <div class="line"></div>
+        <div class="box">Kyle Melis - BMW Ops Manager</div>
+        <div class="line"></div>
+        <div class="level">
+            <div class="box">Driver 1</div>
+            <div class="box">Driver 2</div>
+            <div class="box">Driver 3</div>
+            <div class="box">Checker</div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3 - Highlights -->
+<div class="content-wrapper">
+    <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Logo" class="logo">
+    <h1>📌 Makatu Delivery Model</h1>
+    <div class="grid-container">
+
+<div class="grid-item">
+    <i class="fas fa-code"></i>
+    <h2>Receiving Instruction</h2>
+    <p>Delivery instructions can be received through email, portal uploads, or BMW EDI. Once received, stockcontroller is notified and stock is instantly available in the system for staff to access and verify.</p>
+    <img src="https://makatu.co.za/Presentation/img/Stock.png" 
+         alt="Receiving Instruction" 
+         class="highlight-image" 
+         onclick="openImage(this.src)">
+</div>
+
+
+<div class="grid-item">
+    <i class="fas fa-truck"></i>
+    <h2>Planning the Instruction</h2>
+    <p>At this stage, we assess the earliest available carrier and prioritize shipments based on age and type. Our system ensures that time-sensitive deliveries move first, optimizing efficiency and minimizing delays.</p>
+    <p>Vehicle will also be planned on the BMW system for yard operater to be able to get vehicle ready for collection</p>
+    <img src="https://makatu.co.za/Presentation/img/MAK009%202.jpg" 
+         alt="MAK009 Carrier" 
+         class="highlight-image" 
+         onclick="openImage(this.src)">
+</div>
+<div class="grid-item">
+    <i class="fas fa-map-marked-alt"></i>
+    <h2>Pre-Loading Inspection</h2>
+    <p>Before loading, a thorough collection assessment ensures that every vehicle is received in pristine condition. High-mileage and long-distance transports are identified, with protective bubble wrap applied where necessary to minimize transit damage.</p>
+    <a href="https://makatu.co.za/Presentation/img/Inspection.pdf" target="_blank">
+        <img src="https://makatu.co.za/Presentation/img/MAK009%201%20.jpg" 
+             alt="Pre-Loading Inspection PDF" 
+             class="highlight-image">
+    </a>
+</div>
+
+      
+<div class="grid-item">
+    <i class="fas fa-chart-line"></i>
+    <h2>Loading</h2>
+    <p>Once the driver collects the vehicle, the delivery point is instantly notified with the load details and estimated arrival time. From this stage, the delivery point gains real-time access to track the vehicle’s status and location via the portal.</p>
+      <a href="https://makatu.co.za/Presentation/img/POD_WBA12EY0609W36009_DL10_02-Jul-2024_20_21_17.pdf" target="_blank">
+        <img src="https://makatu.co.za/Presentation/img/MAK009%201%20.jpg" 
+             alt="Pre-Loading Inspection PDF" 
+             class="highlight-image">
+    </a>
+</div>
+      
+<div class="grid-item">
+    <i class="fas fa-check-circle"></i>
+    <h2>Delivery of Vehicle</h2>
+    <p>Upon delivery, the dealer receives the Proof of Delivery (POD) via email, and BMW EDI is updated if required. The POD is also accessible to both the dealer and OEM through our secure Dealer Portal, ensuring seamless documentation and tracking.</p>
+       <a href="https://makatu.co.za/Presentation/img/POD_WBA12EY0609W36009_DL10_02-Jul-2024_20_21_17.pdf" target="_blank">
+        <img src="https://makatu.co.za/Presentation/img/MAK009%202.jpg" 
+             alt="Pre-Loading Inspection PDF" 
+             class="highlight-image">
+    </a>
+</div>
+
+<div class="grid-item">
+    <i class="fas fa-shield-alt"></i>
+    <h2>After Delivery Services and Customer Care</h2>
+    <p>Upon delivery, dealers can report any damages directly, triggering an immediate notification to our Customer Care team for swift claims processing. All damages and claims are logged and made available on our Dealer Portal for full transparency and efficient resolution.</p>
+     <a href="https://makatu.co.za/Presentation/img/POD_WBA12EY0609W36009_DL10_02-Jul-2024_20_21_17.pdf" target="_blank">
+        <img src="https://makatu.co.za/Presentation/img/MAK009%201%20.jpg" 
+             alt="Pre-Loading Inspection PDF" 
+             class="highlight-image">
+    </a>
+</div>
+
+    </div>
+</div>
+
+
+  
+ <!-- Slide 3 - Highlights -->
+<div class="content-wrapper">
+    <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Logo" class="logo">
+    <h1>📌 Makatu Advantages</h1>
+    <div class="grid-container">
+
+        <div class="grid-item">
+            <i class="fas fa-code"></i>
+            <h2>IT Advancements</h2>
+            <p>Our systems have strengthened significantly, achieving 100% on-time POD uploads on the BMW interface, syncing seamlessly with the central processing server for real-time data flow.</p>
+            <img src="https://makatu.co.za/Presentation/img/images (1).jpg" alt="IT Advancements Placeholder" class="highlight-image" onclick="openImage(this.src)">
+        </div>
+
+        <div class="grid-item">
+            <i class="fas fa-truck"></i>
+            <h2>Fleet Expansion</h2>
+            <p>We have procured MAK009, increasing our capacity for handling vehicle logistics. This new carrier will support long-haul deliveries and assist in covering our expanding operational footprint.</p>
+            <p>We eagly await our 10th Carrier , estimated completion March 2025. And we will place our order for 4 x 11 Car Carrier which will be active before the end of 2025 which will assist us on long haul route aswell</p>         
+            <img src="https://makatu.co.za/Presentation/img/MAK009%202.jpg" alt="MAK009 Carrier" class="highlight-image" onclick="openImage(this.src)">
+        </div>
+
+        <div class="grid-item">
+            <i class="fas fa-map-marked-alt"></i>
+            <h2>Expanding Footprint</h2>
+            <p>New routes have been launched in Port Elizabeth (PE) and Cape Town (CPT) with remarketing vehicles for FMCSA. This give Makatu a strong prensence in this region </p>
+            <img src="https://makatu.co.za/Presentation/img/MAK009%201%20.jpg" alt="Expanding Footprint MAK009" class="highlight-image" onclick="openImage(this.src)">
+        </div>
+
+        
+        <div class="grid-item">
+            <i class="fas fa-check-circle"></i>
+            <h2>BMW KPI Excellence</h2>
+            <p>Our commitment to service quality has resulted in an outstanding 99.36% on-time delivery rate for BMW, ensuring reliability and high performance across our operations.</p>
+            <img src="https://makatu.co.za/Presentation/img/BMW%20KPI.png" alt="BMW KPI Performance" class="highlight-image" onclick="openImage(this.src)">
+        </div>
+
+<div class="grid-item">
+    <i class="fas fa-truck-moving"></i>
+    <h2>Subcontractor Partnership</h2>
+    <p>To enhance delivery efficiency, we have appointed a subcontractor with a fleet of 14 carriers nationwide. This partner operates under Makatu's strict quality and system requirements, ensuring seamless integration and reliable service where stock availability is low.</p>
+    <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" 
+         alt="TISAX Certification" 
+         class="highlight-image" 
+         onclick="openImage(this.src)">
+
+</div>
+
+    </div>
+</div>
+
+
+<!-- Styling for Consistent Image Size & Video Link -->
+<style>
+    .highlight-image {
+        width: 350px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .video-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        background-color: #311d60;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+    .video-link:hover {
+        background-color: #51428c;
+    }
+</style>
+
+
+  
+
+
+<!-- Styling for Company Logos & Images -->
+<style>
+    .highlight-image {
+        width: 350px;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .logo-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .logo-wrapper img {
+        width: 150px; /* Adjusted size to prevent covering content */
+        height: auto;
+        object-fit: contain;
+    }
+
+    .company-logos {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .company-logos img {
+        width: 100px;
+        height: auto;
+        object-fit: contain;
+    }
+     .fun-screen {
+        text-align: center;
+        background: linear-gradient(45deg, #311d60, #6a0dad);
+        color: white;
+        padding: 50px;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .animated-title {
+        font-size: 48px;
+        font-weight: bold;
+        animation: bounce 1.5s infinite alternate;
+    }
+
+    .animated-text {
+        font-size: 24px;
+        margin: 20px 0;
+        opacity: 0;
+        animation: fadeIn 2s ease-in forwards;
+    }
+
+    .animated-truck {
+        position: absolute;
+        bottom: 10px;
+        left: -100px;
+        animation: drive 8s linear infinite;
+    }
+
+    .truck-image {
+        width: 250px;
+        height: auto;
+    }
+
+    .highlight-image.fade-in {
+        opacity: 0;
+        animation: fadeIn 3s ease-in forwards;
+    }
+
+    @keyframes bounce {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes drive {
+        from {
+            left: -250px;
+        }
+        to {
+            left: 100%;
+        }
+    }
+</style>
+
+
+
+  <div class="content-wrapper fun-screen">
+    <h1 class="animated-title">🎉 Thank You for Your Time! 🎉</h1>
+    <p class="animated-text">We appreciate your participation and look forward to growing together.</p>
+    <p class="animated-text">For any further inquiries, feel free to reach out to us at <strong>info@makatu.co.za</strong></p>
+    <div class="animated-truck">
+        <img src="https://makatu.co.za/assets/img/Makatu%20carrier.png" alt="Moving Truck" class="truck-image">
+    </div>
+    <img src="https://makatu.co.za/assets/img/Heading (360 x 360 px).png" alt="Thank You" style="width:20%" class="highlight-image fade-in">
+</div>
+
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <button onclick="prevSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+    </div>
+
+    <!-- Download PDF -->
+    <button class="download-button" onclick="generatePDF()">Download PDF</button>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".content-wrapper");
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove("active"));
+            slides[index].classList.add("active");
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function generatePDF() {
+            window.print();
+        }
+    </script>
+  <script>
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+  <!-- Image Zoom Modal -->
+<div id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+    <img id="modalImage" style="max-width:90%; max-height:90%;">
+    <button onclick="closeImage()" style="position:absolute; top:20px; right:20px; background:#fff; color:#311d60; padding:10px; font-size:18px; border:none; cursor:pointer;">Close</button>
+</div>
+
+<!-- JavaScript for Image Zoom -->
+<script>
+    function openImage(src) {
+        document.getElementById("modalImage").src = src;
+        document.getElementById("imageModal").style.display = "flex";
+    }
+
+    function closeImage() {
+        document.getElementById("imageModal").style.display = "none";
+    }
+</script>
+</body>
+</html>

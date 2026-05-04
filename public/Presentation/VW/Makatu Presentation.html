@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Makatu Presentation</title>
+  <link rel="stylesheet" type="text/css" href="present.css">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="apple-touch-icon" href="/assets/img/android-chrome-192x192.png">
+
+  <style>
+    .navigation-buttons button {
+      background: linear-gradient(to right, #311d60, #4a1d90);
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .navigation-buttons button:hover {
+      background: #4a1d90;
+      transform: scale(1.05);
+    }
+    .download-button {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-button button {
+  background: linear-gradient(to right, #311d60, #4a1d90);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.download-button button:hover {
+  background: #4a1d90;
+  transform: scale(1.05);
+}
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Slide 1: Title Slide -->
+  <div class="slide-content slide" id="slide1">
+    <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Business Enterprises Logo" class="logo">
+    <h1>MAKATU BUSINESS ENTERPRISES</h1>
+    <h2>Not your average logistics partner</h2>
+    <p>Makatu Introduction</p>
+
+  <div class="navigation-buttons">
+    <button onclick="nextSlide()">Next</button>
+  </div>
+
+  <!-- Download Button INSIDE the .slide-content div -->
+  <div class="download-button">
+    <a href="https://www.makatu.co.za/Presentation/Makatu%20Company%20Profile.pdf" download="Makatu_Company_Profile.pdf">
+      <button>Download Company Profile</button>
+    </a>
+  </div>
+</div>
+
+  <!-- Slide 2: Index -->
+  <div class="slide-content slide" id="slide2">
+    <h1>Index</h1>
+    <ol class="index-list">
+      <li>Why Makatu?</li>
+      <li>BBBEE Status</li>
+      <li>Size of their fleet</li>
+      <li>Years of experience in the industry</li>
+      <li>Insurance cover (Insurance value excess)</li>
+      <li>Lead time for collection (scheduling process)</li>
+      <li>References/Clients, Alliance Partners</li>
+      <li>Scheduling system</li>
+      <li>SADC countries services</li>
+      <li>Driving hours</li>
+      <li>Payment terms</li>
+    </ol>
+  <div class="navigation-buttons">
+    <button onclick="previousSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+  </div>
+
+  <!-- Download Button INSIDE the .slide-content div -->
+  <div class="download-button">
+    <a href="https://www.makatu.co.za/Presentation/Makatu%20Company%20Profile.pdf" download="Makatu_Company_Profile.pdf">
+      <button>Download Company Profile</button>
+    </a>
+  </div>
+</div>
+
+<!-- Slide 0: Why Us -->
+<!-- Slide 0: Why Us -->
+<div class="slide-content slide" id="slide0" style="width: calc(100vw - 100px); max-width: none;">
+  <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Business Enterprises Logo" class="logo" style="width: 150px; height: auto;">
+  <h1>Why Choose Makatu?</h1>
+  <div class="reasons">
+    <div class="row">
+      <div class="reason-card">
+        <h2>Dynamic and Ambitious</h2>
+        <p>Makatu is a young and dynamic company driven by passion for logistics. We are committed to surpassing your Key Performance Indicators (KPIs) and expectations. Our adaptability ensures we can meet and exceed any requirement you may have.</p>
+      </div>
+      <div class="reason-card">
+        <h2>Comprehensive Expertise</h2>
+        <p>From operational excellence to customer care and technical knowledge, Makatu boasts a diverse skill set. Our team members have extensive experience working with Ford,BMW and 3G Relocation, providing us with a deep understanding of their needs and requirements.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="reason-card">
+        <h2>Real-Time Visibility</h2>
+        <p>With our advanced ERP and ePOD system, we offer real-time updates at every stage of the process. From planning to delivery, our system keeps you informed, providing transparency and peace of mind throughout the logistics journey.</p>
+      </div>
+      <div class="reason-card">
+        <h2>BBBEE Level 2</h2>
+        <p>Makatu is proud to hold a BBBEE Level 2 certification, demonstrating our commitment to empowerment and transformation. This certification reflects our dedication to diversity, inclusion, and economic development in South Africa.</p>
+      </div>
+    </div>
+  </div>
+  <div class="navigation-buttons">
+    <button onclick="nextSlide()">Next</button>
+  </div>
+</div>
+
+
+  <!-- Slide 4: Slide 4 -->
+  <div class="excel-slide">
+    <div class="slide-content slide" id="slide4" style="width: calc(100vw - 80px); max-width: none;">
+      <h1>BBBEE Certificate</h1>
+      <iframe class="pdf-iframe" src="https://www.makatu.co.za/Presentation/VW/BEE%2027%20Sep%202024%20(2).pdf" style="width: 100%; height: 80vh;"></iframe>
+      <div class="navigation-buttons">
+        <button onclick="previousSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+    </div>
+  </div>
+  
+
+<!-- Slide 5: Size of Fleet -->
+  <div class="slide-content slide" id="slide5" style="width: calc(100vw - 80px); max-width: none;">
+    <h1>Size of Fleet</h1>
+    <div class="fleet-images" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+      <div style="text-align: center; flex: 1;">
+        <img src="https://makatu.co.za/assets/img/6car.jpg" alt="6 Car Carrier" class="fleet-image" style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;">
+        <p>6 Car Carrier - Load 6-7 Small Vehicles or 5 Large Vehicles</p>
+      </div>
+
+      <div style="text-align: center; flex: 1;">
+        <img src="https://makatu.co.za/assets/img/8car.jpg" alt="8 Car Carrier" class="fleet-image" style="width: 100%; height: 250px; object-fit: cover; border-radius: 8px;">
+        <p>8 Car Carrier - Load 6 Big Vehicles or 8 Small Vehicles</p>
+      </div>
+
+      <div style="text-align: center; flex: 1;">
+        <img src="https://makatu.co.za/Presentation/VW/0609599a-da40-4b06-9f1d-8bb9f26f4775.png" alt="3 Car Carrier Macro Porter" class="fleet-image" style="width: 100%; height: 250px; object-fit: contain; background-color: #f5f5f5; border-radius: 8px; padding: 10px;">
+        <p>3 Car Carrier (Macro Porter x2) - Currently in Production<br>
+        • 1 going live mid-November<br>
+        • 1 going live mid-December</p>
+      </div>
+    </div>
+    <p>Makatu delivers up to 140 local vehicles (Gauteng) per day and 20-30 long-haul deliveries per week.</p>
+    <div class="navigation-buttons">
+      <button class="show" onclick="previousSlide()">Previous</button>
+      <button class="show" onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+
+<!-- Slide: Management Details -->
+<div class="slide-content slide" id="slide6">
+  <h1>Makatu Management Experience</h1>
+  <p>Our team brings over 90 years of combined experience in the logistics industry.</p>
+  
+  <div id="slide6-carousel" class="carousel">
+    <!-- Carousel Item 1: Rudzani Muhkwanteli -->
+    <div class="carousel-item active">
+      <img src="https://www.makatu.co.za/assets/img/WhatsApp Image 2023-02-13 at 09.17.03.jpg" alt="Rudzani Muhkwanteli">
+      <h2>Rudzani Muhkwanteli</h2>
+      <p><strong>CEO</strong></p>
+      <p>Rudzani Muhkwanteli is our dynamic CEO who truly embodies the grind and growth Makatu stands for. Starting out as a yard driver in 2011, he didn't just clock in—he hustled his way up, launching his own yard services and spearheading the evolution that brought us to where we are today. With 13 years of industry experience under his belt, Rudzani merges old-school hustle with innovative leadership, driving Makatu forward with a blend of tradition and cutting-edge strategy.</p>
+      <p><strong>Years of Experience:</strong> 13</p>
+    </div>
+
+    <!-- Carousel Item 2: William du Plessis -->
+    <div class="carousel-item">
+      <img src="https://www.makatu.co.za/assets/img/348479647_770151311477142_1055882247375433928_n.jpg" alt="William du Plessis">
+      <h2>William du Plessis</h2>
+      <p><strong>Director</strong></p>
+      <p>William du Plessis is our Director with a formidable track record—he's been dominating vehicle logistics since 1989. With over 34 years of hard-earned expertise, including a stellar 13+ year stint at Motorvia, William's deep-rooted industry knowledge and commitment to operational excellence are unmatched. His approach combines the wisdom of time-tested methods with a forward-thinking mindset, ensuring we stay ahead in the game.</p>
+      <p><strong>Years of Experience:</strong> 34+</p>
+    </div>
+
+    <!-- Carousel Item 3: Lungile Mnguni -->
+    <div class="carousel-item">
+      <img src="https://www.makatu.co.za/assets/img/49132385_1107011596139579_6527732592018456576_n.jpg" alt="Lungile Mnguni">
+      <h2>Lungile Mnguni</h2>
+      <p><strong>General Manager</strong></p>
+      <p>Lungile comes with 11 years of logistics experience, having steered customer care and managed major contracts, including giants like Ford and Mahindra. His expertise ensures robust client relationships and operational excellence.</p>
+      <p><strong>Years of Experience:</strong> 11</p>
+    </div>
+
+    <!-- Carousel Item 4: Angelique Viljoen -->
+    <div class="carousel-item">
+      <img src="https://www.makatu.co.za/assets/img/WhatsApp Image 2023-10-13 at 11.50.43_e7c0e562 (1).jpg" alt="Angelique Viljoen">
+      <h2>Angelique Viljoen</h2>
+      <p><strong>ISO Officer and Sundry Manager</strong></p>
+      <p>Angelique is our go-to ISO Officer and Sundry Manager, bringing 19 years of hands-on experience to the table. She's not new to the grind—having held key roles such as Inbound Manager and Admin Manager at top vehicle transport companies in SA, she's all about keeping operations smooth and standards sky-high.</p>
+      <p><strong>Years of Experience:</strong> 19</p>
+    </div>
+
+    <!-- Carousel Item 5: Alexander Heuer -->
+    <div class="carousel-item">
+      <img src="https://www.makatu.co.za/assets/img/1626871046985.jpeg" alt="Alexander Heuer">
+      <h2>Alexander Heuer</h2>
+      <p><strong>Business Analyst</strong></p>
+      <p>With 19 years in logistics expertise under his belt, Alex is set to revolutionize our systems through cutting-edge development and proven industry know-how. Holding a national diploma in Logistics, he’s mastered the art of operational efficiency and is primed to update and optimize our processes for a more streamlined future.</p>
+      <p><strong>Years of Experience:</strong> 19</p>
+    </div>
+
+    <!-- Carousel Item 6: New Team Member -->
+    <div class="carousel-item">
+      <img src="https://www.makatu.co.za/Presentation/img/Belinda.jpg" alt="New Team Member">
+      <h2>Belinda du Plessis</h2>
+      <p><strong>Role:</strong> Customer Care</p>
+      <p>Belinda comes to Makatu with 8 years of hardcore logistics expertise and a lifetime’s worth of battle-tested experience in sales and customer care. She’s not just about moving products; she’s all about moving the needle in customer satisfaction and operational efficiency.</p>
+      <p><strong>Years of Experience:</strong> 8</p>
+    </div>--!>
+
+    <!-- Carousel Navigation Controls -->
+    <div class="carousel-controls">
+      <button id="carousel-prev">Previous Expert</button>
+      <button id="carousel-next">Next Expert</button>
+    </div>
+  </div>
+
+  <!-- Slide Navigation Buttons (Outside Carousel) -->
+  <div class="navigation-buttons">
+    <button onclick="previousSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+  </div>
+</div>
+
+
+
+
+<!-- Slide 7: Insurance Cover -->
+<div class="excel-slide">
+  <div class="slide-content slide" id="slide7" style="width: calc(100vw - 80px); max-width: none;">
+    <h1>Insurance Cover</h1>
+    <p>Rest assured, when you're with Makatu, your cargo is protected by our comprehensive insurance coverage of up to R7 million per load.</p>
+    <iframe class="pdf-iframe" src="https://www.makatu.co.za/Presentation/VW/Confirmation of cover 19 February 2025.pdf" style="width: 100%; height: 70vh;"></iframe>
+    <div class="navigation-buttons">
+      <button class="show" onclick="previousSlide()">Previous</button>
+      <button class="show" onclick="nextSlide()">Next</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Slide 8: Lead Time for Collection -->
+<div class="slide-content slide" id="slide8">
+  <h1>Lead Time for Collection (Scheduling Process)</h1>
+  <p>Our efficient scheduling process ensures timely collection and delivery of vehicles:</p>
+  
+  <table class="lead-time-table">
+    <thead>
+      <tr>
+        <th>Delivery Type</th>
+        <th>Collection Lead Time</th>
+        <th>Delivery Lead Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Local (Gauteng to Gauteng)</td>
+        <td>Within 2 days from Instruction</td>
+        <td>Same day</td>
+      </tr>
+      <tr>
+        <td>Long-Haul Collections (Gauteng to other)</td>
+        <td>Every Wednesday/Thursday after instruction received</td>
+        <td>By following Tuesday <br>(+- 5 Working Days)</td>
+      </tr>
+      <tr>
+        <td>Collections (Other eg WE, EC, FS, LIM, etc. to Gauteng)</td>
+        <td>Every Tuesday/Wednesday after instruction received</td>
+        <td>By following Friday <br>(+- 5 Working Days)</td>
+      </tr>
+      <tr>
+        <td>Collections (Other to Other)</td>
+        <td>Depends on carrier availability in area</td>
+        <td>+- 10 Working Days</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Dealer Locations Across South Africa</h2>
+  <p>Here’s a map of all the dealer locations we deliver to:</p>
+  <iframe src="https://www.google.com/maps/d/embed?mid=153a8pTpXCzz-2F8aB1e7Jp0YGCiTGnM&ehbc=2E312F" width="640" height="480"></iframe>
+
+  <div class="navigation-buttons">
+    <button class="show" onclick="previousSlide()">Previous</button>
+    <button class="show" onclick="nextSlide()">Next</button>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Slide 9: References -->
+<div class="slide-content slide" id="slide9" style="width: calc(100vw - 80px); max-width: none;">
+  <h1>References</h1>
+  
+  <!-- Reference: Ford SA -->
+<!-- Reference: Ford SA -->
+<div class="reference">
+  <p>Ford SA</p>
+  <h2>Contact: Thapelo</h2>
+  <h2>Phone: 079 655 9238</h2>
+  <h2>Services: Remarketing (Gauteng, Eastern Cape, and Western Cape), Shuttle Services, Government Contracts</h2>
+</div>
+
+<!-- Reference: Mahindra SA -->
+<div class="reference">
+  <p>BMW</p>
+  <h2>Contact: Mauritz</h2>
+  <h2>Phone: 082 378 3600</h2>
+  <h2>Services: Local Deliveries and Events</h2>
+</div>
+
+<!-- Reference: 3G -->
+<div class="reference">
+  <p>3G Relocations</p>
+  <h2>Contact: Andre</h2>
+  <h2>Phone: 086 134 7356</h2>
+  <h2>Services: Expert vehicle relocation assistance</h2>
+</div>
+
+  
+  <div class="navigation-buttons">
+    <button class="show" onclick="previousSlide()">Previous</button>
+    <button class="show" onclick="nextSlide()">Next</button>
+  </div>
+</div>
+
+ 
+
+<!-- Slide 10: Online Ordering Process Flow Chart -->
+<div class="slide-content slide" id="slide10" style="width: calc(100vw - 80px); max-width: none;">
+  <div style="position: relative; width: 100%; height: 0; padding-top: 38.25%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+    <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0;" src="https://www.canva.com/design/DAF8SgYRWw4/HqJuucyatWmxsguLdZahfQ/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+  </div>
+  <a href="https://www.canva.com/design/DAF8SgYRWw4/HqJuucyatWmxsguLdZahfQ/view?utm_content=DAF8SgYRWw4&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" rel="noopener">Makatu Delivery Process</a> by Alex Martin
+  <div class="navigation-buttons">
+    <button class="show" onclick="previousSlide()">Previous</button>
+    <button class="show" onclick="nextSlide()">Next</button>
+  </div>
+</div>
+
+
+<<!-- Slide 11: Additional Services and Terms -->
+<div class="slide-content slide" id="slide11" style="width: calc(100vw - 80px); max-width: none;">
+  <h1>Additional Services and Terms</h1>
+  <div class="service-section">
+    <h2>SADC Countries Services</h2>
+    <p>While we primarily focus only on national routes within South Africa. Our goal is to expand our operations in the future to better serve the SADC region.</p>
+  </div>
+  <div class="service-section">
+    <h2>Driving Hours</h2>
+    <p>Our operational hours are from 06:00 to 23:00, ensuring timely and efficient transportation services for our clients. Our dedicated team of drivers adheres to strict safety and scheduling protocols to deliver your goods promptly and securely.</p>
+  </div>
+  <div class="service-section">
+    <h2>Payment Terms</h2>
+    <p>At Makatu Business Enterprises, we understand the importance of flexibility in payment arrangements. Our standard payment terms are set at 30 days, providing our clients with ample time to manage their finances while enjoying the benefits of our exceptional logistics services.</p>
+  </div>
+  <div class="navigation-buttons">
+    <button class="show" onclick="previousSlide()">Previous</button>
+    <button class="show" onclick="nextSlide()">Next</button>
+  </div>
+</div>
+
+ <!-- Slide 14: Thank You -->
+  <div class="slide-content slide" id="slide14">
+    <div class="thank-you-container">
+      <h1>Thank You for Watching!</h1>
+      <p>We appreciate your time and attention.</p>
+      <p>Best Regards, Makatu Business Enterprises</p>
+    </div>
+    <div class="logo-gif">
+      <img src="https://www.makatu.co.za/assets/img/Makatu%20ss-1.webp" alt="Makatu Business Enterprises Logo" class="logo-spin">
+    </div>
+  </div>
+
+
+
+<script src="present.js"></script>
+
+</body>
+</html>
