@@ -16,8 +16,36 @@ export const structure: StructureResolver = (S) =>
         .title("Site Settings")
         .child(S.documentTypeList("siteSettings").title("Site Settings")),
 
-      S.divider(),
+      S.listItem()
+        .title("Business Profile")
+        .child(
+          S.document()
+            .schemaType("businessProfile")
+            .documentId("businessProfile"),
+        ),
 
+      S.divider(),
+      S.listItem()
+        .title("Company Structure")
+        .child(
+          S.list()
+            .title("Company Structure")
+            .items([
+              S.documentTypeListItem("organogramSettings").title(
+                "Organogram Settings",
+              ),
+
+              S.documentTypeListItem("organogramDepartment").title(
+                "Departments",
+              ),
+
+              S.documentTypeListItem("organogramEmployee").title("Employees"),
+
+              S.documentTypeListItem("organogramTeam").title("Teams"),
+            ]),
+        ),
+
+      S.divider(),
       /*
       WEBSITE CONTENT
       */

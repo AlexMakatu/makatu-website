@@ -22,6 +22,11 @@ import documentFile from "./document";
 import faqItem from "./faqItem";
 import faqSection from "./faqSection";
 import seoImage from "./seoImage";
+import organogramDepartment from "./organogramDepartment";
+import organogramTeam from "./organogramTeam";
+import organogramEmployee from "./organogramEmployee";
+import organogramSettings from "./organogramSettings";
+import businessProfile from "./businessProfile";
 
 export const schemaTypes = [
   homepage,
@@ -48,4 +53,9 @@ export const schemaTypes = [
   faqItem,
   faqSection,
   seoImage,
+  organogramDepartment,
+  organogramTeam,
+  organogramEmployee,
+  organogramSettings,
+  businessProfile,
 ];
