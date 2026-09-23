@@ -1,0 +1,233 @@
+/* Import this once from globals.css: @import "./organogram-print.css"; */
+
+@page {
+  size: A3 landscape;
+  margin: 10mm;
+}
+
+.organogram-print-only {
+  display: none;
+}
+
+.org-chart-scroll {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.org-tree,
+.org-tree ul {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.org-tree ul {
+  position: relative;
+  padding-top: 30px;
+}
+
+.org-tree li {
+  position: relative;
+  padding: 30px 9px 0;
+  text-align: center;
+}
+
+.org-tree > li {
+  padding-top: 0;
+}
+
+.org-tree li::before,
+.org-tree li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 30px;
+  border-top: 2px solid #c9c1dc;
+}
+
+.org-tree li::before {
+  right: 50%;
+}
+
+.org-tree li::after {
+  left: 50%;
+  border-left: 2px solid #c9c1dc;
+}
+
+.org-tree li:only-child::before,
+.org-tree li:only-child::after,
+.org-tree > li::before,
+.org-tree > li::after {
+  display: none;
+}
+
+.org-tree li:first-child::before,
+.org-tree li:last-child::after {
+  border: 0;
+}
+
+.org-tree li:last-child::before {
+  border-right: 2px solid #c9c1dc;
+  border-radius: 0 12px 0 0;
+}
+
+.org-tree li:first-child::after {
+  border-radius: 12px 0 0 0;
+}
+
+.org-tree ul::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 30px;
+  border-left: 2px solid #c9c1dc;
+}
+
+.org-card {
+  position: relative;
+  width: 220px;
+  min-height: 94px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #ddd7e9;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 8px 25px rgba(49, 29, 96, 0.08);
+  text-align: left;
+}
+.org-tree li > .org-card {
+  margin-left: auto;
+  margin-right: auto;
+}
+.org-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--node-accent, #311d60);
+}
+
+.org-card--executive {
+  border-color: #311d60;
+  background: #311d60;
+  color: white;
+}
+
+.org-card--executive::before {
+  background: #d8b45c;
+}
+
+.org-card--team {
+  min-height: 82px;
+  border-style: dashed;
+  background: #f7f5fb;
+}
+
+@media print {
+  body header:not(.organogram-page-header) {
+    display: none !important;
+  }
+
+  body footer {
+    display: none !important;
+  }
+  html,
+  body {
+    width: 100%;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    color: #111827;
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  body::before,
+  body::after {
+    display: none !important;
+  }
+
+  /* Add site-header/site-footer to the actual public layout elements. */
+  body.organogram-is-printing .site-header,
+  body.organogram-is-printing .site-footer,
+  body.organogram-is-printing iframe,
+  body.organogram-is-printing [role="dialog"],
+  body.organogram-is-printing [class*="chat" i],
+  body.organogram-is-printing [id*="chat" i],
+  body.organogram-is-printing [class*="whatsapp" i],
+  body.organogram-is-printing [id*="whatsapp" i] {
+    display: none !important;
+  }
+
+  .organogram-screen-only {
+    display: none !important;
+  }
+
+  .organogram-print-only {
+    display: block !important;
+  }
+
+  .organogram-print-root {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .organogram-print-sheet {
+    position: relative;
+    width: 100%;
+    min-height: 270mm;
+    margin: 0;
+    padding: 8mm;
+    overflow: hidden;
+    background: #fff;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .org-chart-scroll {
+    overflow: visible !important;
+  }
+
+  .org-tree-wrap {
+    width: 125%;
+    transform: scale(0.8);
+    transform-origin: top left;
+  }
+
+  .org-card {
+    box-shadow: none;
+  }
+
+  .organogram-print-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .organogram-print-sheet,
+  .organogram-print-card,
+  .organogram-print-group {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .organogram-print-card {
+    box-shadow: none !important;
+  }
+
+  .organogram-print-sheet h1,
+  .organogram-print-sheet h2,
+  .organogram-print-sheet h3,
+  .organogram-print-sheet p {
+    orphans: 3;
+    widows: 3;
+  }
+}
