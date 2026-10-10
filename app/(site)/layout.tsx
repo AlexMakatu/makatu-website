@@ -5,6 +5,7 @@ import Script from "next/script";
 
 import { client } from "@/sanity/lib/client";
 import { contactSettingsQuery } from "@/sanity/queries/getContactSettings";
+import { siteSettingsQuery } from "@/sanity/queries/getSiteSettings";
 
 const leagueSpartan = League_Spartan({
   subsets: ["latin"],
@@ -15,13 +16,19 @@ export default async function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const contact = await client.fetch(contactSettingsQuery);
+  const [contact, siteSettings] = await Promise.all([
+    client.fetch(contactSettingsQuery),
+    client.fetch(siteSettingsQuery).catch((err) => {
+      console.error("Failed to load site settings", err);
+      return null;
+    }),
+  ]);
   const whatsappNumber = contact?.whatsappNumber || "27833441849";
 
   return (
     <div className={leagueSpartan.className}>
       {/* ================= HEADER ================= */}
-      <Header />
+      <Header settings={siteSettings} />
 
       {/* ================= MAIN ================= */}
       <main>{children}</main>

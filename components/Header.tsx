@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { client } from "@/sanity/lib/client";
-import { siteSettingsQuery } from "@/sanity/queries/getSiteSettings";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type NavItem = {
   label: string;
@@ -13,7 +11,7 @@ type NavItem = {
   external?: boolean;
 };
 
-type SiteSettings = {
+export type SiteSettings = {
   siteTitle?: string;
   logo?: {
     asset?: {
@@ -23,21 +21,12 @@ type SiteSettings = {
   navigation?: NavItem[];
 };
 
-export default function Header() {
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
+export default function Header({
+  settings = null,
+}: {
+  settings?: SiteSettings | null;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    async function fetchSettings() {
-      try {
-        const data = await client.fetch(siteSettingsQuery);
-        setSettings(data);
-      } catch (err) {
-        console.error("Failed to load site settings", err);
-      }
-    }
-    fetchSettings();
-  }, []);
 
   // ✅ FALLBACK NAVIGATION (THIS FIXES YOUR ISSUE)
   const navigation: NavItem[] = settings?.navigation ?? [

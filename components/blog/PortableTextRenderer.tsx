@@ -5,10 +5,10 @@ import type { PortableTextComponents } from "@portabletext/react";
 import { PortableTextBlock } from "@portabletext/types";
 import Image from "next/image";
 import imageUrlBuilder from "@sanity/image-url";
-import { client } from "@/sanity/lib/client";
+import { dataset, projectId } from "@/sanity/env";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-const builder = imageUrlBuilder(client);
+const builder = imageUrlBuilder({ projectId, dataset });
 
 function urlFor(source: SanityImageSource) {
   return builder.image(source);
