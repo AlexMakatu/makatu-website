@@ -1,0 +1,63 @@
+# Makatu Vehicle Transport
+
+> Makatu (Makatu Business Enterprises (Pty) Ltd) is a South African vehicle-logistics company that provides door-to-door and dealer vehicle transport between major cities nationwide.
+
+Makatu moves passenger cars, SUVs, dealership vehicles and fleet vehicles for individuals, dealerships and fleet operators using vehicle carriers. Transport types offered on the quote form are Door to Door, Dealer to Dealer, Dealer to Private and Private to Dealer. The network connects Johannesburg, Pretoria, Cape Town, Durban, Gqeberha and Bloemfontein, with electronic vehicle inspections and electronic proof of delivery (ePOD). Published "from" prices on route pages are estimates excluding VAT; the final quote may vary.
+
+Business details as published on the business profile: operating hours 06:00-23:00; payment terms 30 days; service area nationwide South Africa; typical lead times: Gauteng local 1-2 working days, Cape Town to Gauteng target 5 working days, other long-haul routes confirmed per route. Clients named on the site: Ford South Africa, BMW South Africa and 3G Relocations.
+
+Contact: phone 0872651140, email info@makatu.co.za, office 12 La Bri, Petrus Street, Moreleta Park, Pretoria.
+
+## Main pages
+
+- [Home](https://www.makatu.co.za/): Overview of Makatu vehicle transport across South Africa
+- [Get a Quote](https://www.makatu.co.za/get-a-quote): Online quote form (route, vehicle, contact details)
+- [Vehicle Transport](https://www.makatu.co.za/vehicle-transport): How Makatu's nationwide car transport works
+- [Contact](https://www.makatu.co.za/contact): Phone, email, office address and contact form
+- [Business Profile](https://www.makatu.co.za/business-profile): Company profile, fleet, process, lead times, operating hours and clients
+- [Customer Reviews](https://www.makatu.co.za/review): Feedback from customers
+- [FAQ](https://www.makatu.co.za/faq): Common questions about pricing, timing, safety, insurance and preparation
+
+## Routes
+
+- [All vehicle transport routes](https://www.makatu.co.za/vehicle-transport/routes): Index of routes with estimated prices
+- [Johannesburg to Cape Town](https://www.makatu.co.za/vehicle-transport/johannesburg-to-cape-town-vehicle-transport)
+- [Cape Town to Johannesburg](https://www.makatu.co.za/vehicle-transport/cape-town-to-johannesburg-vehicle-transport)
+- [Johannesburg to Durban](https://www.makatu.co.za/vehicle-transport/johannesburg-to-durban-vehicle-transport)
+- [Durban to Johannesburg](https://www.makatu.co.za/vehicle-transport/durban-to-johannesburg-vehicle-transport)
+- [Pretoria to Durban](https://www.makatu.co.za/vehicle-transport/pretoria-to-durban-vehicle-transport)
+- [Pretoria to Cape Town](https://www.makatu.co.za/vehicle-transport/pretoria-to-cape-town-vehicle-transport)
+- [Cape Town to Pretoria](https://www.makatu.co.za/vehicle-transport/cape-town-to-pretoria-vehicle-transport)
+- [Johannesburg to Gqeberha](https://www.makatu.co.za/vehicle-transport/johannesburg-to-gqeberha-vehicle-transport)
+
+## Cities
+
+- [Johannesburg](https://www.makatu.co.za/vehicle-transport/city/johannesburg)
+- [Pretoria](https://www.makatu.co.za/vehicle-transport/city/pretoria)
+- [Cape Town](https://www.makatu.co.za/vehicle-transport/city/cape-town)
+- [Durban](https://www.makatu.co.za/vehicle-transport/city/durban)
+- [Gqeberha](https://www.makatu.co.za/vehicle-transport/city/gqeberha)
+- [Bloemfontein](https://www.makatu.co.za/vehicle-transport/city/bloemfontein)
+
+## Guides
+
+- [Blog](https://www.makatu.co.za/blog): Vehicle transport guides for South Africa
+- [Car transport cost in South Africa](https://www.makatu.co.za/blog/car-transport-cost-south-africa)
+- [What affects vehicle transport prices](https://www.makatu.co.za/blog/what-affects-vehicle-transport-prices-south-africa)
+- [How long does it take to transport a car](https://www.makatu.co.za/blog/how-long-does-it-take-to-transport-a-car-in-south-africa)
+- [How to prepare your car for transport](https://www.makatu.co.za/blog/how-to-prepare-your-car-for-transport-south-africa)
+- [Door-to-door car transport](https://www.makatu.co.za/blog/door-to-door-car-transport-south-africa)
+- [Open vs enclosed car transport](https://www.makatu.co.za/blog/open-vs-enclosed-car-transport-south-africa)
+- [ePOD in vehicle transport](https://www.makatu.co.za/blog/epod-vehicle-transport-south-africa)
+
+## Legal
+
+- [Privacy Policy](https://www.makatu.co.za/legal/privacy-policy)
+- [Terms and Conditions](https://www.makatu.co.za/legal/terms): Private client terms and conditions
+- [Claims Procedure](https://www.makatu.co.za/legal/claims-procedure): How to submit a damage claim
+
+## Optional
+
+- [Is car transport safe in South Africa](https://www.makatu.co.za/blog/is-car-transport-safe-in-south-africa-what-you-need-to-know)
+- [Drive vs transport your car](https://www.makatu.co.za/blog/drive-vs-transport-your-car-south-africa)
+- [Moving to another province](https://www.makatu.co.za/blog/moving-to-another-province-vehicle-transport-south-africa)
