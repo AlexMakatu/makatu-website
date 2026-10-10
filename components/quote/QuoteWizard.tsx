@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 
 import StepRoute from "@/components/quote/StepRoute";
@@ -38,6 +38,9 @@ export type QuoteData = {
 export default function QuoteWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<QuoteData>({});
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+  const submissionIdRef = useRef<string | null>(null);
 
   const searchParams = useSearchParams();
 
@@ -87,10 +90,20 @@ export default function QuoteWizard() {
   ]);
 
   async function next(values: Partial<QuoteData>) {
+    if (step === 3 && submittingRef.current) return; // already sending
+
     const updated = { ...data, ...values };
     setData(updated);
 
     if (step === 3) {
+      submittingRef.current = true;
+      setSubmitting(true);
+      if (!submissionIdRef.current) {
+        submissionIdRef.current =
+          typeof crypto !== "undefined" && "randomUUID" in crypto
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      }
       try {
         const res = await fetch("/api/quote", {
           method: "POST",
@@ -100,6 +113,7 @@ export default function QuoteWizard() {
           body: JSON.stringify({
             ...updated,
             submittedAt: new Date().toISOString(),
+            submissionId: submissionIdRef.current,
           }),
         });
 
@@ -109,12 +123,12 @@ export default function QuoteWizard() {
           throw new Error(result.message || "Submit failed");
         }
 
+        // Stay locked while the browser navigates away.
         window.location.href = "/quote-success";
-
-        setStep(1);
-        setData({});
       } catch (error) {
         console.error("Submit error:", error);
+        submittingRef.current = false;
+        setSubmitting(false);
 
         alert(
           error instanceof Error
@@ -179,7 +193,14 @@ export default function QuoteWizard() {
         <div className="transition-all duration-300">
           {step === 1 && <StepRoute next={next} data={data} />}
           {step === 2 && <StepVehicle next={next} back={back} data={data} />}
-          {step === 3 && <StepContact next={next} back={back} data={data} />}
+          {step === 3 && (
+            <StepContact
+              next={next}
+              back={back}
+              data={data}
+              submitting={submitting}
+            />
+          )}
         </div>
       </div>
     </section>

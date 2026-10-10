@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@sanity/client";
 import { Resend } from "resend";
 
 // =====================
@@ -28,20 +27,31 @@ type QuoteRequestBody = {
   priceToBeat?: number;
   notes?: string;
   vehicles: Vehicle[];
+  submissionId?: string;
 };
 
 // =====================
 // CLIENTS
 // =====================
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  apiVersion: "2024-01-01",
-  token: process.env.SANITY_API_TOKEN,
-  useCdn: false,
-});
-
+// Quotes are NOT stored in Sanity any more (the dataset is public).
+// Zoho is the record; if Zoho fails, the email carries the full quote.
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// =====================
+// DUPLICATE GUARD (best effort, per server instance)
+// =====================
+const DUPLICATE_TTL_MS = 10 * 60 * 1000;
+const recentSubmissions = new Map<string, number>();
+
+function isDuplicate(id: string): boolean {
+  const now = Date.now();
+  for (const [key, ts] of recentSubmissions) {
+    if (now - ts > DUPLICATE_TTL_MS) recentSubmissions.delete(key);
+  }
+  if (recentSubmissions.has(id)) return true;
+  recentSubmissions.set(id, now);
+  return false;
+}
 
 // =====================
 // DATE FORMATTERS
@@ -68,18 +78,72 @@ function formatZohoDateForUI(date: Date): string {
 }
 
 // =====================
-// EMAIL HELPER
+// EMAIL HELPERS
 // =====================
+function esc(value: unknown): string {
+  if (value === undefined || value === null || value === "") return "-";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function row(label: string, value: unknown): string {
+  return `<tr><td style="padding:4px 12px 4px 0;vertical-align:top"><strong>${esc(label)}</strong></td><td style="padding:4px 0;white-space:pre-wrap">${esc(value)}</td></tr>`;
+}
+
+function fullQuoteHtml(data: QuoteRequestBody, submittedAt: string): string {
+  const vehicles = (data.vehicles || [])
+    .map(
+      (v, i) => `
+        <h4>Vehicle ${i + 1}</h4>
+        <table>
+          ${row("Type", v.vehicleType)}
+          ${row("Make", v.vehicleMake)}
+          ${row("Model", v.vehicleModel)}
+          ${row("Year", v.vehicleYear)}
+          ${row("Condition", v.vehicleCondition)}
+        </table>`,
+    )
+    .join("");
+
+  return `
+    <table>
+      ${row("Reference", data.submissionId)}
+      ${row("Submitted at", submittedAt)}
+      ${row("Name", data.fullName)}
+      ${row("Email", data.email)}
+      ${row("Phone", data.phone)}
+      ${row("Customer type", data.customerType)}
+      ${row("From", data.fromCity)}
+      ${row("To", data.toCity)}
+      ${row("Transport type", data.transportType)}
+      ${row("Collection date type", data.collectionDateType)}
+      ${row("Collection date", data.collectionDate)}
+      ${row("Price type", data.quotedPriceType)}
+      ${row("Quoted price (incl. VAT)", data.quotedPrice)}
+      ${row("Price to beat", data.priceToBeat)}
+      ${row("Notes", data.notes)}
+    </table>
+    ${vehicles || "<p>No vehicles listed.</p>"}
+  `;
+}
+
 async function sendNotificationEmail(
   subject: string,
   html: string,
 ): Promise<void> {
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
     from: "Makatu <onboarding@resend.dev>",
     to: ["quoteme@makatu.co.za"],
     subject,
     html,
   });
+  if (error) {
+    throw new Error(`Resend error: ${error.message}`);
+  }
 }
 
 // =====================
@@ -96,81 +160,96 @@ export async function POST(req: Request) {
       );
     }
 
-    // =====================
-    // SAVE TO SANITY
-    // =====================
-    const sanityDoc = {
-      _type: "quoteRequest",
-      fullName: data.fullName,
-      email: data.email,
-      phone: data.phone,
-      customerType: data.customerType,
-      fromCity: data.fromCity,
-      toCity: data.toCity,
-      transportType: data.transportType,
-      collectionDateType: data.collectionDateType,
-      collectionDate: data.collectionDate,
-      quotedPriceType: data.quotedPriceType,
-      quotedPrice: data.quotedPrice,
-      priceToBeat: data.priceToBeat,
-      notes: data.notes,
-      submittedAt: new Date().toISOString(),
-      status: "new",
-      vehicles: (data.vehicles || []).map((v) => ({
-        _key: crypto.randomUUID(),
-        vehicleType: v.vehicleType,
-        vehicleMake: v.vehicleMake,
-        vehicleModel: v.vehicleModel,
-        vehicleYear: v.vehicleYear,
-        vehicleCondition: v.vehicleCondition,
-      })),
-    };
+    const submissionId =
+      typeof data.submissionId === "string" && data.submissionId.trim()
+        ? data.submissionId.trim().slice(0, 100)
+        : undefined;
+    data.submissionId = submissionId;
 
-    const sanityResult = await client.create(sanityDoc);
+    if (submissionId && isDuplicate(submissionId)) {
+      console.warn("Duplicate quote submission ignored:", submissionId);
+      return NextResponse.json({ success: true, duplicate: true });
+    }
+
+    const submittedAt = new Date().toISOString();
 
     // =====================
-    // ZOHO (AWAITED = FIX)
+    // ZOHO (main record)
     // =====================
-    let zohoStatus = "success";
+    let zohoOk = true;
     let zohoError = "";
 
     try {
       await sendToZoho(data);
     } catch (err) {
-      zohoStatus = "failed";
+      zohoOk = false;
       zohoError = String(err);
       console.error("Zoho error:", err);
     }
 
     // =====================
-    // EMAIL (ALWAYS RUN)
+    // EMAIL (short if Zoho worked, full backup if not)
     // =====================
+    let emailOk = true;
     try {
-      await sendNotificationEmail(
-        zohoStatus === "success"
-          ? "✅ New Quote Submitted"
-          : "⚠️ Quote Submitted (Zoho Failed)",
-        `
-          <h2>New Quote Request</h2>
-          <p><strong>Name:</strong> ${data.fullName}</p>
-          <p><strong>Email:</strong> ${data.email}</p>
-          <p><strong>From:</strong> ${data.fromCity}</p>
-          <p><strong>To:</strong> ${data.toCity}</p>
-
-          <hr />
-
-          <p><strong>Zoho Status:</strong> ${zohoStatus}</p>
-          ${zohoError ? `<p><strong>Error:</strong> ${zohoError}</p>` : ""}
-        `,
-      );
+      if (zohoOk) {
+        await sendNotificationEmail(
+          "✅ New Quote Submitted",
+          `
+            <h2>New Quote Request</h2>
+            <table>
+              ${row("Reference", submissionId)}
+              ${row("Name", data.fullName)}
+              ${row("Email", data.email)}
+              ${row("Phone", data.phone)}
+              ${row("From", data.fromCity)}
+              ${row("To", data.toCity)}
+            </table>
+            <hr />
+            <p><strong>Zoho Status:</strong> saved</p>
+          `,
+        );
+      } else {
+        await sendNotificationEmail(
+          "⚠️ Quote NOT in Zoho - enter manually",
+          `
+            <h2>⚠️ This quote was NOT saved in Zoho</h2>
+            <p>Please enter it into Zoho manually. This email is the only copy.</p>
+            ${fullQuoteHtml(data, submittedAt)}
+            <hr />
+            <p><strong>Zoho error:</strong> ${esc(zohoError)}</p>
+          `,
+        );
+      }
     } catch (emailErr) {
+      emailOk = false;
       console.error("Email failed:", emailErr);
     }
 
-    return NextResponse.json({ success: true, sanityResult });
+    if (!zohoOk && !emailOk) {
+      // Allow the customer to retry with the same reference.
+      if (submissionId) recentSubmissions.delete(submissionId);
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Sorry, we couldn't send your quote request. Please try again in a moment, or call us.",
+        },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("API error:", error);
-    return NextResponse.json({ success: false }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Sorry, we couldn't send your quote request. Please try again in a moment, or call us.",
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -229,7 +308,9 @@ async function sendToZoho(data: QuoteRequestBody) {
       }),
       ...(data.quotedPrice && { Quoted_Price: data.quotedPrice }),
       ...(data.priceToBeat && { Price_To_Beat: data.priceToBeat }),
-      Notes: data.notes || "",
+      Notes: [data.notes, data.submissionId ? `Ref: ${data.submissionId}` : ""]
+        .filter(Boolean)
+        .join("\n\n"),
       Status: "New",
       Submitted_At: formatZohoDateForUI(new Date()),
       Vehicles: (data.vehicles || []).map((v) => ({
@@ -242,7 +323,7 @@ async function sendToZoho(data: QuoteRequestBody) {
     },
   };
 
-  console.log("📤 Sending to Zoho:", JSON.stringify(payload, null, 2));
+  console.log("📤 Sending quote to Zoho", data.submissionId || "");
 
   const res = await fetch(url, {
     method: "POST",
@@ -256,10 +337,9 @@ async function sendToZoho(data: QuoteRequestBody) {
   const text = await res.text();
 
   console.log("📥 Status:", res.status);
-  console.log("📥 Response:", text);
 
   if (!res.ok) {
-    throw new Error("Zoho API failed");
+    throw new Error(`Zoho API failed (${res.status})`);
   }
 
   return text;

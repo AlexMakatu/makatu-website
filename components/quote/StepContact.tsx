@@ -7,6 +7,7 @@ type Props = {
   next: (values: Partial<QuoteData>) => void;
   back: () => void;
   data: QuoteData;
+  submitting?: boolean;
 };
 
 type VehicleEstimate = {
@@ -14,7 +15,7 @@ type VehicleEstimate = {
   price: number;
 };
 
-export default function StepContact({ next, back, data }: Props) {
+export default function StepContact({ next, back, data, submitting = false }: Props) {
   const [name, setName] = useState(data.fullName || "");
   const [email, setEmail] = useState(data.email || "");
   const [phone, setPhone] = useState(data.phone || "");
@@ -75,6 +76,7 @@ export default function StepContact({ next, back, data }: Props) {
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (submitting) return;
 
     next({
       fullName: name,
@@ -245,16 +247,19 @@ export default function StepContact({ next, back, data }: Props) {
         <button
           type="button"
           onClick={back}
-          className="border px-6 py-3 rounded-lg"
+          disabled={submitting}
+          className="border px-6 py-3 rounded-lg disabled:opacity-50"
         >
           Back
         </button>
 
         <button
           type="submit"
-          className="bg-black text-white px-6 py-3 rounded-lg"
+          disabled={submitting}
+          aria-busy={submitting}
+          className="bg-black text-white px-6 py-3 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Submit Quote
+          {submitting ? "Sending…" : "Submit Quote"}
         </button>
       </div>
     </form>
