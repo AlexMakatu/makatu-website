@@ -10,6 +10,19 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
+  },
+
   async redirects() {
     return [
       // 🔐 LEGAL
@@ -42,7 +55,7 @@ const nextConfig: NextConfig = {
       // 🧱 CORE
       {
         source: "/about.html",
-        destination: "/vehicle-transport",
+        destination: "/business-profile",
         permanent: true,
       },
       {
@@ -64,6 +77,42 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/Makatu%20Management.html",
+        destination: "/business-profile",
+        permanent: true,
+      },
+      {
+        source: "/Makatu Management.html",
+        destination: "/business-profile",
+        permanent: true,
+      },
+      {
+        source: "/Contact Us.html",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/Makatu%20Current.html",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/Makatu Current.html",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/vehicle-transport.html",
+        destination: "/vehicle-transport",
+        permanent: true,
+      },
+      {
+        // vehicle-transport-blog1.html ... blog7.html (old static blog posts)
+        source: "/vehicle-transport-blog:num(\\d+).html",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/index.html",
         destination: "/",
         permanent: true,
       },

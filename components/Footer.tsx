@@ -135,6 +135,7 @@ export default async function Footer() {
                     key={social.url}
                     href={social.url}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] transition hover:bg-white/15 hover:scale-105"
                   >
                     <Icon size={17} />

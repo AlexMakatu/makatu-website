@@ -430,7 +430,7 @@ export default function BusinessProfilePresentation({ profile }: Props) {
                 <a
                   href={profile.bbbeeCertificateUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   View current certificate <ArrowRight size={15} />
                 </a>
@@ -445,7 +445,7 @@ export default function BusinessProfilePresentation({ profile }: Props) {
                 <a
                   href={profile.insuranceDocumentUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   View confirmation of cover <ArrowRight size={15} />
                 </a>
