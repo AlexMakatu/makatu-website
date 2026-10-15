@@ -222,6 +222,10 @@ export default async function BlogPostPage({
 
   /* ---------------- ROUTES ---------------- */
 
+  const validRouteSlugs: string[] = await client.fetch(
+    groq`*[_type == "route" && defined(slug.current)].slug.current`,
+  );
+
   let popularRoutes = [];
 
   if (post.relatedCities?.length) {
@@ -375,7 +379,10 @@ export default async function BlogPostPage({
           />
         )}
         {/* CONTENT */}
-        <SectionRenderer sections={post.sections || []} />
+        <SectionRenderer
+          sections={post.sections || []}
+          validRouteSlugs={validRouteSlugs}
+        />
 
         {/* AUTHOR */}
         {post.author && (

@@ -30,7 +30,7 @@ function normalizeRoute(route: string) {
   return route + "-vehicle-transport";
 }
 function formatRouteLabel(path: string) {
-  const parts = path.split("/").filter(Boolean);
+  const parts = path.replace(/-vehicle-transport$/, "").split("/").filter(Boolean);
 
   if (parts[0] === "vehicle-transport" && parts[1]) {
     const [from, to] = parts[1].split("-to-");
@@ -108,7 +108,15 @@ const portableTextComponents: PortableTextComponents = {
 
 /* ---------------- COMPONENT ---------------- */
 
-export function SectionRenderer({ sections }: { sections: Section[] }) {
+export function SectionRenderer({
+  sections,
+  validRouteSlugs,
+}: {
+  sections: Section[];
+  /** Published route slugs. When given, links to routes not in this list are skipped (avoids 404s). */
+  validRouteSlugs?: string[];
+}) {
+  const validRoutes = validRouteSlugs ? new Set(validRouteSlugs) : null;
   return (
     <>
       {sections.map((section) => {
@@ -117,7 +125,11 @@ export function SectionRenderer({ sections }: { sections: Section[] }) {
           // 🔥 INTERNAL LINKS FIX
           if (section.sectionKey === "internalLinks" && section.content) {
             const text = extractText(section.content);
-            const routes = extractRoutes(text);
+            const routes = Array.from(
+              new Set(extractRoutes(text).map((r) => normalizeRoute(r.toLowerCase()))),
+            ).filter(
+              (r) => !validRoutes || validRoutes.has(r.replace("/vehicle-transport/", "")),
+            );
 
             return (
               <div key={section._key} className="mt-10">

@@ -25,6 +25,38 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // 🔗 BROKEN INTERNAL LINKS (Screaming Frog 4xx, Oct 2026)
+      {
+        source: "/vehicle-transport/johannesburg-to-cape-town",
+        destination: "/vehicle-transport/johannesburg-to-cape-town-vehicle-transport",
+        permanent: true,
+      },
+      {
+        source: "/vehicle-transport/pretoria-to-durban",
+        destination: "/vehicle-transport/pretoria-to-durban-vehicle-transport",
+        permanent: true,
+      },
+      {
+        source: "/is-car-transport-safe-in-south-africa",
+        destination: "/blog/is-car-transport-safe-in-south-africa-what-you-need-to-know",
+        permanent: true,
+      },
+      {
+        source: "/blog/how-to-prepare-your-car-for-transport-in-south-africa",
+        destination: "/blog/how-to-prepare-your-car-for-transport-south-africa",
+        permanent: true,
+      },
+      {
+        source: "/vehicle-transport/cape-town-to-durban-vehicle-transport",
+        destination: "/vehicle-transport/routes",
+        permanent: true,
+      },
+      {
+        source: "/vehicle-transport/cape-town-to-durban",
+        destination: "/vehicle-transport/routes",
+        permanent: true,
+      },
+
       // 🔐 LEGAL
       {
         source: "/tcs.html",
