@@ -114,6 +114,7 @@ export default async function ReviewsSection() {
                   <Link
                     href={review.reviewUrl}
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm text-brand hover:underline mt-2 inline-block"
                   >
                     Read full review →
