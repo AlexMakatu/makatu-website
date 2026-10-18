@@ -7,6 +7,7 @@ import { SectionRenderer } from "@/components/sections/SectionRenderer";
 import Link from "next/link";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { Metadata } from "next";
+import { clampText, firstFilled } from "@/lib/seo";
 import { notFound } from "next/navigation";
 
 /* ---------------- COMPONENTS ---------------- */
@@ -82,6 +83,7 @@ export async function generateMetadata({
       title,
       seoTitle,
       seoDescription,
+      excerpt,
       mainImage
     }`,
     { slug },
@@ -89,17 +91,32 @@ export async function generateMetadata({
 
   if (!post) return {};
 
+  const title =
+    firstFilled(post.seoTitle) ??
+    (`${post.title} | Makatu Blog`.length <= 65
+      ? `${post.title} | Makatu Blog`
+      : clampText(post.title, 60));
+  const description =
+    firstFilled(post.seoDescription) ??
+    clampText(
+      firstFilled((post as { excerpt?: string }).excerpt) ??
+        `${post.title}. Expert vehicle transport advice from Makatu: door-to-door car transport across South Africa, prices and quick quotes.`,
+      155,
+    );
+
   return {
-    title: post.seoTitle || post.title,
-    description: post.seoDescription || "",
+    title,
+    description,
 
     alternates: {
       canonical: `/blog/${slug}`,
     },
 
     openGraph: {
-      title: post.seoTitle || post.title,
-      description: post.seoDescription,
+      title,
+      description,
+      url: `/blog/${slug}`,
+      type: "article",
       images: post.mainImage
         ? [
             {
@@ -204,6 +221,10 @@ export default async function BlogPostPage({
   }
 
   /* ---------------- ROUTES ---------------- */
+
+  const validRouteSlugs: string[] = await client.fetch(
+    groq`*[_type == "route" && defined(slug.current)].slug.current`,
+  );
 
   let popularRoutes = [];
 
@@ -358,7 +379,10 @@ export default async function BlogPostPage({
           />
         )}
         {/* CONTENT */}
-        <SectionRenderer sections={post.sections || []} />
+        <SectionRenderer
+          sections={post.sections || []}
+          validRouteSlugs={validRouteSlugs}
+        />
 
         {/* AUTHOR */}
         {post.author && (

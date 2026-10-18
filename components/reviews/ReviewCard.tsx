@@ -51,6 +51,7 @@ export default function ReviewCard({ review }: { review: Review }) {
           <Link
             href={review.reviewUrl}
             target="_blank"
+            rel="noopener noreferrer"
             className="text-sm text-blue-600 hover:underline"
           >
             View review

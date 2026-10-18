@@ -1,5 +1,13 @@
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Company Documents & Certificates | Makatu",
+  description:
+    "Download Makatu Business Enterprises company documents, B-BBEE certificates, insurance and compliance documents for vehicle transport clients.",
+  alternates: { canonical: "/legal/documents" },
+};
 
 export const dynamic = "force-dynamic";
 

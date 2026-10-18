@@ -179,6 +179,7 @@ export default async function ContactPage() {
                 <a
                   href={`https://wa.me/${page.whatsappNumber}`}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block bg-green-500 text-white px-5 py-3 rounded-lg font-semibold mt-4 hover:opacity-90 transition"
                 >
                   Chat on WhatsApp

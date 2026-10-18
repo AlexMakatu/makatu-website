@@ -1,5 +1,13 @@
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Organogram & Leadership Team | Makatu",
+  description:
+    "Meet the Makatu Business Enterprises leadership and organisational structure behind our door-to-door vehicle transport services in South Africa.",
+  alternates: { canonical: "/organogram" },
+};
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import PrintButton from "@/app/(site)/organogram/PrintButton";
