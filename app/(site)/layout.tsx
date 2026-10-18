@@ -145,7 +145,7 @@ export default async function SiteLayout({
             var options = {
               whatsapp: "${whatsappNumber}",
               call_to_action: "Chat with us",
-              position: "right",
+              position: "left", // SalesIQ chat sits bottom-right
               pre_filled_message: "Hi Makatu, I need a vehicle transport quote."
             };
 
@@ -167,18 +167,12 @@ export default async function SiteLayout({
           })();
         `}
       </Script>
-      {/* ================= ZOHO SALESIQ (TRACKING ONLY - NO CHAT UI) ================= */}
+      {/* ================= ZOHO SALESIQ (CHAT VISIBLE, BOTTOM-RIGHT) ================= */}
+      {/* WhatsApp button is on the left so the two floating buttons never overlap. */}
       <Script id="zoho-salesiq" strategy="afterInteractive">
         {`
     window.$zoho = window.$zoho || {};
-    $zoho.salesiq = $zoho.salesiq || {
-      ready: function () {
-        // 👇 THIS hides the chat bubble completely
-        $zoho.salesiq.floatwindow.visible("hide");
-        $zoho.salesiq.chatbox.visible("hide");
-        $zoho.salesiq.tracking = true; // keep tracking active
-      }
-    };
+    $zoho.salesiq = $zoho.salesiq || { ready: function () {} };
   `}
       </Script>
 
