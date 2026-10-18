@@ -2,6 +2,7 @@ import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import RoutesSection from "@/components/home/RoutesSection";
 import Script from "next/script";
+import { withLowestPrices } from "@/lib/routeRates";
 
 /* ================= TYPES ================= */
 type PriceType = "fixed" | "startingFrom" | "negotiable" | "quoteRequired";
@@ -45,7 +46,7 @@ export const metadata = {
 /* ================= PAGE ================= */
 
 export default async function RoutesPage() {
-  const routes: Route[] = await client.fetch(
+  const routes: Route[] = await withLowestPrices(await client.fetch(
     groq`*[_type == "route"]{
     slug,
     routeSummary,
@@ -54,20 +55,10 @@ export default async function RoutesPage() {
     },
     fromCity->{name},
     toCity->{name},
-
-    "lowestPrice": *[_type == "routeRate" 
-      && fromCity->_id == ^.fromCity->_id 
-      && toCity->_id == ^.toCity->_id
-    ] | order(price asc)[0].price,
-
-    "priceType": *[_type == "routeRate" 
-      && fromCity->_id == ^.fromCity->_id 
-      && toCity->_id == ^.toCity->_id
-    ][0].priceType
   }`,
     {},
     { cache: "no-store" }, // ✅ THIS is the fix
-  );
+  ));
 
   /* ================= SCHEMA ================= */
 

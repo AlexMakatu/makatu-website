@@ -3,11 +3,12 @@ import { timingSafeEqual } from "crypto";
 import {
   CHAT_MODEL,
   CHAT_VECTOR_STORE_ID,
-  CHAT_INSTRUCTIONS,
+  buildChatInstructions,
   CHAT_KNOWLEDGE,
   FALLBACK_ANSWER,
   applyPriceNote,
 } from "@/lib/chatAssistant";
+import { getAllRouteRates } from "@/lib/routeRates";
 
 // AI answer webhook for the Zoho SalesIQ Zobot (replaces the OpenAI Assistant;
 // OpenAI removed the Assistants API on 26 Aug 2026).
@@ -32,12 +33,17 @@ type ResponsesOutput = {
   output?: { type: string; content?: { type: string; text?: string }[] }[];
 };
 
-async function ask(question: string, useFileSearch: boolean, signal: AbortSignal): Promise<string> {
+async function ask(
+  question: string,
+  instructions: string,
+  useFileSearch: boolean,
+  signal: AbortSignal,
+): Promise<string> {
   const body: Record<string, unknown> = {
     model: CHAT_MODEL,
     instructions: useFileSearch
-      ? CHAT_INSTRUCTIONS
-      : `${CHAT_INSTRUCTIONS}\n\nKNOWLEDGE\n${CHAT_KNOWLEDGE}`,
+      ? instructions
+      : `${instructions}\n\nKNOWLEDGE\n${CHAT_KNOWLEDGE}`,
     input: question,
     temperature: 0.3,
     max_output_tokens: 300,
@@ -125,15 +131,17 @@ export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) return fallback();
 
   const signal = AbortSignal.timeout(TIMEOUT_MS);
+  // Live rates (cached 1h). If both Creator and Sanity fail, the table is empty and every price becomes "quote required".
+  const instructions = buildChatInstructions(await getAllRouteRates().catch(() => []));
   try {
     let text = "";
     try {
-      text = await ask(question, true, signal);
+      text = await ask(question, instructions, true, signal);
     } catch (err) {
       // e.g. vector store not visible to this API key: retry once with the knowledge inline.
       if (signal.aborted) throw err;
       console.error("chat-answer file_search failed, retrying inline", err);
-      text = await ask(question, false, signal);
+      text = await ask(question, instructions, false, signal);
     }
     if (!text) return fallback();
     const { answer, hasPrice } = applyPriceNote(text);

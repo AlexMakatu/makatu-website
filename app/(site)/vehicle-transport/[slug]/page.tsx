@@ -24,6 +24,7 @@ import type {
   PortableTextListItemBlock,
   PortableTextSpan,
 } from "@portabletext/types";
+import { getRatesForRoute } from "@/lib/routeRates";
 
 /* ---------------------------
 Types
@@ -126,23 +127,11 @@ const routeQuery = groq`
   },
 
   seoTitle,
-  seoDescription,
-  "fromCity": fromCity->name,
-  "toCity": toCity->name
+  seoDescription
 }
 `;
 
-const routeRatesQuery = groq`
-*[_type == "routeRate"
-  && fromCity->name == $fromCity
-  && toCity->name == $toCity
-  && active == true
-] | order(vehicleType asc) {
-  vehicleType,
-  priceType,
-  price
-}
-`;
+// Route rates now come from lib/routeRates (Zoho Creator, Sanity fallback).
 
 const vehiclePageQuery = groq`
 *[_type == "vehicleTransportPage"][0]{
@@ -167,7 +156,9 @@ const seoQuery = groq`
 *[_type == "route" && slug.current == $slug][0]{
   title,
   seoTitle,
-  seoDescription
+  seoDescription,
+  "fromCity": fromCity->name,
+  "toCity": toCity->name
 }
 `;
 
@@ -257,7 +248,11 @@ export default async function RoutePage({
 
   const routeRates: RouteRate[] =
     fromCity && toCity
-      ? await client.fetch(routeRatesQuery, { fromCity, toCity })
+      ? (await getRatesForRoute(fromCity, toCity)).map((r) => ({
+          vehicleType: r.vehicleType,
+          priceType: r.priceType,
+          price: r.price ?? undefined,
+        }))
       : [];
 
   const faqSchema =
