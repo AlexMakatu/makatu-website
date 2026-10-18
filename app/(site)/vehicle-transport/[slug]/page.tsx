@@ -1,6 +1,7 @@
 import { client } from "@/sanity/lib/client";
 import { groq } from "next-sanity";
 import type { Metadata } from "next";
+import { firstFilled, routeSeoDefaults } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import RouteHero from "@/components/routes/RouteHero";
 import RouteIntroduction from "@/components/routes/RouteIntroduction";
@@ -125,7 +126,9 @@ const routeQuery = groq`
   },
 
   seoTitle,
-  seoDescription
+  seoDescription,
+  "fromCity": fromCity->name,
+  "toCity": toCity->name
 }
 `;
 
@@ -210,16 +213,16 @@ export async function generateMetadata({
   const { slug } = await params;
 
   const route = await client.fetch(seoQuery, { slug });
+  const defaults = routeSeoDefaults(route?.fromCity, route?.toCity, route?.title);
+  const title = firstFilled(route?.seoTitle) ?? defaults.title;
+  const description = firstFilled(route?.seoDescription) ?? defaults.description;
+  const canonical = `/vehicle-transport/${slug}`;
 
   return {
-    title: route?.seoTitle ?? route?.title ?? "Vehicle Transport | Makatu",
-    description:
-      route?.seoDescription ??
-      "Professional vehicle transport services across South Africa.",
-
-    alternates: {
-      canonical: `/vehicle-transport/${slug}`,
-    },
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: { title, description, url: canonical, type: "website" },
   };
 }
 

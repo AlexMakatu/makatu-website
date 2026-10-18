@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Business Profile | Makatu Business Enterprises",
   description:
     "Makatu Business Enterprises company profile, fleet capacity, leadership, credentials and nationwide vehicle-transport capability.",
+  alternates: { canonical: "/business-profile" },
 };
 
 export const dynamic = "force-dynamic";
