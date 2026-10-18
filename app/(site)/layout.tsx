@@ -172,7 +172,11 @@ export default async function SiteLayout({
       <Script id="zoho-salesiq" strategy="afterInteractive">
         {`
     window.$zoho = window.$zoho || {};
-    $zoho.salesiq = $zoho.salesiq || { ready: function () {} };
+    $zoho.salesiq = $zoho.salesiq || {};
+    $zoho.salesiq.ready = function () {
+      // Keep the chat bubble bottom-right; WhatsApp sits bottom-left.
+      try { $zoho.salesiq.floatbutton.position("bottomright"); } catch (e) {}
+    };
   `}
       </Script>
 
