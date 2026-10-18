@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type Props = {
   fromCity?: string;
@@ -20,7 +21,10 @@ export default function RouteCTA({ fromCity, toCity, startingPrice }: Props) {
 
         {/* PRICE CONTEXT */}
         {startingPrice && (
-          <p className="text-lg text-white/90 mb-2">From R{startingPrice}</p>
+          <>
+            <p className="text-lg text-white/90 mb-1">Estimated from R{startingPrice}</p>
+            <p className="text-xs text-white/70 mb-2">{ESTIMATE_NOTE}</p>
+          </>
         )}
 
         <p className="text-white/80 max-w-xl mx-auto mb-8 text-lg">

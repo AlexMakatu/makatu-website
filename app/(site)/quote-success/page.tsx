@@ -23,7 +23,8 @@ export default function QuoteSuccessPage() {
         {/* MESSAGE */}
         <p className="text-gray-600 mb-6">
           Thank you for your request. Our transport team will review your
-          details and contact you shortly with a quote.
+          details and contact you shortly with a formal quote. Any price shown
+          on the website was an indicative estimate only.
         </p>
 
         {/* TRUST BOOST */}

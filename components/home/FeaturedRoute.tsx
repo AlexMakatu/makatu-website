@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type Route = {
   slug?: { current?: string };
@@ -86,8 +87,7 @@ export default function FeaturedRoute({ route }: Props) {
               {/* Sub label */}
               {price.sub && (
                 <p className="text-xs text-gray-500 mt-1">
-                  {price.sub}. Door-to-door service included. Final quote may
-                  vary depending on vehicle type, condition, and availability.
+                  {price.sub}. Door-to-door service included. {ESTIMATE_NOTE}
                 </p>
               )}
             </div>

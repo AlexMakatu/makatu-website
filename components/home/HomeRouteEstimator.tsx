@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type City = {
   _id: string;
@@ -230,8 +231,10 @@ export default function HomeRouteEstimator() {
             {fromCity} → {toCity}
           </p>
           <p className="text-lg font-semibold text-gray-900">
-            R {estimate.price}
+            Estimated from R{Number(estimate.price).toLocaleString("en-ZA")}{" "}
+            <span className="text-sm font-normal text-gray-500">(excl. VAT)</span>
           </p>
+          <p className="text-xs text-gray-500 mt-1">{ESTIMATE_NOTE}</p>
 
           <button
             onClick={goToQuote}

@@ -118,7 +118,7 @@ export async function POST(req: Request) {
   try {
     if (zohoOk) {
       await sendNotificationEmail(
-        "✅ New Quote Submitted (Website chat)",
+        "New Quote Request (Website chat)",
         `
           <h2>New Quote Request (Website chat)</h2>
           <table>
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
       );
     } else {
       await sendNotificationEmail(
-        "⚠️ Chat quote NOT in Zoho - enter manually",
+        "⚠️ Chat quote request NOT in Zoho - enter manually",
         `
           <h2>⚠️ This chat quote was NOT saved in Zoho</h2>
           <p>Please enter it into Zoho manually. This email is the only copy.</p>

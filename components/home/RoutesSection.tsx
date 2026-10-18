@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type Route = {
   slug?: {
@@ -70,7 +71,7 @@ export default function RoutesSection({ routes }: Props) {
         </div>
 
         <p className="text-xs text-gray-400 mt-1">
-          Estimated price. Final quote may vary.
+          {ESTIMATE_NOTE}
         </p>
       </div>
     );

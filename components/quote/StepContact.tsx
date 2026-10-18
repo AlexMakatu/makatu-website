@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { QuoteData } from "@/components/quote/QuoteWizard";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type Props = {
   next: (values: Partial<QuoteData>) => void;
@@ -92,7 +93,7 @@ export default function StepContact({ next, back, data, submitting = false }: Pr
   return (
     <form onSubmit={submit} className="space-y-6">
       <div className="bg-gray-50 border rounded-lg p-4 space-y-2">
-        <p className="text-sm text-gray-500">Estimated Transport Price</p>
+        <p className="text-sm text-gray-500">Indicative Estimate</p>
 
         {loading && <p>Calculating...</p>}
 
@@ -157,7 +158,7 @@ export default function StepContact({ next, back, data, submitting = false }: Pr
             </div>
 
             <div className="flex justify-between text-lg font-semibold">
-              <span>Total</span>
+              <span>Estimated total</span>
               <span>
                 {breakdown.length > 0
                   ? `R${totalWithVat?.toFixed(0)}`
@@ -168,14 +169,14 @@ export default function StepContact({ next, back, data, submitting = false }: Pr
             {/* 🔹 MESSAGE */}
             {breakdown.length > 0 ? (
               <p className="text-xs text-gray-500 mt-2 leading-relaxed">
-                This is an estimated price based on standard transport rates
-                (excl. VAT). Final pricing may vary depending on vehicle
-                condition, route availability, and operational factors.
+                {ESTIMATE_NOTE} This estimate is based on standard
+                starting-from rates and may change with vehicle condition,
+                route availability and collection date.
               </p>
             ) : (
               <p className="text-xs text-gray-500 mt-2 leading-relaxed">
                 Instant pricing is not available for this route or vehicle type.
-                Submit your request and our team will provide a confirmed quote.
+                Submit your request and our team will send you a formal quote.
               </p>
             )}
           </>

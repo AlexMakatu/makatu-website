@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type City = {
   name?: string;
@@ -62,6 +63,9 @@ export default function RouteHero({
           <p className="text-xl md:text-2xl font-semibold text-white/90 mb-2">
             From R{startingPrice} • Fast & Secure Delivery
           </p>
+        )}
+        {startingPrice && (
+          <p className="text-xs text-white/70 mb-2">{ESTIMATE_NOTE}</p>
         )}
 
         {/* Description */}
