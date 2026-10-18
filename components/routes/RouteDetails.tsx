@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ESTIMATE_NOTE } from "@/lib/pricingNote";
 
 type RouteRate = {
   vehicleType: string;
@@ -76,7 +77,7 @@ export default function RouteDetails({
             {/* Header */}
             <div className="flex justify-between px-6 py-3 bg-gray-50 border-b text-sm font-medium text-gray-600">
               <span>Vehicle Type</span>
-              <span>Estimated Price</span>
+              <span>Indicative Estimate</span>
             </div>
 
             {/* Rows */}
@@ -98,14 +99,13 @@ export default function RouteDetails({
 
           {/* VAT NOTE */}
           <p className="text-sm text-gray-600 mt-3 text-center">
-            Prices exclude VAT. Final pricing may vary based on availability and
-            scheduling.
+            Prices exclude VAT. {ESTIMATE_NOTE}
           </p>
 
           {/* CTA */}
           <div className="mt-8 text-center space-y-4">
             <p className="text-gray-700 font-medium">
-              Get your exact transport price
+              Get your formal quote
             </p>
 
             <Link

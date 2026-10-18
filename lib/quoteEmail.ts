@@ -22,6 +22,17 @@ export function row(label: string, value: unknown): string {
   return `<tr><td style="padding:4px 12px 4px 0;vertical-align:top"><strong>${esc(label)}</strong></td><td style="padding:4px 0;white-space:pre-wrap">${esc(value)}</td></tr>`;
 }
 
+export const QUOTE_REQUEST_NOTICE =
+  "This is a quote REQUEST. Any price shown is the indicative website estimate only, not a confirmed quote. Please prepare and send the formal quote.";
+
+/** The website only ever shows indicative estimates, so never label them as a fixed price. */
+function estimateTypeLabel(type?: string): string {
+  if (!type) return "";
+  const t = type.toLowerCase().replace(/\s/g, "");
+  if (t === "quoterequired") return "No website estimate (quote required)";
+  return "Indicative website estimate";
+}
+
 export function fullQuoteHtml(data: QuoteRequestBody, submittedAt: string): string {
   const vehicles = (data.vehicles || [])
     .map(
@@ -50,8 +61,8 @@ export function fullQuoteHtml(data: QuoteRequestBody, submittedAt: string): stri
       ${row("Transport type", data.transportType)}
       ${row("Collection date type", data.collectionDateType)}
       ${row("Collection date", data.collectionDate)}
-      ${row("Price type", data.quotedPriceType)}
-      ${row("Quoted price (incl. VAT)", data.quotedPrice)}
+      ${row("Estimate type", estimateTypeLabel(data.quotedPriceType))}
+      ${row("Indicative website estimate (incl. VAT)", data.quotedPrice)}
       ${row("Price to beat", data.priceToBeat)}
       ${row("Notes", data.notes)}
     </table>
@@ -59,18 +70,26 @@ export function fullQuoteHtml(data: QuoteRequestBody, submittedAt: string): stri
   `;
 }
 
+const QUOTE_TO = ["quoteme@makatu.co.za"];
+const QUOTE_CC = ["quotesmakatu@gmail.com"];
+
 export async function sendNotificationEmail(
   subject: string,
   html: string,
 ): Promise<void> {
-  const { error } = await getResend().emails.send({
+  const body = {
     from: "Makatu <onboarding@resend.dev>",
-    to: ["quoteme@makatu.co.za"],
+    to: QUOTE_TO,
     subject,
-    html,
-  });
-  if (error) {
-    throw new Error(`Resend error: ${error.message}`);
+    html: `<p style="padding:8px 12px;background:#fff4e5;border:1px solid #f0b46c"><strong>${esc(QUOTE_REQUEST_NOTICE)}</strong></p>${html}`,
+  };
+  const { error } = await getResend().emails.send({ ...body, cc: QUOTE_CC });
+  if (!error) return;
+  // Never lose the notification because of the CC (e.g. Resend test-sender restrictions):
+  // retry once to the main inbox only.
+  console.error("Resend rejected email with CC, retrying without CC:", error.message);
+  const retry = await getResend().emails.send(body);
+  if (retry.error) {
+    throw new Error(`Resend error: ${retry.error.message}`);
   }
 }
-

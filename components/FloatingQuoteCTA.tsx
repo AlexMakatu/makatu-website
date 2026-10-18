@@ -50,7 +50,7 @@ export default function FloatingCTA({ fromCity, toCity, rates }: Props) {
   const lowestPrice = validPrices.length > 0 ? Math.min(...validPrices) : null;
 
   const ctaText = lowestPrice
-    ? `Get Instant Quote from R${lowestPrice}`
+    ? `Get a Quote (est. from R${lowestPrice})`
     : "Get Instant Quote";
 
   return (

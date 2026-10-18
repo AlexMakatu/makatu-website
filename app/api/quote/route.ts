@@ -77,7 +77,7 @@ export async function POST(req: Request) {
     try {
       if (zohoOk) {
         await sendNotificationEmail(
-          "✅ New Quote Submitted",
+          "New Quote Request",
           `
             <h2>New Quote Request</h2>
             <table>
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
         );
       } else {
         await sendNotificationEmail(
-          "⚠️ Quote NOT in Zoho - enter manually",
+          "⚠️ Quote request NOT in Zoho - enter manually",
           `
             <h2>⚠️ This quote was NOT saved in Zoho</h2>
             <p>Please enter it into Zoho manually. This email is the only copy.</p>
