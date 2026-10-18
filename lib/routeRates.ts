@@ -2,7 +2,6 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 import { groq } from "next-sanity";
 import { client } from "@/sanity/lib/client";
-import { getZohoAccessToken } from "@/lib/zohoCreator";
 
 // Route rates: Zoho Creator report All_Route_Rates is the source of truth.
 // Sanity routeRate documents are only used as a fallback if Creator fails.
@@ -74,29 +73,59 @@ function isActive(v: unknown): boolean {
 
 /* ---------------- Creator ---------------- */
 
-// Reuse one access token (~55 min) so rate reads never hammer Zoho's token endpoint,
-// which is shared with quote submissions and throttles bursts of refreshes.
+// Rates use their own OAuth client/token (ZOHO_RATES_*, needs ZohoCreator.report.READ) so quote
+// submissions (lib/zohoCreator, ZOHO_*) stay isolated. Falls back to the ZOHO_* vars if not set.
+// The access token is cached here (~55 min), separately from the quote flow, so rate reads never
+// hammer Zoho's token endpoint (which throttles bursts of refreshes).
+function ratesOAuth() {
+  return {
+    refreshToken: process.env.ZOHO_RATES_REFRESH_TOKEN || process.env.ZOHO_REFRESH_TOKEN || "",
+    clientId: process.env.ZOHO_RATES_CLIENT_ID || process.env.ZOHO_CLIENT_ID || "",
+    clientSecret: process.env.ZOHO_RATES_CLIENT_SECRET || process.env.ZOHO_CLIENT_SECRET || "",
+    usingRatesClient: Boolean(process.env.ZOHO_RATES_REFRESH_TOKEN),
+  };
+}
+
 let tokenCache: { token: string; expires: number } | null = null;
 let tokenInflight: Promise<string> | null = null;
+
+async function refreshRatesToken(): Promise<string> {
+  const o = ratesOAuth();
+  const res = await fetch("https://accounts.zoho.com/oauth/v2/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      refresh_token: o.refreshToken,
+      client_id: o.clientId,
+      client_secret: o.clientSecret,
+      grant_type: "refresh_token",
+    }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(15000),
+  });
+  const data = (await res.json().catch(() => ({}))) as { access_token?: string; expires_in?: number; error?: string };
+  if (!data.access_token) {
+    throw new Error(`Zoho token refresh failed (${o.usingRatesClient ? "ZOHO_RATES_*" : "ZOHO_*"}): ${data.error ?? res.status}`);
+  }
+  const ttl = Math.min((data.expires_in ?? 3600) * 1000, 55 * 60 * 1000);
+  tokenCache = { token: data.access_token, expires: Date.now() + ttl };
+  return data.access_token;
+}
 
 async function creatorToken(): Promise<string> {
   if (tokenCache && tokenCache.expires > Date.now()) return tokenCache.token;
   if (!tokenInflight) {
-    tokenInflight = getZohoAccessToken()
-      .then((token) => {
-        tokenCache = { token, expires: Date.now() + 55 * 60 * 1000 };
-        return token;
-      })
-      .finally(() => {
-        tokenInflight = null;
-      });
+    tokenInflight = refreshRatesToken().finally(() => {
+      tokenInflight = null;
+    });
   }
   return tokenInflight;
 }
 
 async function fetchFromCreator(): Promise<RouteRate[]> {
-  if (!process.env.ZOHO_REFRESH_TOKEN || !process.env.ZOHO_CLIENT_ID || !process.env.ZOHO_CLIENT_SECRET) {
-    throw new Error("Zoho OAuth env vars not set");
+  const o = ratesOAuth();
+  if (!o.refreshToken || !o.clientId || !o.clientSecret) {
+    throw new Error("Zoho OAuth env vars not set (ZOHO_RATES_* or ZOHO_*)");
   }
   const token = await creatorToken();
   const base = `https://creator.zoho.com/api/v2/${CREATOR_OWNER}/${CREATOR_APP}/report/${CREATOR_REPORT}`;
