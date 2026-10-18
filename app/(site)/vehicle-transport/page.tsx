@@ -18,6 +18,7 @@ import { PortableTextBlock } from "@portabletext/types";
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import { generateBreadcrumbJsonLd } from "@/lib/seo";
 import CustomerTypes from "@/components/vehicle/CustomerTypes";
+import { withLowestPrices } from "@/lib/routeRates";
 
 /* ================= HELPERS ================= */
 
@@ -89,7 +90,7 @@ export default async function VehicleTransportPage() {
 
   /* ================= FETCH ROUTES ================= */
 
-  const routes = await client.fetch(
+  const routes = await withLowestPrices(await client.fetch(
     groq`*[_type == "route"][0..5]{
     slug,
     routeSummary,
@@ -98,18 +99,8 @@ export default async function VehicleTransportPage() {
     },
     fromCity->{name},
     toCity->{name},
-
-    "lowestPrice": *[_type == "routeRate" 
-      && fromCity._ref == ^.fromCity._ref 
-      && toCity._ref == ^.toCity._ref
-    ] | order(price asc)[0].price,
-
-    "priceType": *[_type == "routeRate" 
-      && fromCity._ref == ^.fromCity._ref 
-      && toCity._ref == ^.toCity._ref
-    ] | order(price asc)[0].priceType
   }`,
-  );
+  ));
 
   /* ================= FETCH FAQS ================= */
 

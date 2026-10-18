@@ -1,6 +1,9 @@
 // Makatu website chat assistant: prompt, knowledge and price-note rules.
-// Used by app/api/chat-answer (SalesIQ Zobot webhook). Rates come from Sanity routeRate (pulled 18 Oct 2026);
-// update CHAT_INSTRUCTIONS + CHAT_KNOWLEDGE when rates change.
+// Used by app/api/chat-answer (SalesIQ Zobot webhook).
+// Prices are NOT hardcoded: buildChatInstructions() inserts the live rate table from lib/routeRates
+// (Zoho Creator, Sanity fallback; cached 1h, tag "route-rates").
+
+import type { RouteRate } from "@/lib/routeRates";
 
 export const CHAT_MODEL = process.env.CHAT_ANSWER_MODEL || "gpt-4.1-mini";
 export const CHAT_VECTOR_STORE_ID =
@@ -13,18 +16,18 @@ export const QUOTE_INVITE =
 export const FALLBACK_ANSWER =
   "Sorry, I can't answer that right now. Prices depend on the route, vehicle type and collection date. Tap Get a quote here, use the form at https://www.makatu.co.za/, email quoteme@makatu.co.za, or WhatsApp https://wa.me/27646806414 for the fastest reply. We usually reply the same day.";
 
-export const CHAT_INSTRUCTIONS = `You are the Makatu Website Assistant, the chat assistant for Makatu Business Enterprises (www.makatu.co.za), a South African door-to-door vehicle transport company. Be warm, concise and helpful. Use South African English and Rand (R) prices. Keep every reply under about 80 words. Plain text only: no markdown tables, no headings, no bold, no citations or source markers.
+const CHAT_INSTRUCTIONS_BASE = `You are the Makatu Website Assistant, the chat assistant for Makatu Business Enterprises (www.makatu.co.za), a South African door-to-door vehicle transport company. Be warm, concise and helpful. Use South African English and Rand (R) prices. Keep every reply under about 80 words. Plain text only: no markdown tables, no headings, no bold, no citations or source markers.
 
 SCOPE
 Only answer questions about Makatu, its services and vehicle transport. For anything else (general knowledge, trivia, other companies, coding, poems, jokes, news, etc.), do NOT answer it, give hints, or suggest any other source, website, search engine or person. Reply with one short decline that ends with the WhatsApp link, using this exact wording: "Sorry, I can only help with Makatu vehicle transport. For anything else, chat to our team on WhatsApp: https://wa.me/27646806414" If the message mixes an off-topic part with a transport question, answer only the transport part.
-Use the knowledge file for facts. If something is not in it, say you're not sure and suggest WhatsApp. Never make up facts.
+Use the knowledge file for general facts (never for prices). If something is not in it, say you're not sure and suggest WhatsApp. Never make up facts.
 
 PRICING RULES (strict)
-0. First normalise places to their main city: Sandton, Midrand, Randburg, Roodepoort, Joburg, JHB = Johannesburg; Centurion, PTA = Pretoria; Bellville, CPT, Stellenbosch = Cape Town; Umhlanga, Durban North, Durban South, DBN = Durban; PE, Port Elizabeth = Gqeberha. Then look up the normalised route in the RATE TABLE. Door-to-door from suburbs is included.
-Also normalise the vehicle to a table type: small cars like Mini, Polo, Swift, i20, Fiesta = hatchback; Corolla, Jetta, 3 Series, C-Class = sedan; Fortuner, RAV4, X5, Tiguan, Creta = SUV; Hilux, Ranger, NP200, double cab = bakkie; Quantum, Hiace, Staria = van; Ferrari, Lamborghini, classic or exotic cars = luxury (quote required). Always do this mapping silently before deciding, and never explain the mapping to the visitor (just say e.g. "A Mini from Cape Town to Durban"). A model name (Fortuner, Quantum, Polo) is NOT a reason to say there is no rate: map it, then find the line. Example: Fortuner from Umhlanga to Centurion = 'Durban to Pretoria, SUV: from R4,120'.
-1. The ONLY prices you may give are those in the RATE TABLE below (also in the knowledge file). Say them as "from R X" for the exact route direction and vehicle type asked.
+0. First normalise places to their main city: Sandton, Midrand, Randburg, Roodepoort, Joburg, JHB = Johannesburg; Centurion, PTA = Pretoria; Bellville, CPT, Stellenbosch = Cape Town; Umhlanga, Durban North, Durban South, DBN = Durban; PE, Port Elizabeth = Gqeberha. Then look up the normalised route in the LIVE RATE TABLE. Door-to-door from suburbs is included.
+Also normalise the vehicle to a table type: small cars like Mini, Polo, Swift, i20, Fiesta = hatchback; Corolla, Jetta, 3 Series, C-Class = sedan; Fortuner, RAV4, X5, Tiguan, Creta = SUV; Hilux, Ranger, NP200, double cab = bakkie; Quantum, Hiace, Staria = van; Ferrari, Lamborghini, classic or exotic cars = luxury (quote required). Always do this mapping silently before deciding, and never explain the mapping to the visitor (just say e.g. "A Mini from Cape Town to Durban"). A model name (Fortuner, Quantum, Polo) is NOT a reason to say there is no rate: map it, then find the line.
+1. The ONLY prices you may give are those in the LIVE RATE TABLE below. Ignore any price that appears in file search results, blog articles or general knowledge. Say them as "from R X" for the exact route direction and vehicle type asked.
 2. Rates are direction-specific. Never reuse the opposite direction's rate, never average, never estimate, never give a range, and never use prices from blog articles or general market knowledge.
-3. If the route, direction or vehicle type is not in the RATE TABLE (for example Cape Town to Durban, anything with Bloemfontein or Gqeberha, Pretoria to Johannesburg, luxury or exotic cars), do NOT mention any number. Say we don't have a listed rate for that route, so it needs a quick personalised quote, then briefly explain the QUOTE PROCESS below. Do NOT add the price disclaimer in this case, because no price was given.
+3. If the exact route, direction or vehicle type is not in the LIVE RATE TABLE (including luxury or exotic cars unless listed), do NOT mention any number. Say we don't have a listed rate for that route, so it needs a quick personalised quote, then briefly explain the QUOTE PROCESS below. Do NOT add the price disclaimer in this case, because no price was given.
 4. Only mention the vehicle type the visitor asked about (e.g. "a sedan is from R3,600"), not other types.
 5. If the vehicle type is unclear, map it sensibly (e.g. a Mini, Polo or Swift is a hatchback; a Fortuner is an SUV; a Hilux is a bakkie) or ask.
 6. ONLY when your reply contains a Rand amount (R followed by a number), it MUST end with exactly this sentence, followed by the invite:
@@ -35,60 +38,80 @@ QUOTE PROCESS (explain when asked about price or when no rate exists)
 Price depends on the route, the vehicle type and the collection date. To get a quote: tap Get a quote in this chat, use the online form at https://www.makatu.co.za/, email quoteme@makatu.co.za, or WhatsApp https://wa.me/27646806414 (fastest). We usually reply the same day.
 Prefer steering people to WhatsApp for fast replies.
 
-RATE TABLE (starting-from prices, one vehicle, one way; look up the exact 'From to To, Type' line)
-Cape Town to Johannesburg, Bakkie: from R7,900
-Cape Town to Johannesburg, Hatchback: from R7,500
-Cape Town to Johannesburg, Sedan: from R7,500
-Cape Town to Johannesburg, SUV: from R7,900
-Cape Town to Johannesburg, Van: from R13,500
-Cape Town to Pretoria, Bakkie: from R7,900
-Cape Town to Pretoria, Hatchback: from R7,500
-Cape Town to Pretoria, Sedan: from R7,500
-Cape Town to Pretoria, SUV: from R7,900
-Cape Town to Pretoria, Van: from R13,500
-Durban to Johannesburg, Bakkie: from R4,120
-Durban to Johannesburg, Hatchback: from R3,600
-Durban to Johannesburg, Sedan: from R3,600
-Durban to Johannesburg, SUV: from R4,120
-Durban to Johannesburg, Van: from R4,120
-Durban to Pretoria, Bakkie: from R4,120
-Durban to Pretoria, Hatchback: from R3,600
-Durban to Pretoria, Sedan: from R3,600
-Durban to Pretoria, SUV: from R4,120
-Durban to Pretoria, Van: from R4,120
-Johannesburg to Cape Town, Bakkie: from R6,900
-Johannesburg to Cape Town, Hatchback: from R6,500
-Johannesburg to Cape Town, Sedan: from R6,500
-Johannesburg to Cape Town, SUV: from R6,900
-Johannesburg to Cape Town, Van: from R11,500
-Johannesburg to Durban, Bakkie: from R3,100
-Johannesburg to Durban, Hatchback: from R2,890
-Johannesburg to Durban, Sedan: from R2,890
-Johannesburg to Durban, SUV: from R3,100
-Johannesburg to Durban, Van: from R3,330
-Pretoria to Cape Town, Bakkie: from R7,400
-Pretoria to Cape Town, Hatchback: from R7,400
-Pretoria to Cape Town, Sedan: from R7,400
-Pretoria to Cape Town, SUV: from R7,400
-Pretoria to Cape Town, Van: from R7,400
-Pretoria to Durban, Bakkie: from R3,100
-Pretoria to Durban, Hatchback: from R2,890
-Pretoria to Durban, Sedan: from R2,890
-Pretoria to Durban, SUV: from R3,100
-Pretoria to Durban, Van: from R3,330
-Every other route or vehicle: quote required, no price.
+`;
+
+const VEHICLE_LABEL: Record<string, string> = {
+  hatchback: "Hatchback",
+  sedan: "Sedan",
+  suv: "SUV",
+  bakkie: "Bakkie",
+  van: "Van",
+  luxury: "Luxury/Exotic",
+  other: "Other",
+};
+const ORDER = ["hatchback", "sedan", "suv", "bakkie", "van", "luxury", "other"];
+
+const rand = (n: number) => `R${String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+
+/** Lowest priced rate per route + vehicle type. */
+function pricedTable(rates: RouteRate[]): Map<string, RouteRate> {
+  const best = new Map<string, RouteRate>();
+  for (const r of rates) {
+    if (typeof r.price !== "number" || r.price <= 0 || r.priceType === "quoteRequired") continue;
+    const key = `${r.from}|${r.to}|${r.vehicleType}`;
+    const cur = best.get(key);
+    if (!cur || (cur.price as number) > r.price) best.set(key, r);
+  }
+  return best;
+}
+
+function priceText(r: RouteRate) {
+  return r.priceType === "fixed" ? rand(r.price as number) : `from ${rand(r.price as number)}`;
+}
+
+export function buildRateTable(rates: RouteRate[]): string {
+  const rows = [...pricedTable(rates).values()].sort(
+    (a, b) =>
+      a.from.localeCompare(b.from) ||
+      a.to.localeCompare(b.to) ||
+      ORDER.indexOf(a.vehicleType) - ORDER.indexOf(b.vehicleType),
+  );
+  if (rows.length === 0) return "(No rates are available right now: every route needs a quote. Do not give any price.)";
+  return rows
+    .map((r) => `${r.from} to ${r.to}, ${VEHICLE_LABEL[r.vehicleType] ?? r.vehicleType}: ${priceText(r)}`)
+    .join("\n");
+}
+
+function examples(rates: RouteRate[]): string {
+  const t = pricedTable(rates);
+  const find = (from: string, to: string, v: string) => t.get(`${from}|${to}|${v}`);
+  const ex: string[] = [];
+  const tail = `${PRICE_NOTE} ${QUOTE_INVITE}`;
+  const a = find("Johannesburg", "Cape Town", "suv");
+  if (a) ex.push(`Visitor: How much for an SUV from Sandton to Cape Town?\nYou: An SUV from Johannesburg (Sandton) to Cape Town is ${priceText(a)}, door to door. ${tail}`);
+  const b = find("Durban", "Pretoria", "bakkie");
+  if (b) ex.push(`Visitor: How much to move my Hilux from Umhlanga to Centurion?\nYou: A bakkie from Durban (Umhlanga) to Pretoria (Centurion) is ${priceText(b)}, door to door. ${tail}`);
+  const unpriced = [["Cape Town", "Durban"], ["Durban", "Cape Town"], ["Pretoria", "Johannesburg"]].find(
+    ([f, to]) => !ORDER.some((v) => find(f, to, v)),
+  );
+  if (unpriced) {
+    ex.push(`Visitor: Price for a car from ${unpriced[0]} to ${unpriced[1]}?\nYou: We don't have a listed rate for ${unpriced[0]} to ${unpriced[1]}, so it needs a quick personalised quote. Price depends on the route, vehicle type and collection date. Tap Get a quote here, use the form at https://www.makatu.co.za/, email quoteme@makatu.co.za, or WhatsApp https://wa.me/27646806414 for the fastest reply. We usually reply the same day.`);
+  }
+  return ex.length ? `EXAMPLES (format only; always use the LIVE RATE TABLE price)\n${ex.join("\n")}` : "";
+}
+
+/** Full system instructions with the live rate table. */
+export function buildChatInstructions(rates: RouteRate[]): string {
+  return `${CHAT_INSTRUCTIONS_BASE}LIVE RATE TABLE (the ONLY source of prices; starting-from prices excl. VAT, one vehicle, one way; look up the exact 'From to To, Type' line)
+${buildRateTable(rates)}
+Every other route, direction or vehicle: quote required, no price.
 
 The disclaimer is for prices only. Never add it to replies about transit times, insurance, preparation or anything without a Rand amount.
 
-EXAMPLES
-Visitor: How much for an SUV from Sandton to Cape Town?
-You: An SUV from Johannesburg (Sandton) to Cape Town is from R6,900, door to door. Please note: this is an indicative market price only. Your actual rate is confirmed in a formal quote from Makatu. Tap Get a quote, or WhatsApp us at https://wa.me/27646806414 for a fast reply.
-Visitor: How much to move my Hilux from Umhlanga to Centurion?
-You: A bakkie from Durban (Umhlanga) to Pretoria (Centurion) is from R4,120, door to door. Please note: this is an indicative market price only. Your actual rate is confirmed in a formal quote from Makatu. Tap Get a quote, or WhatsApp us at https://wa.me/27646806414 for a fast reply.
-Visitor: Price for a car from Cape Town to Durban?
-You: We don't have a listed rate for Cape Town to Durban, so it needs a quick personalised quote. Price depends on the route, vehicle type and collection date. Tap Get a quote here, use the form at https://www.makatu.co.za/, email quoteme@makatu.co.za, or WhatsApp https://wa.me/27646806414 for the fastest reply. We usually reply the same day.`;
+${examples(rates)}`.trim();
+}
 
-/** Full knowledge file, used inline only if file_search is unavailable. */
+/** General knowledge (no prices), used inline only if file_search is unavailable. */
 export const CHAT_KNOWLEDGE = `# Makatu Business Enterprises – Website Chat Knowledge
 
 Source: published content on www.makatu.co.za (Sanity CMS, project qi1msas1), pulled 18 Oct 2026.
@@ -141,76 +164,8 @@ Source: published content on www.makatu.co.za (Sanity CMS, project qi1msas1), pu
 
 ## Pricing notes
 - Long-distance routes cost more overall because of fuel, driver time and carrier scheduling.
-- Prices listed below are "starting from" indicative market prices only. The actual rate is confirmed in a formal quote from Makatu.
-
-## Rate table (the ONLY prices the assistant may quote)
-
-All prices are 'starting from' rates in South African Rand, per vehicle, one way. Source: Makatu website rate data. Any route or vehicle type NOT listed here has no published rate and needs a formal quote.
-
-| From | To | Vehicle type | Starting from |
-|---|---|---|---|
-| Cape Town | Johannesburg | Hatchback | from R7,500 |
-| Cape Town | Johannesburg | Sedan | from R7,500 |
-| Cape Town | Johannesburg | SUV | from R7,900 |
-| Cape Town | Johannesburg | Bakkie | from R7,900 |
-| Cape Town | Johannesburg | Van | from R13,500 |
-| Cape Town | Pretoria | Hatchback | from R7,500 |
-| Cape Town | Pretoria | Sedan | from R7,500 |
-| Cape Town | Pretoria | SUV | from R7,900 |
-| Cape Town | Pretoria | Bakkie | from R7,900 |
-| Cape Town | Pretoria | Van | from R13,500 |
-| Durban | Johannesburg | Hatchback | from R3,600 |
-| Durban | Johannesburg | Sedan | from R3,600 |
-| Durban | Johannesburg | SUV | from R4,120 |
-| Durban | Johannesburg | Bakkie | from R4,120 |
-| Durban | Johannesburg | Van | from R4,120 |
-| Durban | Pretoria | Hatchback | from R3,600 |
-| Durban | Pretoria | Sedan | from R3,600 |
-| Durban | Pretoria | SUV | from R4,120 |
-| Durban | Pretoria | Bakkie | from R4,120 |
-| Durban | Pretoria | Van | from R4,120 |
-| Johannesburg | Cape Town | Hatchback | from R6,500 |
-| Johannesburg | Cape Town | Sedan | from R6,500 |
-| Johannesburg | Cape Town | SUV | from R6,900 |
-| Johannesburg | Cape Town | Bakkie | from R6,900 |
-| Johannesburg | Cape Town | Van | from R11,500 |
-| Johannesburg | Durban | Hatchback | from R2,890 |
-| Johannesburg | Durban | Sedan | from R2,890 |
-| Johannesburg | Durban | SUV | from R3,100 |
-| Johannesburg | Durban | Bakkie | from R3,100 |
-| Johannesburg | Durban | Van | from R3,330 |
-| Pretoria | Cape Town | Hatchback | from R7,400 |
-| Pretoria | Cape Town | Sedan | from R7,400 |
-| Pretoria | Cape Town | SUV | from R7,400 |
-| Pretoria | Cape Town | Bakkie | from R7,400 |
-| Pretoria | Cape Town | Van | from R7,400 |
-| Pretoria | Durban | Hatchback | from R2,890 |
-| Pretoria | Durban | Sedan | from R2,890 |
-| Pretoria | Durban | SUV | from R3,100 |
-| Pretoria | Durban | Bakkie | from R3,100 |
-| Pretoria | Durban | Van | from R3,330 |
-
-### Same rates written out per route
-
-- Cape Town to Johannesburg: Hatchback from R7,500; Sedan from R7,500; SUV from R7,900; Bakkie from R7,900; Van from R13,500. Luxury/exotic and other vehicle types: quote required.
-- Cape Town to Pretoria: Hatchback from R7,500; Sedan from R7,500; SUV from R7,900; Bakkie from R7,900; Van from R13,500. Luxury/exotic and other vehicle types: quote required.
-- Durban to Johannesburg: Hatchback from R3,600; Sedan from R3,600; SUV from R4,120; Bakkie from R4,120; Van from R4,120. Luxury/exotic and other vehicle types: quote required.
-- Durban to Pretoria: Hatchback from R3,600; Sedan from R3,600; SUV from R4,120; Bakkie from R4,120; Van from R4,120. Luxury/exotic and other vehicle types: quote required.
-- Johannesburg to Cape Town: Hatchback from R6,500; Sedan from R6,500; SUV from R6,900; Bakkie from R6,900; Van from R11,500. Luxury/exotic and other vehicle types: quote required.
-- Johannesburg to Durban: Hatchback from R2,890; Sedan from R2,890; SUV from R3,100; Bakkie from R3,100; Van from R3,330. Luxury/exotic and other vehicle types: quote required.
-- Pretoria to Cape Town: Hatchback from R7,400; Sedan from R7,400; SUV from R7,400; Bakkie from R7,400; Van from R7,400. Luxury/exotic and other vehicle types: quote required.
-- Pretoria to Durban: Hatchback from R2,890; Sedan from R2,890; SUV from R3,100; Bakkie from R3,100; Van from R3,330. Luxury/exotic and other vehicle types: quote required.
-
-### Routes we cover but with NO published rate (quote required, never give a price)
-
-- Cape Town to Bloemfontein
-- Gqeberha to Johannesburg
-- Gqeberha to Pretoria
-- Johannesburg to Gqeberha
-- Pretoria to Gqeberha
-- Pretoria to Johannesburg
-- Cape Town to Durban, Durban to Cape Town, and any route to/from Bloemfontein, Gqeberha (other than above), East London, Nelspruit, Polokwane or any other town: quote required.
-- Any reverse direction not listed in the table (for example Johannesburg to Pretoria, Durban to Cape Town): quote required. Rates are direction-specific; do not reuse the opposite direction's price.`;
+- Website and chat prices are "starting from" indicative market prices only. The actual rate is confirmed in a formal quote from Makatu.
+- Current rates are provided separately as the LIVE RATE TABLE (from Makatu's rate system).`;
 
 const RAND = /R\s?\d/;
 

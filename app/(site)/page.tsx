@@ -12,6 +12,7 @@ import FAQSection from "@/components/home/FAQSection";
 import { getReviewsQuery } from "@/sanity/queries/getReviews";
 import FeaturedRoute from "@/components/home/FeaturedRoute";
 import ServiceIntro from "@/components/home/ServiceIntro";
+import { withLowestPrices } from "@/lib/routeRates";
 export const metadata: Metadata = {
   alternates: {
     canonical: "/",
@@ -137,24 +138,17 @@ export default async function HomePage() {
     { cache: "no-store" },
   );
 
-  const featuredRoute = await client.fetch(
+  const featuredRouteDoc = await client.fetch(
     groq`*[_type == "route" && featuredRoute == true][0]{
     slug,
     fromCity->{name},
     toCity->{name},
-
-    "lowestPrice": *[_type == "routeRate" 
-      && fromCity._ref == ^.fromCity._ref 
-      && toCity._ref == ^.toCity._ref
-    ] | order(price asc)[0].price,
-
-    "priceType": *[_type == "routeRate" 
-      && fromCity._ref == ^.fromCity._ref 
-      && toCity._ref == ^.toCity._ref
-    ] | order(price asc)[0].priceType
   }`,
   );
-  const routes: Route[] = await client.fetch(
+  const featuredRoute = featuredRouteDoc
+    ? (await withLowestPrices([featuredRouteDoc]))[0]
+    : featuredRouteDoc;
+  const routeDocs: Route[] = await client.fetch(
     groq`*[_type == "route"]{
     slug,
     routeImage{
@@ -166,19 +160,10 @@ export default async function HomePage() {
     toCity->{
       name
     },
-
-    // 👇 ADD THIS
-    "lowestPrice": *[_type == "routeRate" 
-      && fromCity._ref == ^.fromCity._ref 
-      && toCity._ref == ^.toCity._ref
-    ] | order(price asc)[0].price,
-
-    "priceType": *[_type == "routeRate" 
-      && fromCity._ref == ^.fromCity._ref 
-      && toCity._ref == ^.toCity._ref
-    ] | order(price asc)[0].priceType
   }`,
   );
+
+  const routes: Route[] = await withLowestPrices(routeDocs);
 
   const settings: SiteSettings = await client.fetch(
     groq`*[_type == "siteSettings"][0]{
