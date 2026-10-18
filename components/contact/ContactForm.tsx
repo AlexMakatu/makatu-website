@@ -5,12 +5,16 @@ import { useState } from "react";
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+    setSuccess(false);
+    setFailed(false);
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
     const data = {
       name: formData.get("name"),
@@ -19,14 +23,22 @@ export default function ContactForm() {
       message: formData.get("message"),
     };
 
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json().catch(() => null);
 
-    if (res.ok) {
-      setSuccess(true);
-      e.currentTarget.reset();
+      if (res.ok && json?.success) {
+        setSuccess(true);
+        form.reset();
+      } else {
+        setFailed(true);
+      }
+    } catch {
+      setFailed(true);
     }
 
     setLoading(false);
@@ -78,6 +90,21 @@ export default function ContactForm() {
 
       {success && (
         <p className="text-green-600 text-sm">Message sent successfully!</p>
+      )}
+
+      {failed && (
+        <p className="text-red-600 text-sm">
+          Sorry, your message could not be sent. Please{" "}
+          <a
+            href="https://wa.me/27646806414"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline font-semibold"
+          >
+            WhatsApp us
+          </a>{" "}
+          instead.
+        </p>
       )}
     </form>
   );
