@@ -12,7 +12,7 @@ import {
 // AI answer webhook for the Zoho SalesIQ Zobot (replaces the OpenAI Assistant;
 // OpenAI removed the Assistants API on 26 Aug 2026).
 // Auth: header `x-chat-quote-secret` = process.env.CHAT_QUOTE_SECRET (same as /api/chat-quote).
-// Request:  POST JSON { "question": "..." }
+// Request:  POST JSON { "question": "..." } (also message/text keys, form-encoded or plain-text body)
 // Response: { ok: boolean, answer: string, hasPrice: boolean }  -> show `answer` to the visitor.
 
 export const dynamic = "force-dynamic";
@@ -66,6 +66,52 @@ async function ask(question: string, useFileSearch: boolean, signal: AbortSignal
     .trim();
 }
 
+const EMPTY_ANSWER = "What would you like to know about moving your vehicle?";
+const QUESTION_KEYS = ["question", "message", "text", "query", "input"];
+
+/** Pull the visitor's question from JSON, form-encoded or plain-text bodies. */
+async function readQuestion(req: Request): Promise<string> {
+  let raw = "";
+  try {
+    raw = await req.text();
+  } catch {
+    return "";
+  }
+  raw = raw.trim();
+  if (!raw) return "";
+
+  let value: unknown = raw;
+  const type = req.headers.get("content-type") ?? "";
+  if (raw.startsWith("{") || raw.startsWith("[") || raw.startsWith('"') || type.includes("json")) {
+    try {
+      value = JSON.parse(raw);
+    } catch {
+      value = raw; // not valid JSON: treat as plain text
+    }
+  } else if (type.includes("x-www-form-urlencoded") || /^[\w.-]+=/.test(raw)) {
+    const form = new URLSearchParams(raw);
+    value = Object.fromEntries(form.entries());
+  }
+
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const obj = value as Record<string, unknown>;
+    const key = QUESTION_KEYS.find((k) => typeof obj[k] === "string" || typeof obj[k] === "number");
+    value = key ? String(obj[key]) : "";
+  }
+  if (typeof value !== "string") return "";
+  return clean(value);
+}
+
+/** Drop unresolved SalesIQ/template placeholders such as %question% or ${question}. */
+function clean(q: string): string {
+  const t = q.trim().slice(0, 1000);
+  if (/^(%[^%\s]+%|\$\{[^}]*\}|\{\{[^}]*\}\}|null|undefined)$/i.test(t)) return "";
+  return t;
+}
+
+const emptyQuestion = () =>
+  NextResponse.json({ ok: false, answer: EMPTY_ANSWER, hasPrice: false, reason: "empty_question" });
+
 const fallback = (status = 200) =>
   NextResponse.json({ ok: false, answer: FALLBACK_ANSWER, hasPrice: false }, { status });
 
@@ -74,15 +120,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, answer: "Unauthorized", hasPrice: false }, { status: 401 });
   }
 
-  let question = "";
-  try {
-    const body = (await req.json()) as Record<string, unknown>;
-    const q = body?.question ?? body?.message;
-    question = typeof q === "string" ? q.trim().slice(0, 1000) : "";
-  } catch {
-    return fallback(400);
-  }
-  if (!question) return fallback(400);
+  const question = await readQuestion(req);
+  if (!question) return emptyQuestion();
   if (!process.env.OPENAI_API_KEY) return fallback();
 
   const signal = AbortSignal.timeout(TIMEOUT_MS);
