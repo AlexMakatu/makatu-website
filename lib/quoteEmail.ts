@@ -71,6 +71,8 @@ export function fullQuoteHtml(data: QuoteRequestBody, submittedAt: string): stri
 }
 
 const QUOTE_TO = ["quoteme@makatu.co.za"];
+// Internal notification sender. resend.dev test sender only delivers to the Resend account owner.
+const FROM = process.env.RESEND_FROM || "Makatu <noreply@makatu.co.za>";
 const QUOTE_CC = ["quotesmakatu@gmail.com"];
 
 export async function sendNotificationEmail(
@@ -78,7 +80,7 @@ export async function sendNotificationEmail(
   html: string,
 ): Promise<void> {
   const body = {
-    from: "Makatu <onboarding@resend.dev>",
+    from: FROM,
     to: QUOTE_TO,
     subject,
     html: `<p style="padding:8px 12px;background:#fff4e5;border:1px solid #f0b46c"><strong>${esc(QUOTE_REQUEST_NOTICE)}</strong></p>${html}`,
@@ -87,9 +89,10 @@ export async function sendNotificationEmail(
   if (!error) return;
   // Never lose the notification because of the CC (e.g. Resend test-sender restrictions):
   // retry once to the main inbox only.
-  console.error("Resend rejected email with CC, retrying without CC:", error.message);
+  console.error("Resend rejected email with CC, retrying without CC:", error.name, error.message);
   const retry = await getResend().emails.send(body);
   if (retry.error) {
+    console.error("Resend rejected notification email:", retry.error.name, retry.error.message);
     throw new Error(`Resend error: ${retry.error.message}`);
   }
 }
