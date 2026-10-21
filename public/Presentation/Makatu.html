@@ -21,9 +21,12 @@
 body{font-family:'League Spartan',system-ui,Arial,sans-serif;background:#f6f3fb;color:var(--ink);min-height:100vh;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
 .card{width:100%;max-width:440px;background:#fff;min-height:100vh;box-shadow:0 20px 60px rgba(49,29,96,.12)}
 @media(min-width:520px){body{padding:32px 16px;align-items:flex-start}.card{min-height:0;border-radius:28px;overflow:hidden}}
-.hero{position:relative;height:230px;background:var(--p) url('/Presentation/img/makatu-card-hero.jpg?v=2') 78% 40%/cover}
-.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(49,29,96,.15) 0%,rgba(49,29,96,.55) 60%,var(--p) 100%)}
-.hero img{position:absolute;z-index:1;left:24px;bottom:22px;height:42px;width:auto}
+.hero{position:relative;height:230px;background:var(--p);overflow:hidden}
+.hs{position:absolute;inset:0;background-size:cover;background-position:78% 40%;opacity:0;transition:opacity 1.4s ease}
+.hs.on{opacity:1}
+@media(prefers-reduced-motion:reduce){.hs{transition:none}}
+.hero:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(49,29,96,.15) 0%,rgba(49,29,96,.55) 60%,var(--p) 100%)}
+.hero img{position:absolute;z-index:2;left:24px;bottom:22px;height:42px;width:auto}
 .top{background:var(--p);color:#fff;padding:4px 24px 26px}
 h1{font-size:27px;line-height:1.05;font-weight:800;letter-spacing:-.01em}
 .tag{color:#cdbff0;font-size:16px;margin-top:6px}
@@ -49,7 +52,7 @@ svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:
 .toast.on{transform:translate(-50%,0);opacity:1}
 </style></head>
 <body><main class="card">
-<div class="hero"><img src="https://cdn.sanity.io/images/qi1msas1/production/4143be77debeffb6842fb1cb4afa06855ade026c-240x80.png" alt="Makatu" width="126" height="42"></div>
+<div class="hero" aria-label="Makatu car carriers"><div class="hs on" style="background-image:url('/Presentation/img/makatu-card-hero.jpg?v=2')"></div><div class="hs" data-bg="/Presentation/img/makatu-card-hero-2.jpg?v=1" style="background-position:70% 50%"></div><div class="hs" data-bg="/Presentation/img/makatu-card-hero-3.jpg?v=1" style="background-position:72% 50%"></div><img src="https://cdn.sanity.io/images/qi1msas1/production/4143be77debeffb6842fb1cb4afa06855ade026c-240x80.png" alt="Makatu" width="126" height="42"></div>
 <section class="top">
 <h1>Makatu Business Enterprises (Pty) Ltd</h1>
 <p class="tag">Not your average logistics partner</p>
@@ -93,4 +96,7 @@ document.getElementById('save').onclick=()=>{const v=['BEGIN:VCARD','VERSION:3.0
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([v],{type:'text/vcard'}));a.download='Makatu.vcf';document.body.appendChild(a);a.click();a.remove();toast('Contact downloaded')};
 document.getElementById('share').onclick=async()=>{const d={title:'Makatu Business Enterprises',text:'Makatu Vehicle Transport – digital business card',url:URL_};
 if(navigator.share){try{await navigator.share(d)}catch(e){}}else{try{await navigator.clipboard.writeText(URL_);toast('Link copied')}catch(e){prompt('Copy this link:',URL_)}}};
+(()=>{const s=[...document.querySelectorAll('.hs')];if(matchMedia('(prefers-reduced-motion: reduce)').matches||s.length<2)return;
+addEventListener('load',()=>{s.forEach(e=>{if(e.dataset.bg){const i=new Image();i.src=e.dataset.bg;e.style.backgroundImage="url('"+e.dataset.bg+"')"}});let k=0;
+setInterval(()=>{if(document.hidden)return;s[k].classList.remove('on');k=(k+1)%s.length;s[k].classList.add('on')},4000)})})();
 </script></body></html>
