@@ -3,7 +3,6 @@ import { timingSafeEqual } from "crypto";
 import { sendToZoho, type QuoteRequestBody } from "@/lib/zohoCreator";
 import {
   esc,
-  row,
   fullQuoteHtml,
   sendNotificationEmail,
 } from "@/lib/quoteEmail";
@@ -116,24 +115,8 @@ export async function POST(req: Request) {
 
   let emailOk = true;
   try {
-    if (zohoOk) {
-      await sendNotificationEmail(
-        "New Quote Request (Website chat)",
-        `
-          <h2>New Quote Request (Website chat)</h2>
-          <table>
-            ${row("Reference", ref)}
-            ${row("Name", fullName)}
-            ${row("Email", email)}
-            ${row("Phone", phone)}
-            ${row("From", fromCity)}
-            ${row("To", toCity)}
-          </table>
-          <hr />
-          <p><strong>Zoho Status:</strong> saved</p>
-        `,
-      );
-    } else {
+    // Zoho saved it: Creator sends its own alert, so no website email (avoids duplicates).
+    if (!zohoOk) {
       await sendNotificationEmail(
         "⚠️ Chat quote request NOT in Zoho - enter manually",
         `

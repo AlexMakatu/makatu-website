@@ -5,7 +5,6 @@ import {
 } from "@/lib/zohoCreator";
 import {
   esc,
-  row,
   fullQuoteHtml,
   sendNotificationEmail,
 } from "@/lib/quoteEmail";
@@ -75,24 +74,8 @@ export async function POST(req: Request) {
     // =====================
     let emailOk = true;
     try {
-      if (zohoOk) {
-        await sendNotificationEmail(
-          "New Quote Request",
-          `
-            <h2>New Quote Request</h2>
-            <table>
-              ${row("Reference", submissionId)}
-              ${row("Name", data.fullName)}
-              ${row("Email", data.email)}
-              ${row("Phone", data.phone)}
-              ${row("From", data.fromCity)}
-              ${row("To", data.toCity)}
-            </table>
-            <hr />
-            <p><strong>Zoho Status:</strong> saved</p>
-          `,
-        );
-      } else {
+      // Zoho saved it: Creator sends its own alert, so no website email (avoids duplicates).
+      if (!zohoOk) {
         await sendNotificationEmail(
           "⚠️ Quote request NOT in Zoho - enter manually",
           `
