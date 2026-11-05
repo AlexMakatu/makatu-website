@@ -33,8 +33,8 @@
 .progress button:hover { background: #a798c4; }
 .progress .progressActive { width: 50px; background: var(--purple); }
 .toolbarActions { display: flex; justify-content: flex-end; gap: 8px; }
-.toolbarActions button { display: flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border: 1px solid rgba(49, 29, 96, .14); border-radius: 12px; background: white; color: var(--purple); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
-.toolbarActions button:hover { border-color: var(--purple); background: var(--purple-soft); }
+.toolbarActions button, .toolbarActions a { text-decoration: none; display: flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 14px; border: 1px solid rgba(49, 29, 96, .14); border-radius: 12px; background: white; color: var(--purple); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.toolbarActions button:hover, .toolbarActions a:hover { border-color: var(--purple); background: var(--purple-soft); }
 
 .stage { width: 100%; }
 .slide {

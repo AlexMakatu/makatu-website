@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   ArrowLeft,
+  Network,
   ArrowRight,
   Award,
   Building2,
@@ -163,6 +164,10 @@ export default function BusinessProfilePresentation({ profile }: Props) {
         </div>
 
         <div className={styles.toolbarActions}>
+          <a href="/organogram" title="View the organogram">
+            <Network size={18} />
+            <span>Organogram</span>
+          </a>
           <button type="button" onClick={enterFullscreen} title="Fullscreen">
             <Maximize2 size={18} />
           </button>

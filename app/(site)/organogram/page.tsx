@@ -336,7 +336,10 @@ export default async function OrganogramPage() {
                     "A clear view of leadership accountability, functional reporting and operational capacity."}
                 </p>
               </div>
-              <div className="print:hidden">
+              <div className="flex flex-wrap items-center gap-3 print:hidden">
+                <a href="/business-profile" className="rounded-full border border-white/30 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-white hover:text-[#311d60]">
+                  ← Business Profile
+                </a>
                 {settings?.showDownloadButton !== false ? <PrintButton /> : null}
               </div>
             </div>
